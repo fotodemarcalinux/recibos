@@ -6,257 +6,180 @@
     <title>Gerador de Código de Barras</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             background-color: #f0f2f5;
             margin: 0;
-            flex-direction: column;
             padding: 20px;
         }
 
         .container {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 600px;
-            text-align: center;
+            max-width: 500px;
         }
 
         h1 {
             color: #333;
-            margin-bottom: 30px;
-            font-size: 2em;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 600;
-            text-align: left;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
 
-        input[type="text"], select {
+        input, select {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 25px;
+            padding: 10px;
+            margin-bottom: 15px;
             border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1em;
+            border-radius: 5px;
             box-sizing: border-box;
-            transition: border-color 0.3s;
-        }
-
-        input[type="text"]:focus, select:focus {
-            border-color: #007bff;
-            outline: none;
         }
 
         #barcode-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 150px;
-            margin: 30px 0;
-            background-color: #fff;
+            margin: 20px 0;
+            text-align: center;
+            min-height: 100px;
+            padding: 20px;
+            background-color: white;
         }
 
-        #barcode {
-            max-width: 100%;
-            height: auto;
-        }
-        
         .error {
             color: red;
-            font-size: 0.9em;
-            margin-top: -15px;
+            font-size: 0.8em;
+            margin-top: -10px;
             margin-bottom: 10px;
             display: none;
         }
-        
-        .download-options {
-            display: flex;
-            justify-content: space-around;
-            gap: 10px;
-            margin-top: 20px;
-        }
 
-        .download-options a {
-            flex-grow: 1;
-            padding: 12px;
-            text-decoration: none;
-            color: #fff;
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
             background-color: #007bff;
-            border-radius: 8px;
-            transition: background-color 0.3s, transform 0.2s;
-            font-weight: 600;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
         }
 
-        .download-options a:hover {
+        .download-btn:hover {
             background-color: #0056b3;
-            transform: translateY(-2px);
-        }
-
-        .download-options a:active {
-            transform: translateY(0);
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-            h1 {
-                font-size: 1.5em;
-            }
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Gerador de Código de Barras</h1>
-
-        <label for="barcode-text">Digite o texto/número:</label>
-        <input type="text" id="barcode-text" placeholder="Ex: GITHUB-12345">
+        
+        <label for="barcode-text">Texto/Número:</label>
+        <input type="text" id="barcode-text" placeholder="Digite aqui...">
         <span id="validation-error" class="error"></span>
-
-        <label for="barcode-type">Selecione o tipo de código:</label>
+        
+        <label for="barcode-type">Tipo de código:</label>
         <select id="barcode-type">
-            <option value="CODE128">CODE 128 (alfanumérico)</option>
-            <option value="CODE39">CODE 39 (alfanumérico limitado)</option>
-            <option value="EAN13">EAN-13 (13 dígitos numéricos)</option>
-            <option value="UPC">UPC-A (12 dígitos numéricos)</option>
+            <option value="CODE128">CODE 128 (mais comum)</option>
+            <option value="CODE39">CODE 39</option>
+            <option value="EAN13">EAN-13 (produtos)</option>
+            <option value="UPC">UPC-A</option>
         </select>
-
+        
         <div id="barcode-container">
             <svg id="barcode"></svg>
         </div>
         
-        <div class="download-options">
-            <a href="#" id="download-jpeg">Download JPEG</a>
-            <a href="#" id="download-png">Download PNG</a>
-            <a href="#" id="download-webp">Download WebP</a>
-        </div>
+        <button id="download-png" class="download-btn">Baixar como PNG</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <script>
+        // Elementos da página
         const barcodeText = document.getElementById('barcode-text');
         const barcodeType = document.getElementById('barcode-type');
         const barcodeSvg = document.getElementById('barcode');
-        const validationError = document.getElementById('validation-error');
-        const downloadJpeg = document.getElementById('download-jpeg');
-        const downloadPng = document.getElementById('download-png');
-        const downloadWebp = document.getElementById('download-webp');
-        
-        function validateAndGenerate() {
-            let text = barcodeText.value.trim();
+        const errorElement = document.getElementById('validation-error');
+        const downloadBtn = document.getElementById('download-png');
+
+        // Função para gerar o código de barras
+        function generateBarcode() {
+            const text = barcodeText.value.trim();
             const type = barcodeType.value;
-            let isValid = true;
-            let errorMessage = '';
-
-            barcodeSvg.innerHTML = '';
-            validationError.style.display = 'none';
-
-            if (text === '') {
-                return;
-            }
-
+            
+            // Limpa erros anteriores
+            errorElement.style.display = 'none';
+            
+            // Se estiver vazio, não faz nada
+            if (!text) return;
+            
             try {
-                switch(type) {
-                    case 'EAN13':
-                        if (!/^\d{12}$/.test(text)) {
-                            throw new Error('EAN-13 deve ter exatamente 12 dígitos numéricos.');
-                        }
-                        JsBarcode(barcodeSvg, text, { format: type });
-                        break;
-                    case 'UPC':
-                        if (!/^\d{11}$/.test(text)) {
-                            throw new Error('UPC-A deve ter exatamente 11 dígitos numéricos.');
-                        }
-                        JsBarcode(barcodeSvg, text, { format: type });
-                        break;
-                    case 'CODE39':
-                        if (!/^[A-Z0-9\-\.\$\/\+% ]+$/.test(text.toUpperCase())) {
-                            throw new Error('CODE 39 só aceita letras maiúsculas (A-Z), números (0-9), espaço e os caracteres - . $ / + %.');
-                        }
-                        JsBarcode(barcodeSvg, text.toUpperCase(), { format: type });
-                        break;
-                    case 'CODE128':
-                        JsBarcode(barcodeSvg, text, { format: type });
-                        break;
-                    default:
-                        JsBarcode(barcodeSvg, text, { format: type });
-                }
+                // Tenta gerar o código de barras
+                JsBarcode(barcodeSvg, text, {
+                    format: type,
+                    lineColor: "#000000",
+                    width: 2,
+                    height: 100,
+                    displayValue: true
+                });
             } catch (error) {
-                isValid = false;
-                errorMessage = error.message;
-            }
-
-            if (!isValid) {
-                validationError.textContent = errorMessage;
-                validationError.style.display = 'block';
+                // Mostra mensagem de erro se houver problema
+                errorElement.textContent = error.message;
+                errorElement.style.display = 'block';
             }
         }
-        
-        function downloadImage(format) {
+
+        // Função para baixar o código como PNG
+        function downloadBarcode() {
             const svgElement = barcodeSvg.querySelector('svg');
             if (!svgElement) return;
-
-            const svgString = new XMLSerializer().serializeToString(svgElement);
             
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
+            // Converte SVG para string
+            const svgData = new XMLSerializer().serializeToString(svgElement);
+            
+            // Cria uma imagem a partir do SVG
             const img = new Image();
-
-            const svgSize = svgElement.getBoundingClientRect();
-            canvas.width = svgSize.width;
-            canvas.height = svgSize.height;
-
-            // Converter SVG para imagem
-            img.onload = () => {
-                context.fillStyle = '#fff'; // Adiciona um fundo branco
-                context.fillRect(0, 0, canvas.width, canvas.height);
-                context.drawImage(img, 0, 0);
-
-                const url = canvas.toDataURL(`image/${format === 'jpeg' ? 'jpeg' : format}`, 1.0);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `barcode.${format}`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+            img.onload = function() {
+                // Cria um canvas para converter para PNG
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = 'white'; // Fundo branco
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0);
+                
+                // Cria link para download
+                const link = document.createElement('a');
+                link.download = 'codigo-barras.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
             };
-
-            // Codificar o SVG para o formato de URL e carregar na imagem
-            const svgUrl = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svgString)}`;
-            img.src = svgUrl;
+            
+            img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
         }
 
-        barcodeText.addEventListener('input', validateAndGenerate);
-        barcodeType.addEventListener('change', validateAndGenerate);
-        downloadJpeg.addEventListener('click', (e) => {
-            e.preventDefault();
-            downloadImage('jpeg');
-        });
-        downloadPng.addEventListener('click', (e) => {
-            e.preventDefault();
-            downloadImage('png');
-        });
-        downloadWebp.addEventListener('click', (e) => {
-            e.preventDefault();
-            downloadImage('webp');
-        });
+        // Event listeners
+        barcodeText.addEventListener('input', generateBarcode);
+        barcodeType.addEventListener('change', generateBarcode);
+        downloadBtn.addEventListener('click', downloadBarcode);
 
-        // Gera um código de barras inicial no carregamento da página
+        // Gera um código inicial quando a página carrega
         window.addEventListener('load', () => {
-            barcodeText.value = 'GITHUB-PAGES-123';
-            validateAndGenerate();
+            barcodeText.value = 'EXEMPLO123';
+            generateBarcode();
         });
     </script>
 </body>
