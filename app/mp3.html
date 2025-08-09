@@ -103,6 +103,13 @@
     const downloadLink = document.getElementById('download-link');
     
     let isFFmpegLoaded = false;
+    
+    // Mapeamento dos formatos para codecs e tipos MIME corretos
+    const formatMap = {
+        'mp3': { codec: 'libmp3lame', mimeType: 'audio/mpeg' },
+        'ogg': { codec: 'libvorbis', mimeType: 'audio/ogg' },
+        'opus': { codec: 'libopus', mimeType: 'audio/opus' }
+    };
 
     async function loadFFmpeg() {
         if (!isFFmpegLoaded) {
@@ -122,6 +129,7 @@
         if (!isFFmpegLoaded) {
             statusMessage.textContent = 'Aguarde, o conversor ainda está carregando...';
             await loadFFmpeg();
+            if (!isFFmpegLoaded) return; // Se o carregamento falhar, para a função
         }
 
         const file = audioInput.files[0];
@@ -137,13 +145,16 @@
         statusMessage.textContent = `Convertendo para ${outputFormat.toUpperCase()}...`;
         downloadLink.style.display = 'none';
 
+        const { codec, mimeType } = formatMap[outputFormat];
+
         try {
             ffmpeg.FS('writeFile', inputFilename, await fetchFile(file));
             
-            await ffmpeg.run('-i', inputFilename, '-acodec', outputFormat, outputFilename);
+            // Comando FFmpeg ajustado para usar o codec correto e a taxa de bits (bitrate) para MP3
+            await ffmpeg.run('-i', inputFilename, '-c:a', codec, '-b:a', '192k', outputFilename);
             
             const data = ffmpeg.FS('readFile', outputFilename);
-            const blob = new Blob([data.buffer], { type: `audio/${outputFormat}` });
+            const blob = new Blob([data.buffer], { type: mimeType });
             
             const url = URL.createObjectURL(blob);
             
@@ -158,7 +169,6 @@
         }
     }
     
-    // Iniciar o carregamento da biblioteca assim que a página for aberta
     loadFFmpeg();
 </script>
 
