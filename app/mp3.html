@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Áudio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #666;
+        }
+        input[type="file"], select, button {
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #status-message {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+        #download-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: #28a745;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: none;
+        }
+        #download-link:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Conversor de Áudio</h1>
+    <p>Converta áudios (incluindo do WhatsApp) para OGG, MP3 e Opus.</p>
+    
+    <input type="file" id="audio-input" accept="audio/*">
+    
+    <select id="format-select">
+        <option value="mp3">Converter para MP3</option>
+        <option value="ogg">Converter para OGG</option>
+        <option value="opus">Converter para Opus</option>
+    </select>
+    
+    <button onclick="convertAudio()">Converter e Baixar</button>
+    
+    <div id="status-message"></div>
+    <a id="download-link" href="#" download>Baixar Áudio</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.7/dist/ffmpeg.min.js"></script>
+
+<script>
+    const { createFFmpeg, fetchFile } = FFmpeg;
+    const ffmpeg = createFFmpeg({ log: true });
+    
+    const audioInput = document.getElementById('audio-input');
+    const formatSelect = document.getElementById('format-select');
+    const statusMessage = document.getElementById('status-message');
+    const downloadLink = document.getElementById('download-link');
+    
+    let isFFmpegLoaded = false;
+
+    async function loadFFmpeg() {
+        if (!isFFmpegLoaded) {
+            statusMessage.textContent = 'Carregando o conversor...';
+            try {
+                await ffmpeg.load();
+                isFFmpegLoaded = true;
+                statusMessage.textContent = 'Conversor pronto!';
+            } catch (error) {
+                statusMessage.textContent = 'Erro ao carregar o conversor. Tente novamente.';
+                console.error(error);
+            }
+        }
+    }
+
+    async function convertAudio() {
+        if (!isFFmpegLoaded) {
+            statusMessage.textContent = 'Aguarde, o conversor ainda está carregando...';
+            await loadFFmpeg();
+        }
+
+        const file = audioInput.files[0];
+        if (!file) {
+            statusMessage.textContent = 'Por favor, selecione um arquivo de áudio.';
+            return;
+        }
+
+        const outputFormat = formatSelect.value;
+        const inputFilename = 'input' + file.name.substring(file.name.lastIndexOf('.'));
+        const outputFilename = `audio_convertido.${outputFormat}`;
+        
+        statusMessage.textContent = `Convertendo para ${outputFormat.toUpperCase()}...`;
+        downloadLink.style.display = 'none';
+
+        try {
+            ffmpeg.FS('writeFile', inputFilename, await fetchFile(file));
+            
+            await ffmpeg.run('-i', inputFilename, '-acodec', outputFormat, outputFilename);
+            
+            const data = ffmpeg.FS('readFile', outputFilename);
+            const blob = new Blob([data.buffer], { type: `audio/${outputFormat}` });
+            
+            const url = URL.createObjectURL(blob);
+            
+            downloadLink.href = url;
+            downloadLink.download = outputFilename;
+            downloadLink.style.display = 'inline-block';
+            statusMessage.textContent = 'Conversão concluída!';
+            
+        } catch (error) {
+            statusMessage.textContent = 'Ocorreu um erro durante a conversão.';
+            console.error(error);
+        }
+    }
+    
+    // Iniciar o carregamento da biblioteca assim que a página for aberta
+    loadFFmpeg();
+</script>
+
+</body>
+</html>
