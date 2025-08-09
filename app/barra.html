@@ -45,7 +45,7 @@
         input[type="text"], select {
             width: 100%;
             padding: 12px;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 1em;
@@ -56,6 +56,30 @@
         input[type="text"]:focus, select:focus {
             border-color: #007bff;
             outline: none;
+        }
+
+        button {
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-weight: 600;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
         }
 
         #barcode-container {
@@ -72,27 +96,13 @@
             height: auto;
         }
 
-        .download-btn {
-            padding: 12px 20px;
-            text-decoration: none;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
+        #status-message {
+            margin-top: -15px;
+            margin-bottom: 15px;
+            color: #d9534f;
             font-weight: 600;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .download-btn:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-        }
-
-        .download-btn:active {
-            transform: translateY(0);
+            text-align: left;
+            display: none;
         }
 
         @media (max-width: 600px) {
@@ -111,7 +121,7 @@
         <h1>Gerador de Código de Barras</h1>
 
         <label for="barcode-text">Digite o texto/número:</label>
-        <input type="text" id="barcode-text" placeholder="Ex: GITHUB-12345" value="TESTE123">
+        <input type="text" id="barcode-text" placeholder="Ex: GITHUB-12345">
 
         <label for="barcode-type">Selecione o tipo de código:</label>
         <select id="barcode-type">
@@ -119,10 +129,14 @@
             <option value="CODE39">CODE 39</option>
         </select>
 
+        <button id="generate-btn">Gerar Código</button>
+
+        <p id="status-message"></p>
+
         <div id="barcode-container">
             <svg id="barcode"></svg>
         </div>
-        
+
         <button id="download-btn" class="download-btn">Baixar Código de Barras (PNG)</button>
     </div>
 
@@ -133,27 +147,48 @@
             const barcodeType = document.getElementById('barcode-type');
             const barcodeSvg = document.getElementById('barcode');
             const downloadBtn = document.getElementById('download-btn');
+            const generateBtn = document.getElementById('generate-btn');
+            const statusMessage = document.getElementById('status-message');
+
+            function showStatus(message, isError = true) {
+                statusMessage.textContent = message;
+                statusMessage.style.display = 'block';
+                statusMessage.style.color = isError ? '#d9534f' : '#337ab7';
+            }
 
             function generateBarcode() {
+                statusMessage.style.display = 'none';
+
+                let text = barcodeText.value.trim();
+                const type = barcodeType.value;
+
+                if (text === '') {
+                    barcodeSvg.innerHTML = '';
+                    showStatus("Por favor, digite um texto para gerar o código.", false);
+                    return;
+                }
+
                 try {
                     barcodeSvg.innerHTML = '';
-                    
-                    JsBarcode(barcodeSvg, barcodeText.value, {
-                        format: barcodeType.value,
+                    JsBarcode(barcodeSvg, text, {
+                        format: type,
                         lineColor: "#000000",
                         width: 2,
                         height: 100,
                         displayValue: true
                     });
+                    showStatus("Código de barras gerado. Você pode baixar a imagem.", false);
                 } catch (e) {
-                    console.error("Erro ao gerar o código de barras:", e.message);
+                    barcodeSvg.innerHTML = '';
+                    showStatus(`Erro: ${e.message}`);
                 }
             }
 
             function downloadBarcode() {
-                const svgElement = barcodeSvg.querySelector('svg');
-                if (!svgElement) {
-                    alert("Nenhum código de barras para baixar!");
+                const svgElement = barcodeSvg;
+
+                if (!svgElement || svgElement.innerHTML.trim() === '') {
+                    alert("Nenhum código de barras para baixar! Por favor, gere um primeiro.");
                     return;
                 }
 
@@ -162,15 +197,17 @@
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
                 const img = new Image();
-                
-                const svgSize = svgElement.getBoundingClientRect();
-                canvas.width = svgSize.width;
-                canvas.height = svgSize.height;
+
+                // Define largura/altura fixas para evitar corte
+                const exportWidth = 800;  // largura em px
+                const exportHeight = 200; // altura em px
+                canvas.width = exportWidth;
+                canvas.height = exportHeight;
 
                 img.onload = () => {
                     context.fillStyle = '#fff';
                     context.fillRect(0, 0, canvas.width, canvas.height);
-                    context.drawImage(img, 0, 0);
+                    context.drawImage(img, 0, 0, exportWidth, exportHeight);
 
                     const url = canvas.toDataURL('image/png');
                     const a = document.createElement('a');
@@ -185,12 +222,8 @@
                 img.src = svgUrl;
             }
 
-            barcodeText.addEventListener('input', generateBarcode);
-            barcodeType.addEventListener('change', generateBarcode);
+            generateBtn.addEventListener('click', generateBarcode);
             downloadBtn.addEventListener('click', downloadBarcode);
-
-            // Gera o código de barras inicial apenas após o DOM ser carregado
-            generateBarcode();
         });
     </script>
 </body>
