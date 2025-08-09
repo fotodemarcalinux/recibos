@@ -153,13 +153,13 @@
         const downloadJpeg = document.getElementById('download-jpeg');
         const downloadPng = document.getElementById('download-png');
         const downloadWebp = document.getElementById('download-webp');
-
+        
         function validateAndGenerate() {
             let text = barcodeText.value.trim();
             const type = barcodeType.value;
             let isValid = true;
             let errorMessage = '';
-            
+
             barcodeSvg.innerHTML = '';
             validationError.style.display = 'none';
 
@@ -167,36 +167,35 @@
                 return;
             }
 
-            switch(type) {
-                case 'EAN13':
-                    if (!/^\d{12}$/.test(text)) {
-                        isValid = false;
-                        errorMessage = 'EAN-13 deve ter exatamente 12 dígitos numéricos.';
-                    } else {
+            try {
+                switch(type) {
+                    case 'EAN13':
+                        if (!/^\d{12}$/.test(text)) {
+                            throw new Error('EAN-13 deve ter exatamente 12 dígitos numéricos.');
+                        }
                         JsBarcode(barcodeSvg, text, { format: type });
-                    }
-                    break;
-                case 'UPC':
-                    if (!/^\d{11}$/.test(text)) {
-                        isValid = false;
-                        errorMessage = 'UPC-A deve ter exatamente 11 dígitos numéricos.';
-                    } else {
+                        break;
+                    case 'UPC':
+                        if (!/^\d{11}$/.test(text)) {
+                            throw new Error('UPC-A deve ter exatamente 11 dígitos numéricos.');
+                        }
                         JsBarcode(barcodeSvg, text, { format: type });
-                    }
-                    break;
-                case 'CODE39':
-                    if (!/^[A-Z0-9\-\.\$\/\+% ]+$/.test(text.toUpperCase())) {
-                        isValid = false;
-                        errorMessage = 'CODE 39 só aceita letras maiúsculas (A-Z), números (0-9), espaço e os caracteres - . $ / + %.';
-                    } else {
+                        break;
+                    case 'CODE39':
+                        if (!/^[A-Z0-9\-\.\$\/\+% ]+$/.test(text.toUpperCase())) {
+                            throw new Error('CODE 39 só aceita letras maiúsculas (A-Z), números (0-9), espaço e os caracteres - . $ / + %.');
+                        }
                         JsBarcode(barcodeSvg, text.toUpperCase(), { format: type });
-                    }
-                    break;
-                case 'CODE128':
-                    JsBarcode(barcodeSvg, text, { format: type });
-                    break;
-                default:
-                    JsBarcode(barcodeSvg, text, { format: type });
+                        break;
+                    case 'CODE128':
+                        JsBarcode(barcodeSvg, text, { format: type });
+                        break;
+                    default:
+                        JsBarcode(barcodeSvg, text, { format: type });
+                }
+            } catch (error) {
+                isValid = false;
+                errorMessage = error.message;
             }
 
             if (!isValid) {
@@ -210,6 +209,7 @@
             if (!svgElement) return;
 
             const svgString = new XMLSerializer().serializeToString(svgElement);
+            
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
             const img = new Image();
@@ -218,8 +218,12 @@
             canvas.width = svgSize.width;
             canvas.height = svgSize.height;
 
+            // Converter SVG para imagem
             img.onload = () => {
+                context.fillStyle = '#fff'; // Adiciona um fundo branco
+                context.fillRect(0, 0, canvas.width, canvas.height);
                 context.drawImage(img, 0, 0);
+
                 const url = canvas.toDataURL(`image/${format === 'jpeg' ? 'jpeg' : format}`, 1.0);
                 const a = document.createElement('a');
                 a.href = url;
@@ -229,7 +233,9 @@
                 document.body.removeChild(a);
             };
 
-            img.src = 'data:image/svg+xml;base64,' + btoa(svgString);
+            // Codificar o SVG para o formato de URL e carregar na imagem
+            const svgUrl = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svgString)}`;
+            img.src = svgUrl;
         }
 
         barcodeText.addEventListener('input', validateAndGenerate);
@@ -247,9 +253,11 @@
             downloadImage('webp');
         });
 
-        // Gera um código de barras inicial
-        barcodeText.value = 'GITHUB-PAGES-123';
-        validateAndGenerate();
+        // Gera um código de barras inicial no carregamento da página
+        window.addEventListener('load', () => {
+            barcodeText.value = 'GITHUB-PAGES-123';
+            validateAndGenerate();
+        });
     </script>
 </body>
 </html>
