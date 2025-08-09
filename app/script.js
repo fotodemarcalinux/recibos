@@ -31,7 +31,7 @@ async function gerarHtmlPersonalizado() {
     <style>
         body { 
             font-family: 'Arial', sans-serif; 
-            background-color: #ffffff; /* Fundo branco puro */
+            background-color: #ffffff;
             margin: 0; 
             padding: 20px; 
             color: #333; 
@@ -41,11 +41,11 @@ async function gerarHtmlPersonalizado() {
         }
         .recibo-content { 
             max-width: 400px; 
-            background-color: #ffffff; /* Fundo branco puro para a div de conteúdo do recibo */
+            background-color: #ffffff;
             border: 1px solid #ffffff; 
             border-radius: 8px; 
             padding: 20px; 
-            box-shadow: none; /* Remove a sombra para evitar tom acinzentado ao gerar o JPG */
+            box-shadow: none;
             margin: auto; 
             text-align: left; 
         }
@@ -63,9 +63,9 @@ async function gerarHtmlPersonalizado() {
             max-width: 400px; 
             margin: 20px auto; 
             padding: 20px; 
-            background: #ffffff; /* Fundo branco puro para o formulário */
+            background: #ffffff;
             border-radius: 8px; 
-            box-shadow: none; /* Remove a sombra do formulário */
+            box-shadow: none;
         }
         form label { font-size: 14px; color: #4a5568; font-weight: bold; }
         form input, form textarea, form button { 
@@ -86,6 +86,34 @@ async function gerarHtmlPersonalizado() {
         form button:hover { background-color: #2b6cb0; }
         footer { margin-top: 20px; text-align: center; font-size: 12px; color: #718096; }
         footer a { color: #48bb78; text-decoration: none; font-weight: bold; }
+        .botoes-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        .botoes-container button {
+            flex: 1;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        #downloadButton {
+            background-color: #3182ce;
+        }
+        #downloadButton:hover {
+            background-color: #2b6cb0;
+        }
+        #whatsappButton {
+            background-color: #25D366;
+        }
+        #whatsappButton:hover {
+            background-color: #128C7E;
+        }
     </style>
 </head>
 <body>
@@ -129,8 +157,11 @@ async function gerarHtmlPersonalizado() {
             <img src="${barcodeBase64}" alt="Código de Barras">
         </div>
     </div>
-
-    <button id="downloadButton" style="display: none;" onclick="downloadRecibo()">Baixar Recibo</button>
+    
+    <div id="botoesRecibo" class="botoes-container" style="display: none;">
+        <button id="downloadButton" onclick="downloadRecibo()">Baixar JPEG</button>
+        <button id="whatsappButton" onclick="compartilharRecibo()">Compartilhar WhatsApp</button>
+    </div>
 
     <footer>
         Desenvolvido por <a href="https:grupo.fotodemarca.com.br" target="_blank">Grupo Foto de Marca</a> | <a href="https://bit.ly/3UIbjPt" target="_blank">Termos de Uso</a> | <a href="https://bit.ly/3UHxOEp" target="_blank">Política de Privacidade</a>
@@ -153,7 +184,7 @@ async function gerarHtmlPersonalizado() {
             document.getElementById("descricaoText").textContent = descricao;
 
             document.getElementById("recibo").style.display = "block";
-            document.getElementById("downloadButton").style.display = "block";
+            document.getElementById("botoesRecibo").style.display = "flex"; // Exibe a div com os dois botões
         }
 
         function downloadRecibo() {
@@ -162,6 +193,24 @@ async function gerarHtmlPersonalizado() {
                 link.href = canvas.toDataURL("image/jpeg");
                 link.download = "recibo.jpg";
                 link.click();
+            });
+        }
+
+        function compartilharRecibo() {
+            html2canvas(document.querySelector(".recibo-content")).then(canvas => {
+                canvas.toBlob(blob => {
+                    const file = new File([blob], "recibo.jpg", { type: "image/jpeg" });
+                    
+                    if (navigator.share) {
+                        navigator.share({
+                            files: [file],
+                            title: 'Recibo gerado',
+                            text: 'Segue seu recibo.',
+                        }).catch(error => console.log('Erro no compartilhamento', error));
+                    } else {
+                        alert("A função de compartilhamento não está disponível neste navegador. Tente em outro dispositivo ou navegador mais atual.");
+                    }
+                }, "image/jpeg");
             });
         }
     </script>
