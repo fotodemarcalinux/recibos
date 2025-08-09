@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversor de Áudio</title>
+    <title>Conversor de Áudio MP3/Opus</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -30,7 +30,7 @@
         p {
             color: #666;
         }
-        input[type="file"], select, button {
+        input[type="file"], button {
             margin: 10px 0;
             padding: 12px;
             border-radius: 5px;
@@ -75,15 +75,9 @@
 
 <div class="container">
     <h1>Conversor de Áudio</h1>
-    <p>Converta áudios (incluindo do WhatsApp) para OGG, MP3 e Opus.</p>
+    <p>Converta MP3 para Opus ou Opus para MP3.</p>
     
-    <input type="file" id="audio-input" accept="audio/*">
-    
-    <select id="format-select">
-        <option value="mp3">Converter para MP3</option>
-        <option value="ogg">Converter para OGG</option>
-        <option value="opus">Converter para Opus</option>
-    </select>
+    <input type="file" id="audio-input" accept=".mp3,.opus">
     
     <button onclick="convertAudio()">Converter e Baixar</button>
     
@@ -98,19 +92,11 @@
     const ffmpeg = createFFmpeg({ log: true });
     
     const audioInput = document.getElementById('audio-input');
-    const formatSelect = document.getElementById('format-select');
     const statusMessage = document.getElementById('status-message');
     const downloadLink = document.getElementById('download-link');
     
     let isFFmpegLoaded = false;
     
-    // Mapeamento dos formatos para codecs e tipos MIME corretos
-    const formatMap = {
-        'mp3': { codec: 'libmp3lame', mimeType: 'audio/mpeg' },
-        'ogg': { codec: 'libvorbis', mimeType: 'audio/ogg' },
-        'opus': { codec: 'libopus', mimeType: 'audio/opus' }
-    };
-
     async function loadFFmpeg() {
         if (!isFFmpegLoaded) {
             statusMessage.textContent = 'Carregando o conversor...';
@@ -129,7 +115,7 @@
         if (!isFFmpegLoaded) {
             statusMessage.textContent = 'Aguarde, o conversor ainda está carregando...';
             await loadFFmpeg();
-            if (!isFFmpegLoaded) return; // Se o carregamento falhar, para a função
+            if (!isFFmpegLoaded) return;
         }
 
         const file = audioInput.files[0];
@@ -137,24 +123,37 @@
             statusMessage.textContent = 'Por favor, selecione um arquivo de áudio.';
             return;
         }
+        
+        const inputFileExtension = file.name.split('.').pop().toLowerCase();
+        
+        let outputFormat, outputCodec, outputMimeType;
 
-        const outputFormat = formatSelect.value;
-        const inputFilename = 'input' + file.name.substring(file.name.lastIndexOf('.'));
+        if (inputFileExtension === 'mp3') {
+            outputFormat = 'opus';
+            outputCodec = 'libopus';
+            outputMimeType = 'audio/opus';
+        } else if (inputFileExtension === 'opus') {
+            outputFormat = 'mp3';
+            outputCodec = 'libmp3lame';
+            outputMimeType = 'audio/mpeg';
+        } else {
+            statusMessage.textContent = 'Formato de arquivo não suportado. Por favor, selecione um arquivo .mp3 ou .opus.';
+            return;
+        }
+
+        const inputFilename = 'input.' + inputFileExtension;
         const outputFilename = `audio_convertido.${outputFormat}`;
         
         statusMessage.textContent = `Convertendo para ${outputFormat.toUpperCase()}...`;
         downloadLink.style.display = 'none';
 
-        const { codec, mimeType } = formatMap[outputFormat];
-
         try {
             ffmpeg.FS('writeFile', inputFilename, await fetchFile(file));
             
-            // Comando FFmpeg ajustado para usar o codec correto e a taxa de bits (bitrate) para MP3
-            await ffmpeg.run('-i', inputFilename, '-c:a', codec, '-b:a', '192k', outputFilename);
+            await ffmpeg.run('-i', inputFilename, '-c:a', outputCodec, outputFilename);
             
             const data = ffmpeg.FS('readFile', outputFilename);
-            const blob = new Blob([data.buffer], { type: mimeType });
+            const blob = new Blob([data.buffer], { type: outputMimeType });
             
             const url = URL.createObjectURL(blob);
             
@@ -164,7 +163,7 @@
             statusMessage.textContent = 'Conversão concluída!';
             
         } catch (error) {
-            statusMessage.textContent = 'Ocorreu um erro durante a conversão.';
+            statusMessage.textContent = 'Ocorreu um erro durante a conversão. Verifique o console para mais detalhes.';
             console.error(error);
         }
     }
