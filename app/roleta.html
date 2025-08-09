@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roleta de Opções</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+            flex-direction: column;
+        }
+        .container {
+            text-align: center;
+        }
+        .wheel-box {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin-bottom: 30px;
+        }
+        #roulette-canvas {
+            border: 4px solid #333;
+            border-radius: 50%;
+            background-color: #f8f8f8;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .pointer {
+            position: absolute;
+            top: -20px; /* Posiciona um pouco acima da roleta */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 30px solid #dc3545; /* Cor do ponteiro */
+            z-index: 10;
+        }
+        #spin-btn {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        #spin-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        #spin-btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+            transform: translateY(0);
+        }
+        .result-box {
+            margin-top: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            min-height: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="wheel-box">
+            <canvas id="roulette-canvas" width="400" height="400"></canvas>
+            <div class="pointer"></div>
+        </div>
+        <button id="spin-btn">Girar Roleta</button>
+        <div id="result" class="result-box"></div>
+    </div>
+
+    <audio id="spin-sound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRl9vT1N..." type="audio/wav"> </audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('roulette-canvas');
+            const ctx = canvas.getContext('2d');
+            const spinBtn = document.getElementById('spin-btn');
+            const resultDiv = document.getElementById('result');
+            const audio = document.getElementById('spin-sound');
+
+            // Aqui você pode personalizar suas opções
+            const options = ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4', 'Opção 5', 'Opção 6', 'Opção 7', 'Opção 8', 'Opção 9', 'Opção 10', 'Opção 11', 'Opção 12'];
+            const numSegments = options.length;
+            const segmentAngle = (2 * Math.PI) / numSegments;
+            const colors = ['#f8b195', '#f67280', '#c06c84', '#6c5b7b', '#355c7d', '#5d9cec', '#53d769', '#ffcc00', '#ff9500', '#ff2d55', '#8a2be2', '#4169e1'];
+
+            let isSpinning = false;
+            let currentAngle = 0;
+            let velocity = 0;
+            const deceleration = 0.0005;
+            let lastClickAngle = 0;
+
+            // Função para desenhar a roleta
+            function drawRoulette() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                const radius = canvas.width / 2;
+
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(currentAngle);
+
+                for (let i = 0; i < numSegments; i++) {
+                    const startAngle = i * segmentAngle;
+                    const endAngle = (i + 1) * segmentAngle;
+
+                    // Desenhar o segmento
+                    ctx.beginPath();
+                    ctx.arc(0, 0, radius, startAngle, endAngle);
+                    ctx.lineTo(0, 0);
+                    ctx.fillStyle = colors[i % colors.length];
+                    ctx.fill();
+                    ctx.closePath();
+
+                    // Desenhar o texto
+                    ctx.save();
+                    ctx.rotate(startAngle + segmentAngle / 2);
+                    ctx.textAlign = 'right';
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 16px sans-serif';
+                    ctx.fillText(options[i], radius - 15, 5);
+                    ctx.restore();
+                }
+
+                ctx.restore();
+            }
+
+            // Função de animação
+            function animate() {
+                if (!isSpinning) {
+                    const winningIndex = (numSegments - Math.floor((currentAngle + segmentAngle / 2) / segmentAngle) % numSegments) % numSegments;
+                    resultDiv.textContent = `A opção vencedora é: ${options[winningIndex]}`;
+                    spinBtn.disabled = false;
+                    return;
+                }
+
+                currentAngle += velocity;
+                velocity -= deceleration;
+
+                // Loop para o ângulo
+                currentAngle %= (2 * Math.PI);
+
+                // Lógica do som da catraca
+                const clickThreshold = segmentAngle;
+                const currentClickIndex = Math.floor(currentAngle / clickThreshold);
+                if (currentClickIndex !== lastClickAngle) {
+                    audio.currentTime = 0;
+                    audio.play();
+                    lastClickAngle = currentClickIndex;
+                }
+
+                drawRoulette();
+
+                if (velocity <= 0) {
+                    isSpinning = false;
+                    animate(); // Chama a função uma última vez para exibir o resultado
+                } else {
+                    requestAnimationFrame(animate);
+                }
+            }
+
+            // Função para iniciar o giro
+            function spin() {
+                if (isSpinning) return;
+                
+                isSpinning = true;
+                spinBtn.disabled = true;
+                resultDiv.textContent = 'Girando...';
+
+                // Define uma velocidade inicial aleatória para o giro
+                velocity = (Math.random() * 0.1) + 0.1;
+                lastClickAngle = 0;
+                
+                requestAnimationFrame(animate);
+            }
+
+            spinBtn.addEventListener('click', spin);
+
+            // Desenha a roleta inicial
+            drawRoulette();
+        });
+    </script>
+</body>
+</html>
