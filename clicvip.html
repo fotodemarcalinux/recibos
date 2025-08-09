@@ -63,6 +63,35 @@
         form button:hover { background-color: #2b6cb0; }
         footer { margin-top: 20px; text-align: center; font-size: 12px; color: #718096; }
         footer a { color: #48bb78; text-decoration: none; font-weight: bold; }
+        /* Código novo: Estilos para os botões de compartilhamento */
+        .botoes-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        .botoes-container button {
+            flex: 1;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        #downloadButton {
+            background-color: #3182ce;
+        }
+        #downloadButton:hover {
+            background-color: #2b6cb0;
+        }
+        #whatsappButton {
+            background-color: #25D366;
+        }
+        #whatsappButton:hover {
+            background-color: #128C7E;
+        }
     </style>
 </head>
 <body>
@@ -107,7 +136,10 @@
         </div>
     </div>
 
-    <button id="downloadButton" style="display: none;" onclick="downloadRecibo()">Baixar Recibo</button>
+    <div id="botoesRecibo" class="botoes-container" style="display: none;">
+        <button id="downloadButton" onclick="downloadRecibo()">Baixar JPEG</button>
+        <button id="whatsappButton" onclick="compartilharRecibo()">Compartilhar WhatsApp</button>
+    </div>
 
     <footer>
         Desenvolvido por <a href="https:grupo.fotodemarca.com.br" target="_blank">Grupo Foto de Marca</a> | <a href="https://bit.ly/3UIbjPt" target="_blank">Termos de Uso</a> | <a href="https://bit.ly/3UHxOEp" target="_blank">Política de Privacidade</a>
