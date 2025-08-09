@@ -60,9 +60,10 @@
             transition: background-color 0.3s ease; 
             font-weight: bold; 
         }
-        form button:hover { background-color: #2b6cb0; }
+form button:hover { background-color: #2b6cb0; }
         footer { margin-top: 20px; text-align: center; font-size: 12px; color: #718096; }
         footer a { color: #48bb78; text-decoration: none; font-weight: bold; }
+        /* Código novo: Estilos para os botões de compartilhamento */
         .botoes-container {
             display: flex;
             justify-content: space-between;
@@ -94,105 +95,6 @@
     </style>
 </head>
 <body>
-
-    <h2>Festa Boa Fotografias</h2>
-    <h3>Preencha os dados do recibo</h3>
-    <form id="reciboForm">
-        <label>Data (DD/MM/AAAA):</label>
-        <input type="date" id="dataRecibo" required><br>
-        <label>Recebi de:</label>
-        <input type="text" id="recebiDe" required><br>
-        <label>A importância de R$:</label>
-        <input type="number" id="valor" required><br>
-        <label>Referente a:</label>
-        <textarea id="descricao" rows="2" required></textarea><br>
-        <button type="button" onclick="gerarRecibo()">Gerar Recibo</button>
-    </form>
-
-    <div id="recibo" class="recibo-content" style="display: none;">
-        <div class="recibo-header">
-            <img src="data:image/png;base64,iVBOR...AAAAAAAAAAAAAAYBGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAEAAD//wMAMG+B8Im5e2EAAAAASUVORK5CYII=" alt="Logo da Empresa" class="logo">
-            <div class="empresa-info">
-                <strong style="text-transform: uppercase;">Festa Boa Fotografias</strong><br>
-                Rua Japaratuba, 502 - Santo Antonio - Aracaju/SE<br>
-                <strong>FONE:</strong> <strong>(79) 99896-5081</strong>
-            </div>
-        </div>
-        <h2 class="recibo-title">RECIBO</h2>
-        <div class="dashed-line"></div>
-        <p id="dataReciboText">Data: </p>
-        <div class="dashed-line"></div>
-        <div class="recibo-body">
-            <p><strong>Recebi de:</strong> <span id="recebiDeText"></span></p>
-            <p><strong>A importância de R$:</strong> <span id="valorText"></span></p>
-            <p><strong>Referente a:</strong> <span id="descricaoText"></span></p>
-            <div class="dashed-line"></div>
-        </div>
-        <p class="info-title">INFORMAÇÕES IMPORTANTES</p>
-        <p class="info-text">Em conformidade com a legislação vigente, este recibo é suficiente para comprovar a prestação de serviços e pagamentos efetuados.</p>
-        <div class="barcode" style="text-align: center;">
-            <img src="data:image/webp;base64,UklGRjYMAABXRUJQVlA4WAoAAAAgAAAA0wEAQQAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA....6k33Kxm35svufpo4eKXD7D9KvsoOxxOPAo6zyD7DL2I6xRtpwp8PIjOQAAAAA=" alt="Código de Barras">
-        </div>
-    </div>
-    
-    <div id="botoesRecibo" class="botoes-container" style="display: none;">
-        <button id="downloadButton" onclick="downloadRecibo()">Baixar JPEG</button>
-        <button id="whatsappButton" onclick="compartilharRecibo()">Compartilhar WhatsApp</button>
-    </div>
-
-    <footer>
-        Desenvolvido por <a href="https:grupo.fotodemarca.com.br" target="_blank">Grupo Foto de Marca</a> | <a href="https://bit.ly/3UIbjPt" target="_blank">Termos de Uso</a> | <a href="https://bit.ly/3UHxOEp" target="_blank">Política de Privacidade</a>
-    </footer>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script>
-        function gerarRecibo() {
-            const data = document.getElementById("dataRecibo").value;
-            const recebiDe = document.getElementById("recebiDe").value;
-            const valor = document.getElementById("valor").value;
-            const descricao = document.getElementById("descricao").value;
-
-            const [year, month, day] = data.split("-");
-            const formattedDate = `${day}/${month}/${year}`;
-
-            document.getElementById("dataReciboText").textContent = "Data: " + formattedDate;
-            document.getElementById("recebiDeText").textContent = recebiDe;
-            document.getElementById("valorText").textContent = valor;
-            document.getElementById("descricaoText").textContent = descricao;
-
-            document.getElementById("recibo").style.display = "block";
-            document.getElementById("botoesRecibo").style.display = "flex"; // Exibe a div com os dois botões
-        }
-
-        function downloadRecibo() {
-            html2canvas(document.querySelector(".recibo-content")).then(canvas => {
-                const link = document.createElement("a");
-                link.href = canvas.toDataURL("image/jpeg");
-                link.download = "recibo.jpg";
-                link.click();
-            });
-        }
-
-        function compartilharRecibo() {
-            html2canvas(document.querySelector(".recibo-content")).then(canvas => {
-                canvas.toBlob(blob => {
-                    const file = new File([blob], "recibo.jpg", { type: "image/jpeg" });
-                    
-                    if (navigator.share) {
-                        navigator.share({
-                            files: [file],
-                            title: 'Recibo gerado',
-                            text: 'Segue seu recibo.',
-                        }).catch(error => console.log('Erro no compartilhamento', error));
-                    } else {
-                        alert("A função de compartilhamento não está disponível neste navegador. Tente em outro dispositivo ou navegador mais atual.");
-                    }
-                }, "image/jpeg");
-            });
-        }
-    </script>
-</body>
-</html>
 
     <h2>Festa Boa Fotografias</h2>
     <h3>Preencha os dados do recibo</h3>
