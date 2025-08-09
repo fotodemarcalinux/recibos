@@ -73,6 +73,10 @@
             margin-bottom: 10px;
         }
 
+        .download-btn-webp {
+            background-color: #38c716;
+        }
+
         button:hover {
             background-color: #0056b3;
             transform: translateY(-2px);
@@ -137,7 +141,8 @@
             <svg id="barcode"></svg>
         </div>
 
-        <button id="download-btn" class="download-btn">Baixar Código de Barras (PNG)</button>
+        <button id="download-btn-png">Baixar Código (PNG)</button>
+        <button id="download-btn-webp" class="download-btn-webp">Baixar Código (WebP)</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
@@ -146,7 +151,8 @@
             const barcodeText = document.getElementById('barcode-text');
             const barcodeType = document.getElementById('barcode-type');
             const barcodeSvg = document.getElementById('barcode');
-            const downloadBtn = document.getElementById('download-btn');
+            const downloadBtnPng = document.getElementById('download-btn-png');
+            const downloadBtnWebp = document.getElementById('download-btn-webp');
             const generateBtn = document.getElementById('generate-btn');
             const statusMessage = document.getElementById('status-message');
 
@@ -158,7 +164,6 @@
 
             function generateBarcode() {
                 statusMessage.style.display = 'none';
-
                 let text = barcodeText.value.trim();
                 const type = barcodeType.value;
 
@@ -184,7 +189,7 @@
                 }
             }
 
-            function downloadBarcode() {
+            function downloadBarcode(format) {
                 const svgElement = barcodeSvg;
 
                 if (!svgElement || svgElement.innerHTML.trim() === '') {
@@ -193,14 +198,12 @@
                 }
 
                 const svgString = new XMLSerializer().serializeToString(svgElement);
-                
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
                 const img = new Image();
 
-                // Define largura/altura fixas para evitar corte
-                const exportWidth = 800;  // largura em px
-                const exportHeight = 200; // altura em px
+                const exportWidth = 800;
+                const exportHeight = 200;
                 canvas.width = exportWidth;
                 canvas.height = exportHeight;
 
@@ -209,10 +212,20 @@
                     context.fillRect(0, 0, canvas.width, canvas.height);
                     context.drawImage(img, 0, 0, exportWidth, exportHeight);
 
-                    const url = canvas.toDataURL('image/png');
+                    let url;
+                    let filename;
+
+                    if (format === 'webp') {
+                        url = canvas.toDataURL('image/webp');
+                        filename = 'codigo-barras.webp';
+                    } else {
+                        url = canvas.toDataURL('image/png');
+                        filename = 'codigo-barras.png';
+                    }
+                    
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = 'codigo-barras.png';
+                    a.download = filename;
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
@@ -223,7 +236,8 @@
             }
 
             generateBtn.addEventListener('click', generateBarcode);
-            downloadBtn.addEventListener('click', downloadBarcode);
+            downloadBtnPng.addEventListener('click', () => downloadBarcode('png'));
+            downloadBtnWebp.addEventListener('click', () => downloadBarcode('webp'));
         });
     </script>
 </body>
