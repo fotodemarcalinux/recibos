@@ -128,71 +128,70 @@
 
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <script>
-        const barcodeText = document.getElementById('barcode-text');
-        const barcodeType = document.getElementById('barcode-type');
-        const barcodeSvg = document.getElementById('barcode');
-        const downloadBtn = document.getElementById('download-btn');
+        document.addEventListener('DOMContentLoaded', () => {
+            const barcodeText = document.getElementById('barcode-text');
+            const barcodeType = document.getElementById('barcode-type');
+            const barcodeSvg = document.getElementById('barcode');
+            const downloadBtn = document.getElementById('download-btn');
 
-        function generateBarcode() {
-            try {
-                // Limpa o SVG antes de gerar
-                barcodeSvg.innerHTML = '';
+            function generateBarcode() {
+                try {
+                    barcodeSvg.innerHTML = '';
+                    
+                    JsBarcode(barcodeSvg, barcodeText.value, {
+                        format: barcodeType.value,
+                        lineColor: "#000000",
+                        width: 2,
+                        height: 100,
+                        displayValue: true
+                    });
+                } catch (e) {
+                    console.error("Erro ao gerar o código de barras:", e.message);
+                }
+            }
+
+            function downloadBarcode() {
+                const svgElement = barcodeSvg.querySelector('svg');
+                if (!svgElement) {
+                    alert("Nenhum código de barras para baixar!");
+                    return;
+                }
+
+                const svgString = new XMLSerializer().serializeToString(svgElement);
                 
-                JsBarcode(barcodeSvg, barcodeText.value, {
-                    format: barcodeType.value,
-                    lineColor: "#000000",
-                    width: 2,
-                    height: 100,
-                    displayValue: true
-                });
-            } catch (e) {
-                console.error("Erro ao gerar o código de barras:", e.message);
-                // Opcional: você pode exibir uma mensagem de erro para o usuário aqui
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                const img = new Image();
+                
+                const svgSize = svgElement.getBoundingClientRect();
+                canvas.width = svgSize.width;
+                canvas.height = svgSize.height;
+
+                img.onload = () => {
+                    context.fillStyle = '#fff';
+                    context.fillRect(0, 0, canvas.width, canvas.height);
+                    context.drawImage(img, 0, 0);
+
+                    const url = canvas.toDataURL('image/png');
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'codigo-barras.png';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                };
+
+                const svgUrl = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svgString)}`;
+                img.src = svgUrl;
             }
-        }
 
-        function downloadBarcode() {
-            const svgElement = barcodeSvg.querySelector('svg');
-            if (!svgElement) {
-                alert("Nenhum código de barras para baixar!");
-                return;
-            }
+            barcodeText.addEventListener('input', generateBarcode);
+            barcodeType.addEventListener('change', generateBarcode);
+            downloadBtn.addEventListener('click', downloadBarcode);
 
-            const svgString = new XMLSerializer().serializeToString(svgElement);
-            
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            const img = new Image();
-            
-            // Define as dimensões do canvas baseadas no SVG
-            const svgSize = svgElement.getBoundingClientRect();
-            canvas.width = svgSize.width;
-            canvas.height = svgSize.height;
-
-            img.onload = () => {
-                context.fillStyle = '#fff';
-                context.fillRect(0, 0, canvas.width, canvas.height);
-                context.drawImage(img, 0, 0);
-
-                const url = canvas.toDataURL('image/png');
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'codigo-barras.png';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            };
-
-            const svgUrl = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svgString)}`;
-            img.src = svgUrl;
-        }
-
-        barcodeText.addEventListener('input', generateBarcode);
-        barcodeType.addEventListener('change', generateBarcode);
-        downloadBtn.addEventListener('click', downloadBarcode);
-
-        // Gera o código de barras inicial apenas após a página carregar
-        window.addEventListener('load', generateBarcode);
+            // Gera o código de barras inicial apenas após o DOM ser carregado
+            generateBarcode();
+        });
     </script>
 </body>
 </html>
