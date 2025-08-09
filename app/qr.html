@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de QR Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+        }
+        h1 {
+            color: #333;
+        }
+        input[type="text"], select, button {
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #qrcode-container {
+            margin-top: 20px;
+            padding: 10px; /* Padding for the white border effect */
+            background-color: #fff;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        #qrcode-img {
+            max-width: 100%;
+            height: auto;
+            display: none;
+        }
+        #download-options {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            display: none;
+        }
+        #download-options a {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        #download-options a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Gerador de QR Code</h1>
+    <p>Digite o texto ou URL para gerar o seu QR Code:</p>
+    
+    <input type="text" id="text-input" placeholder="Ex: https://google.com ou seu texto aqui">
+    
+    <button onclick="generateQRCode()">Gerar QR Code</button>
+    
+    <div id="qrcode-container">
+        </div>
+
+    <div id="download-options">
+        <a id="download-png" href="#" download="qrcode.png">Baixar PNG</a>
+        <a id="download-jpg" href="#" download="qrcode.jpg">Baixar JPG</a>
+        <a id="download-webp" href="#" download="qrcode.webp">Baixar WebP</a>
+    </div>
+
+    <p id="error-message" style="color: red;"></p>
+</div>
+
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script>
+let qrcodeInstance = null;
+const borderSize = 20; // Tamanho da borda branca
+
+function generateQRCode() {
+    const textInput = document.getElementById('text-input').value;
+    const qrcodeContainer = document.getElementById('qrcode-container');
+    const downloadOptions = document.getElementById('download-options');
+    const errorMessage = document.getElementById('error-message');
+
+    errorMessage.textContent = '';
+    
+    if (textInput === '') {
+        errorMessage.textContent = 'Por favor, digite algum texto ou URL.';
+        qrcodeContainer.innerHTML = '';
+        downloadOptions.style.display = 'none';
+        return;
+    }
+
+    // Limpar o container para gerar um novo QR Code
+    qrcodeContainer.innerHTML = '';
+    
+    // Gerar o QR Code
+    qrcodeInstance = new QRCode(qrcodeContainer, {
+        text: textInput,
+        width: 256,
+        height: 256,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+
+    // Esperar um pouco para que o QR Code seja renderizado
+    setTimeout(() => {
+        // Encontrar o canvas gerado pela biblioteca
+        const canvas = qrcodeContainer.querySelector('canvas');
+        if (canvas) {
+            // Criar um novo canvas para adicionar a borda
+            const finalCanvas = document.createElement('canvas');
+            const finalCtx = finalCanvas.getContext('2d');
+            
+            finalCanvas.width = canvas.width + borderSize * 2;
+            finalCanvas.height = canvas.height + borderSize * 2;
+            
+            // Preencher o fundo com a cor da borda (branco)
+            finalCtx.fillStyle = '#ffffff';
+            finalCtx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+            
+            // Desenhar o QR Code no centro do novo canvas
+            finalCtx.drawImage(canvas, borderSize, borderSize);
+            
+            // Substituir o canvas original pelo novo com a borda
+            qrcodeContainer.innerHTML = '';
+            qrcodeContainer.appendChild(finalCanvas);
+            
+            // Atualizar os links de download
+            updateDownloadLinks(finalCanvas);
+            downloadOptions.style.display = 'flex';
+        } else {
+            errorMessage.textContent = 'Erro ao gerar o QR Code.';
+        }
+    }, 100);
+}
+
+function updateDownloadLinks(canvas) {
+    const downloadPng = document.getElementById('download-png');
+    const downloadJpg = document.getElementById('download-jpg');
+    const downloadWebp = document.getElementById('download-webp');
+    
+    const baseFilename = 'qrcode';
+
+    // Link para PNG
+    const pngDataUrl = canvas.toDataURL('image/png');
+    downloadPng.href = pngDataUrl;
+    downloadPng.download = `${baseFilename}.png`;
+    
+    // Link para JPG
+    const jpgDataUrl = canvas.toDataURL('image/jpeg', 1.0); // 1.0 é a qualidade máxima
+    downloadJpg.href = jpgDataUrl;
+    downloadJpg.download = `${baseFilename}.jpg`;
+
+    // Link para WebP
+    const webpDataUrl = canvas.toDataURL('image/webp', 1.0); // 1.0 é a qualidade máxima
+    downloadWebp.href = webpDataUrl;
+    downloadWebp.download = `${baseFilename}.webp`;
+}
+</script>
+
+</body>
+</html>
