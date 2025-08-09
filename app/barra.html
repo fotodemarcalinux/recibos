@@ -73,7 +73,6 @@
         }
 
         .download-btn {
-            flex-grow: 1;
             padding: 12px 20px;
             text-decoration: none;
             color: #fff;
@@ -148,7 +147,7 @@
                 });
             } catch (e) {
                 console.error("Erro ao gerar o código de barras:", e.message);
-                // Opcional: exiba uma mensagem de erro na interface
+                // Opcional: você pode exibir uma mensagem de erro para o usuário aqui
             }
         }
 
@@ -165,6 +164,7 @@
             const context = canvas.getContext('2d');
             const img = new Image();
             
+            // Define as dimensões do canvas baseadas no SVG
             const svgSize = svgElement.getBoundingClientRect();
             canvas.width = svgSize.width;
             canvas.height = svgSize.height;
@@ -191,7 +191,7 @@
         barcodeType.addEventListener('change', generateBarcode);
         downloadBtn.addEventListener('click', downloadBarcode);
 
-        // Gera o código de barras inicial
+        // Gera o código de barras inicial apenas após a página carregar
         window.addEventListener('load', generateBarcode);
     </script>
 </body>
