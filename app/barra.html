@@ -78,6 +78,33 @@
             margin-bottom: 10px;
             display: none;
         }
+        
+        .download-options {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .download-options a {
+            flex-grow: 1;
+            padding: 12px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.2s;
+            font-weight: 600;
+        }
+
+        .download-options a:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .download-options a:active {
+            transform: translateY(0);
+        }
 
         @media (max-width: 600px) {
             .container {
@@ -109,6 +136,12 @@
         <div id="barcode-container">
             <svg id="barcode"></svg>
         </div>
+        
+        <div class="download-options">
+            <a href="#" id="download-jpeg">Download JPEG</a>
+            <a href="#" id="download-png">Download PNG</a>
+            <a href="#" id="download-webp">Download WebP</a>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
@@ -117,14 +150,16 @@
         const barcodeType = document.getElementById('barcode-type');
         const barcodeSvg = document.getElementById('barcode');
         const validationError = document.getElementById('validation-error');
+        const downloadJpeg = document.getElementById('download-jpeg');
+        const downloadPng = document.getElementById('download-png');
+        const downloadWebp = document.getElementById('download-webp');
 
         function validateAndGenerate() {
             let text = barcodeText.value.trim();
             const type = barcodeType.value;
             let isValid = true;
             let errorMessage = '';
-
-            // Limpa o SVG antes de gerar um novo
+            
             barcodeSvg.innerHTML = '';
             validationError.style.display = 'none';
 
@@ -138,7 +173,6 @@
                         isValid = false;
                         errorMessage = 'EAN-13 deve ter exatamente 12 dígitos numéricos.';
                     } else {
-                        // A JsBarcode adiciona o 13º dígito de validação
                         JsBarcode(barcodeSvg, text, { format: type });
                     }
                     break;
@@ -147,7 +181,6 @@
                         isValid = false;
                         errorMessage = 'UPC-A deve ter exatamente 11 dígitos numéricos.';
                     } else {
-                        // A JsBarcode adiciona o 12º dígito de validação
                         JsBarcode(barcodeSvg, text, { format: type });
                     }
                     break;
@@ -160,11 +193,9 @@
                     }
                     break;
                 case 'CODE128':
-                    // CODE128 suporta a maioria dos caracteres, então não precisamos de validação complexa
                     JsBarcode(barcodeSvg, text, { format: type });
                     break;
                 default:
-                    // Caso padrão para outros formatos
                     JsBarcode(barcodeSvg, text, { format: type });
             }
 
@@ -173,19 +204,52 @@
                 validationError.style.display = 'block';
             }
         }
+        
+        function downloadImage(format) {
+            const svgElement = barcodeSvg.querySelector('svg');
+            if (!svgElement) return;
+
+            const svgString = new XMLSerializer().serializeToString(svgElement);
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            const img = new Image();
+
+            const svgSize = svgElement.getBoundingClientRect();
+            canvas.width = svgSize.width;
+            canvas.height = svgSize.height;
+
+            img.onload = () => {
+                context.drawImage(img, 0, 0);
+                const url = canvas.toDataURL(`image/${format === 'jpeg' ? 'jpeg' : format}`, 1.0);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `barcode.${format}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+
+            img.src = 'data:image/svg+xml;base64,' + btoa(svgString);
+        }
 
         barcodeText.addEventListener('input', validateAndGenerate);
         barcodeType.addEventListener('change', validateAndGenerate);
+        downloadJpeg.addEventListener('click', (e) => {
+            e.preventDefault();
+            downloadImage('jpeg');
+        });
+        downloadPng.addEventListener('click', (e) => {
+            e.preventDefault();
+            downloadImage('png');
+        });
+        downloadWebp.addEventListener('click', (e) => {
+            e.preventDefault();
+            downloadImage('webp');
+        });
 
         // Gera um código de barras inicial
-        barcodeText.value = '123456789012';
-        generateInitialBarcode();
-        function generateInitialBarcode() {
-            const text = barcodeText.value;
-            if (text) {
-                JsBarcode(barcodeSvg, text, { format: barcodeType.value });
-            }
-        }
+        barcodeText.value = 'GITHUB-PAGES-123';
+        validateAndGenerate();
     </script>
 </body>
 </html>
