@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,7 +7,7 @@
     <style>
         body { 
             font-family: 'Arial', sans-serif; 
-            background-color: #ffffff; /* Fundo branco puro */
+            background-color: #ffffff;
             margin: 0; 
             padding: 20px; 
             color: #333; 
@@ -18,11 +17,11 @@
         }
         .recibo-content { 
             max-width: 400px; 
-            background-color: #ffffff; /* Fundo branco puro para a div de conteúdo do recibo */
+            background-color: #ffffff;
             border: 1px solid #ffffff; 
             border-radius: 8px; 
             padding: 20px; 
-            box-shadow: none; /* Remove a sombra para evitar tom acinzentado ao gerar o JPG */
+            box-shadow: none;
             margin: auto; 
             text-align: left; 
         }
@@ -40,9 +39,9 @@
             max-width: 400px; 
             margin: 20px auto; 
             padding: 20px; 
-            background: #ffffff; /* Fundo branco puro para o formulário */
+            background: #ffffff;
             border-radius: 8px; 
-            box-shadow: none; /* Remove a sombra do formulário */
+            box-shadow: none;
         }
         form label { font-size: 14px; color: #4a5568; font-weight: bold; }
         form input, form textarea, form button { 
@@ -60,10 +59,9 @@
             transition: background-color 0.3s ease; 
             font-weight: bold; 
         }
-form button:hover { background-color: #2b6cb0; }
+        form button:hover { background-color: #2b6cb0; }
         footer { margin-top: 20px; text-align: center; font-size: 12px; color: #718096; }
         footer a { color: #48bb78; text-decoration: none; font-weight: bold; }
-        /* Código novo: Estilos para os botões de compartilhamento */
         .botoes-container {
             display: flex;
             justify-content: space-between;
@@ -135,7 +133,7 @@ form button:hover { background-color: #2b6cb0; }
             <img src="data:image/webp;base64,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" alt="Código de Barras">
         </div>
     </div>
-
+    
     <div id="botoesRecibo" class="botoes-container" style="display: none;">
         <button id="downloadButton" onclick="downloadRecibo()">Baixar JPEG</button>
         <button id="whatsappButton" onclick="compartilharRecibo()">Compartilhar WhatsApp</button>
@@ -162,7 +160,7 @@ form button:hover { background-color: #2b6cb0; }
             document.getElementById("descricaoText").textContent = descricao;
 
             document.getElementById("recibo").style.display = "block";
-            document.getElementById("downloadButton").style.display = "block";
+            document.getElementById("botoesRecibo").style.display = "flex"; // Exibe a div com os dois botões
         }
 
         function downloadRecibo() {
@@ -171,6 +169,24 @@ form button:hover { background-color: #2b6cb0; }
                 link.href = canvas.toDataURL("image/jpeg");
                 link.download = "recibo.jpg";
                 link.click();
+            });
+        }
+
+        function compartilharRecibo() {
+            html2canvas(document.querySelector(".recibo-content")).then(canvas => {
+                canvas.toBlob(blob => {
+                    const file = new File([blob], "recibo.jpg", { type: "image/jpeg" });
+                    
+                    if (navigator.share) {
+                        navigator.share({
+                            files: [file],
+                            title: 'Recibo gerado',
+                            text: 'Segue seu recibo.',
+                        }).catch(error => console.log('Erro no compartilhamento', error));
+                    } else {
+                        alert("A função de compartilhamento não está disponível neste navegador. Tente em outro dispositivo ou navegador mais atual.");
+                    }
+                }, "image/jpeg");
             });
         }
     </script>
