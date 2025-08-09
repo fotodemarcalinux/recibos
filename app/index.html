@@ -1,34 +1,133 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de HTML para Recibos</title>
+    <title>Conversor de Imagens</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 80%;
+            max-width: 500px;
+        }
+        h1 {
+            color: #333;
+        }
+        input[type="file"], select, button {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #output {
+            margin-top: 20px;
+            display: none;
+        }
+        #downloadLink {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        #downloadLink:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
-<body style="font-family: 'Arial', sans-serif; background-color: #ffffff; display: flex; flex-direction: column; align-items: center; margin: 0; padding: 20px; color: #333;">
-    <h2 style="color: #4a5568; font-size: 24px; font-weight: bold; margin-bottom: 20px;">Gerador de HTML para Recibo Offline</h2>
-    <form id="empresaForm">
-        <label>Nome da Empresa:</label>
-        <input type="text" id="nomeEmpresa" class="form-field" required style="width: 100%; max-width: 400px; margin-bottom: 10px; padding: 8px; font-size: 14px; border: 1px solid #cbd5e0; border-radius: 5px;"><br>
+<body>
 
-        <label>Endereço:</label>
-        <input type="text" id="endereco" class="form-field" required style="width: 100%; max-width: 400px; margin-bottom: 10px; padding: 8px; font-size: 14px; border: 1px solid #cbd5e0; border-radius: 5px;"><br>
+<div class="container">
+    <h1>Conversor de Imagens</h1>
+    <p>Selecione uma imagem (JPG, PNG, WebP) e converta para outro formato.</p>
 
-        <label>Telefone:</label>
-        <input type="text" id="telefone" class="form-field" required style="width: 100%; max-width: 400px; margin-bottom: 10px; padding: 8px; font-size: 14px; border: 1px solid #cbd5e0; border-radius: 5px;"><br>
+    <input type="file" id="imageInput" accept="image/jpeg, image/png, image/webp">
 
-        <label>Logo da Empresa (PNG):</label>
-        <input type="file" id="logoUpload" class="form-field" accept="image/png" required style="width: 100%; max-width: 400px; margin-bottom: 10px; padding: 8px; font-size: 14px; border: 1px solid #cbd5e0; border-radius: 5px;"><br>
+    <select id="formatSelect">
+        <option value="image/jpeg">Converter para JPG</option>
+        <option value="image/png">Converter para PNG</option>
+        <option value="image/webp">Converter para WebP</option>
+    </select>
 
-        <label>Código de Barras:</label>
-        <input type="file" id="barcodeUpload" class="form-field" accept="image/webp" required style="width: 100%; max-width: 400px; margin-bottom: 10px; padding: 8px; font-size: 14px; border: 1px solid #cbd5e0; border-radius: 5px;"><br>
+    <button onclick="convertImage()">Converter e Baixar</button>
 
-        <button type="button" onclick="gerarHtmlPersonalizado()" style="padding: 10px 20px; background-color: #3182ce; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;"
-            onmouseover="this.style.backgroundColor='#2b6cb0'" onmouseout="this.style.backgroundColor='#3182ce'">Gerar HTML Personalizado</button>
-    </form>
+    <div id="output">
+        <p>Conversão concluída! Baixe sua imagem:</p>
+        <a id="downloadLink" href="#" download>Baixar Imagem</a>
+    </div>
 
-    <a id="downloadLink" style="display: none; margin-top: 20px; text-decoration: none; color: #48bb78; font-weight: bold;">Baixar HTML Personalizado</a>
+    <p id="errorMsg" style="color: red;"></p>
+</div>
 
-    <script src="script.js"></script>
+<script>
+async function convertImage() {
+    const fileInput = document.getElementById('imageInput');
+    const formatSelect = document.getElementById('formatSelect');
+    const outputDiv = document.getElementById('output');
+    const downloadLink = document.getElementById('downloadLink');
+    const errorMsg = document.getElementById('errorMsg');
+
+    errorMsg.textContent = '';
+    outputDiv.style.display = 'none';
+
+    if (fileInput.files.length === 0) {
+        errorMsg.textContent = 'Por favor, selecione uma imagem primeiro.';
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const newFormat = formatSelect.value;
+    const newFileName = file.name.split('.').slice(0, -1).join('.') + '.' + newFormat.split('/')[1];
+
+    try {
+        const image = await createImageBitmap(file);
+        const canvas = document.createElement('canvas');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(image, 0, 0);
+
+        canvas.toBlob(blob => {
+            const url = URL.createObjectURL(blob);
+            downloadLink.href = url;
+            downloadLink.download = newFileName;
+            outputDiv.style.display = 'block';
+        }, newFormat, 1.0); // 1.0 é a qualidade para JPG/WebP, 0-1
+    } catch (error) {
+        errorMsg.textContent = 'Ocorreu um erro durante a conversão. Tente novamente.';
+        console.error('Erro na conversão:', error);
+    }
+}
+</script>
+
 </body>
 </html>
