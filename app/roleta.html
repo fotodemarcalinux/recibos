@@ -32,14 +32,14 @@
         }
         .pointer {
             position: absolute;
-            top: -20px; /* Posiciona um pouco acima da roleta */
+            top: 0; /* Posição corrigida para o topo da roleta */
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
             border-left: 20px solid transparent;
             border-right: 20px solid transparent;
-            border-bottom: 30px solid #dc3545; /* Cor do ponteiro */
+            border-top: 30px solid #dc3545; /* Alterado para border-top para apontar para baixo */
             z-index: 10;
         }
         #spin-btn {
@@ -84,7 +84,8 @@
     </div>
 
     <audio id="spin-sound" preload="auto">
-        <source src="data:audio/wav;base64,UklGRl9vT1N..." type="audio/wav"> </audio>
+        <source src="data:audio/wav;base64,UklGRtOBAABXQVZFZm10IBAAAAABAAEARKAAABAAZGF0YUCAAADAAAADAAAAAAAAABc4AABbEAAAWQAAACWAAAAnQAAANsAAAC9AAAAkAAAAOIAAAAfAAAAugAAAK4AAABVAAAAnAAAAFIAAADdAAAAGgAAAPAAAADwAAAA3wAAAOwAAADwAAAATQAAAKoAAAAQAAAA4wAAAEkAAAAkAAAAfAAAACgAAAHgAAAAjAAAAyAAAACoAAADYAAAACQAAABcAAAADAAAAJwAAAAcAAAAJAAAAEwAAAAIAAAAMAAAAAAAAAA0AAAAEAAAAEwAAAAMAAAACwAAAAkAAAAJAAAAHwAAAA8AAAAbAAAAAAAAAABnAAAAMQAAAG0AAAA+AAAAZQAAADkAAABhAAAARQAAAHwAAABHAAAAcAAAADMAAAApAAAARgAAAB8AAABWAAAATAAAAHsAAABMAAAAcAAAADcAAAB4AAAARQAAAJAAAABbAAAAXAAAAGkAAAAbAAAAgAAAAGQAAAB7AAAAWgAAAHoAAABhAAAAXAAAAC0AAACBAAAAagAAAEEAAABQAAAAVQAAAGsAAABVAAAAZQAAAFsAAADCAAAAaQAAAGYAAABzAAAAcgAAAHYAAAB/AAAAtwAAAHsAAADBAAAAbgAAAGsAAAB3AAAAVQAAAHgAAABpAAAAWQAAAG0AAABoAAAAZAAAAGYAAABtAAAATgAAAFsAAABhAAAAawAAAJ0AAAB9AAAAtwAAACkAAAB2AAAASgAAAEgAAABeAAAAPwAAACgAAABQAAAATQAAAKAAAABWAAAAoAAAAFkAAABjAAAAVAAAAIYAAABdAAAAoQAAACgAAAB5AAAAEQAAAGYAAABOAAAAZAAAAHwAAAA4AAAAZgAAAFgAAABmAAAASgAAAJcAAAB1AAAApAAAACwAAABUAAAAagAAAEsAAABdAAAAWAAAABwAAADoAAAAYwAAAHwAAADgAAAAPAAAAPAAAADkAAABkAAAAEwAAAJYAAAAxAAAAPAAAABsAAAA0AAAADAAAABoAAAAKAAAAMQAAAAcAAAAaAAAADgAAABIAAAALAAAAEgAAAAwAAAALAAAADQAAAAIAAAAFAAAAAwAAAAMAAAADgAAAAgAAAAIAAAAAwAAAAMAAAADAAAAAIAAAAAAAAADAAAAAAAAAARAAAAAQAAAAMAAAAEAAAAAQAAAAA=
+    </audio>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -145,6 +146,7 @@
             // Função de animação
             function animate() {
                 if (!isSpinning) {
+                    // Calcula e exibe o resultado quando a roleta para
                     const winningIndex = (numSegments - Math.floor((currentAngle + segmentAngle / 2) / segmentAngle) % numSegments) % numSegments;
                     resultDiv.textContent = `A opção vencedora é: ${options[winningIndex]}`;
                     spinBtn.disabled = false;
@@ -154,14 +156,14 @@
                 currentAngle += velocity;
                 velocity -= deceleration;
 
-                // Loop para o ângulo
+                // Mantém o ângulo dentro de 0 e 2 * PI
                 currentAngle %= (2 * Math.PI);
 
                 // Lógica do som da catraca
                 const clickThreshold = segmentAngle;
                 const currentClickIndex = Math.floor(currentAngle / clickThreshold);
                 if (currentClickIndex !== lastClickAngle) {
-                    audio.currentTime = 0;
+                    audio.currentTime = 0; // Reinicia o som para que possa ser tocado rapidamente
                     audio.play();
                     lastClickAngle = currentClickIndex;
                 }
@@ -192,6 +194,14 @@
             }
 
             spinBtn.addEventListener('click', spin);
+            
+            // Toca um som mudo na primeira interação para contornar políticas de áudio dos navegadores
+            spinBtn.addEventListener('click', () => {
+                audio.volume = 0;
+                audio.play();
+                audio.volume = 1;
+            }, { once: true });
+
 
             // Desenha a roleta inicial
             drawRoulette();
