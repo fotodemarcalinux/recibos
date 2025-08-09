@@ -85,12 +85,11 @@
     <a id="download-link" href="#" download>Baixar Áudio</a>
 </div>
 
-<script src="./js/ffmpeg-core.js"></script>
+<script src="ffmpeg.min.js"></script>
 
 <script>
     const { createFFmpeg, fetchFile } = FFmpeg;
-    // O corePath aponta para a pasta onde os arquivos foram salvos
-    const ffmpeg = createFFmpeg({ log: true, corePath: './js/ffmpeg-core.js' });
+    const ffmpeg = createFFmpeg({ log: true });
     
     const audioInput = document.getElementById('audio-input');
     const statusMessage = document.getElementById('status-message');
@@ -106,7 +105,7 @@
                 isFFmpegLoaded = true;
                 statusMessage.textContent = 'Conversor pronto!';
             } catch (error) {
-                statusMessage.textContent = 'Erro ao carregar o conversor. Verifique se os arquivos estão na pasta /js.';
+                statusMessage.textContent = 'Erro ao carregar o conversor. Tente novamente.';
                 console.error(error);
             }
         }
