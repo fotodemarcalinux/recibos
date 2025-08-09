@@ -85,11 +85,12 @@
     <a id="download-link" href="#" download>Baixar Áudio</a>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.7/dist/ffmpeg.min.js"></script>
+<script src="./js/ffmpeg-core.js"></script>
 
 <script>
     const { createFFmpeg, fetchFile } = FFmpeg;
-    const ffmpeg = createFFmpeg({ log: true });
+    // O corePath aponta para a pasta onde os arquivos foram salvos
+    const ffmpeg = createFFmpeg({ log: true, corePath: './js/ffmpeg-core.js' });
     
     const audioInput = document.getElementById('audio-input');
     const statusMessage = document.getElementById('status-message');
@@ -105,7 +106,7 @@
                 isFFmpegLoaded = true;
                 statusMessage.textContent = 'Conversor pronto!';
             } catch (error) {
-                statusMessage.textContent = 'Erro ao carregar o conversor. Tente novamente.';
+                statusMessage.textContent = 'Erro ao carregar o conversor. Verifique se os arquivos estão na pasta /js.';
                 console.error(error);
             }
         }
@@ -163,7 +164,7 @@
             statusMessage.textContent = 'Conversão concluída!';
             
         } catch (error) {
-            statusMessage.textContent = 'Ocorreu um erro durante a conversão. Verifique o console para mais detalhes.';
+            statusMessage.textContent = 'Ocorreu um erro durante a conversão. Verifique se o formato do arquivo é compatível.';
             console.error(error);
         }
     }
