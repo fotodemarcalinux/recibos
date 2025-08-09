@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Código de Barras</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 25px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        #barcode-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+            margin: 30px 0;
+            background-color: #fff;
+        }
+
+        #barcode {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: -15px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Gerador de Código de Barras</h1>
+
+        <label for="barcode-text">Digite o texto/número:</label>
+        <input type="text" id="barcode-text" placeholder="Ex: GITHUB-12345">
+        <span id="validation-error" class="error"></span>
+
+        <label for="barcode-type">Selecione o tipo de código:</label>
+        <select id="barcode-type">
+            <option value="CODE128">CODE 128 (alfanumérico)</option>
+            <option value="CODE39">CODE 39 (alfanumérico limitado)</option>
+            <option value="EAN13">EAN-13 (13 dígitos numéricos)</option>
+            <option value="UPC">UPC-A (12 dígitos numéricos)</option>
+        </select>
+
+        <div id="barcode-container">
+            <svg id="barcode"></svg>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script>
+        const barcodeText = document.getElementById('barcode-text');
+        const barcodeType = document.getElementById('barcode-type');
+        const barcodeSvg = document.getElementById('barcode');
+        const validationError = document.getElementById('validation-error');
+
+        function validateAndGenerate() {
+            let text = barcodeText.value.trim();
+            const type = barcodeType.value;
+            let isValid = true;
+            let errorMessage = '';
+
+            // Limpa o SVG antes de gerar um novo
+            barcodeSvg.innerHTML = '';
+            validationError.style.display = 'none';
+
+            if (text === '') {
+                return;
+            }
+
+            switch(type) {
+                case 'EAN13':
+                    if (!/^\d{12}$/.test(text)) {
+                        isValid = false;
+                        errorMessage = 'EAN-13 deve ter exatamente 12 dígitos numéricos.';
+                    } else {
+                        // A JsBarcode adiciona o 13º dígito de validação
+                        JsBarcode(barcodeSvg, text, { format: type });
+                    }
+                    break;
+                case 'UPC':
+                    if (!/^\d{11}$/.test(text)) {
+                        isValid = false;
+                        errorMessage = 'UPC-A deve ter exatamente 11 dígitos numéricos.';
+                    } else {
+                        // A JsBarcode adiciona o 12º dígito de validação
+                        JsBarcode(barcodeSvg, text, { format: type });
+                    }
+                    break;
+                case 'CODE39':
+                    if (!/^[A-Z0-9\-\.\$\/\+% ]+$/.test(text.toUpperCase())) {
+                        isValid = false;
+                        errorMessage = 'CODE 39 só aceita letras maiúsculas (A-Z), números (0-9), espaço e os caracteres - . $ / + %.';
+                    } else {
+                        JsBarcode(barcodeSvg, text.toUpperCase(), { format: type });
+                    }
+                    break;
+                case 'CODE128':
+                    // CODE128 suporta a maioria dos caracteres, então não precisamos de validação complexa
+                    JsBarcode(barcodeSvg, text, { format: type });
+                    break;
+                default:
+                    // Caso padrão para outros formatos
+                    JsBarcode(barcodeSvg, text, { format: type });
+            }
+
+            if (!isValid) {
+                validationError.textContent = errorMessage;
+                validationError.style.display = 'block';
+            }
+        }
+
+        barcodeText.addEventListener('input', validateAndGenerate);
+        barcodeType.addEventListener('change', validateAndGenerate);
+
+        // Gera um código de barras inicial
+        barcodeText.value = '123456789012';
+        generateInitialBarcode();
+        function generateInitialBarcode() {
+            const text = barcodeText.value;
+            if (text) {
+                JsBarcode(barcodeSvg, text, { format: barcodeType.value });
+            }
+        }
+    </script>
+</body>
+</html>
