@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sorteador 1–12</title>
+  <style>
+    :root{--bg:#071029;--card:#0f2440}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,var(--bg),#041022);font-family:Inter,system-ui,Arial;color:#e6eef8}
+    .card{width:520px;max-width:96vw;padding:28px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));box-shadow:0 10px 40px rgba(2,6,23,.6);text-align:center}
+    h1{margin:0 0 8px;font-size:20px}
+    #display{font-size:120px;line-height:1;height:170px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:12px;margin:14px 0;font-weight:800}
+    #spin{width:100%;padding:14px;border-radius:10px;border:0;background:#06b6d4;color:#012;cursor:pointer;font-weight:800;font-size:16px}
+    .controls{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+    .small{flex:1;padding:10px;border-radius:10px;border:0;background:#152b42;color:#cfeff4;cursor:pointer}
+    #result{margin-top:12px;font-size:16px;min-height:28px}
+    canvas#confetti{position:absolute;left:0;top:0;pointer-events:none}
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+  <div class="card" role="application" aria-label="Sorteador 1 a 12">
+    <h1>Sorteador Digital — 1 a 12</h1>
+    <div id="display">—</div>
+    <button id="spin">Sortear</button>
+    <div class="controls">
+      <button id="quick" class="small">Rápido</button>
+      <button id="slow" class="small">Lento</button>
+      <button id="mute" class="small">🔊 Som</button>
+    </div>
+    <div id="result">Resultado: —</div>
+    <div style="margin-top:8px;font-size:12px;color:#89b3c7">Arquivo: <code>roleta.html</code></div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    const spinBtn = document.getElementById('spin');
+    const resultBox = document.getElementById('result');
+    const quickBtn = document.getElementById('quick');
+    const slowBtn = document.getElementById('slow');
+    const muteBtn = document.getElementById('mute');
+    const confCanvas = document.getElementById('confetti');
+    const cctx = confCanvas.getContext('2d');
+
+    const min = 1, max = 12;
+    let isRunning = false;
+    let rafId = null;
+    let audioCtx = null;
+    let muted = false;
+
+    function fitCanvas(){
+      const ratio = window.devicePixelRatio || 1;
+      confCanvas.width = Math.round(window.innerWidth * ratio);
+      confCanvas.height = Math.round(window.innerHeight * ratio);
+      cctx.setTransform(ratio,0,0,ratio,0,0);
+    }
+    window.addEventListener('resize', fitCanvas);
+    fitCanvas();
+
+    let confettis = [];
+    function launchConfetti(){
+      confettis = [];
+      const w = confCanvas.width / (window.devicePixelRatio||1);
+      const h = confCanvas.height / (window.devicePixelRatio||1);
+      for(let i=0;i<120;i++){
+        confettis.push({
+          x: w/2 + (Math.random()-0.5)*200,
+          y: h/2 + (Math.random()-0.5)*60,
+          vx: (Math.random()-0.5)*6,
+          vy: -6 - Math.random()*8,
+          rot: Math.random()*6,
+          vr: (Math.random()-0.5)*0.3,
+          life: 120 + Math.random()*120,
+          w: 8 + Math.random()*8,
+          h: 6 + Math.random()*6,
+          color: `hsl(${Math.random()*360} 80% 60%)`
+        });
+      }
+      cancelAnimationFrame(rafId);
+      function frame(){
+        cctx.clearRect(0,0,confCanvas.width, confCanvas.height);
+        confettis.forEach((p)=>{
+          p.x += p.vx; p.y += p.vy; p.vy += 0.25; p.rot += p.vr; p.life--;
+          cctx.save(); cctx.translate(p.x,p.y); cctx.rotate(p.rot);
+          cctx.fillStyle = p.color; cctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+          cctx.restore();
+        });
+        confettis = confettis.filter(p=>p.life>0 && p.y < (confCanvas.height/(window.devicePixelRatio||1))+50);
+        if(confettis.length>0) rafId = requestAnimationFrame(frame);
+        else cctx.clearRect(0,0,confCanvas.width,confCanvas.height);
+      }
+      rafId = requestAnimationFrame(frame);
+    }
+
+    function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
+    function tickSound(){
+      if(muted) return;
+      ensureAudio();
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type='square';
+      o.frequency.value=900;
+      g.gain.value=0.06;
+      o.connect(g);
+      g.connect(audioCtx.destination);
+      o.start();
+      g.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+0.06);
+      o.stop(audioCtx.currentTime+0.07);
+    }
+    function winSound(){
+      if(muted) return;
+      ensureAudio();
+      const now = audioCtx.currentTime;
+      [660,880,1100].forEach((f,i)=>{
+        const o=audioCtx.createOscillator();
+        const g=audioCtx.createGain();
+        o.type='sine';
+        o.frequency.value=f;
+        o.connect(g);
+        g.connect(audioCtx.destination);
+        g.gain.value=0.07;
+        o.start(now + i*0.15);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + i*0.15 + 0.15);
+        o.stop(now + i*0.16);
+      });
+    }
+
+    function spin(options={duration:3000}){
+      if(isRunning) return;
+      isRunning = true;
+      resultBox.textContent = 'Resultado: —';
+      const duration = options.duration || 3000;
+      const start = performance.now();
+      const startNum = Math.floor(Math.random()*(max-min+1))+min;
+      const target = Math.floor(Math.random()*(max-min+1))+min;
+      function easeOutCubic(t){return 1 - Math.pow(1-t,3)}
+      function frame(now){
+        const t = Math.min(1,(now-start)/duration);
+        const eased = easeOutCubic(t);
+        const totalCycles = 25;
+        const position = startNum + (target - startNum) * eased + (1 - eased) * totalCycles;
+        const raw = Math.round(position);
+        const range = max - min + 1;
+        let shown = ((raw - min) % range + range) % range + min;
+        display.textContent = shown;
+        if(Math.random() < 0.15 + 0.6*(1-t)) tickSound();
+        if(t<1) requestAnimationFrame(frame); else {
+          isRunning = false;
+          display.textContent = target;
+          resultBox.textContent = `Resultado: ${target}`;
+          launchConfetti();
+          winSound();
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+
+    quickBtn.addEventListener('click', ()=> spin({duration:900}));
+    slowBtn.addEventListener('click', ()=> spin({duration:5000}));
+    spinBtn.addEventListener('click', ()=> spin({duration:3000}));
+
+    muteBtn.addEventListener('click', ()=>{
+      muted = !muted;
+      muteBtn.textContent = muted ? '🔇 Mudo' : '🔊 Som';
+    });
+
+    document.addEventListener('keydown', e=>{ if(e.key==='Enter') spinBtn.click(); });
+
+    display.textContent = '—';
+  </script>
+</body>
+</html>
