@@ -7,7 +7,8 @@
   <style>
     :root{--bg:#071029;--card:#0f2440}
     *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,var(--bg),#041022);font-family:Inter,system-ui,Arial;color:#e6eef8}
+    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,var(--bg),#041022);font-family:Inter,system-ui,Arial;color:#e6eef8;flex-direction:column;gap:10px}
+    .clock{font-size:18px;color:#cfeff4;margin-top:10px}
     .card{width:520px;max-width:96vw;padding:28px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));box-shadow:0 10px 40px rgba(2,6,23,.6);text-align:center}
     h1{margin:0 0 8px;font-size:20px}
     #display{font-size:120px;line-height:1;height:170px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:12px;margin:14px 0;font-weight:800}
@@ -19,6 +20,7 @@
   </style>
 </head>
 <body>
+  <div class="clock" id="clock"></div>
   <canvas id="confetti"></canvas>
   <div class="card" role="application" aria-label="Sorteador 1 a 12">
     <h1>Sorteador Digital — 1 a 12</h1>
@@ -34,6 +36,14 @@
   </div>
 
   <script>
+    const clockEl = document.getElementById('clock');
+    function updateClock(){
+      const now = new Date().toLocaleString('pt-BR',{timeZone:'America/Maceio',hour12:false});
+      clockEl.textContent = now;
+    }
+    setInterval(updateClock,1000);
+    updateClock();
+
     const display = document.getElementById('display');
     const spinBtn = document.getElementById('spin');
     const resultBox = document.getElementById('result');
