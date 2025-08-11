@@ -42,7 +42,7 @@
             height: 100px;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .dice-face {
@@ -60,12 +60,21 @@
             color: #333;
         }
 
-        .dice-1 { transform: rotateX(0deg) rotateY(0deg) translateZ(50px); }
-        .dice-2 { transform: rotateX(0deg) rotateY(90deg) translateZ(50px); }
-        .dice-3 { transform: rotateX(0deg) rotateY(180deg) translateZ(50px); }
-        .dice-4 { transform: rotateX(0deg) rotateY(-90deg) translateZ(50px); }
-        .dice-5 { transform: rotateX(90deg) rotateY(0deg) translateZ(50px); }
-        .dice-6 { transform: rotateX(-90deg) rotateY(0deg) translateZ(50px); }
+        /* Posições iniciais das faces */
+        .dice-face:nth-child(1) { transform: rotateX(0deg) rotateY(0deg) translateZ(50px); } /* Face 1 */
+        .dice-face:nth-child(2) { transform: rotateY(90deg) translateZ(50px); } /* Face 2 */
+        .dice-face:nth-child(3) { transform: rotateY(180deg) translateZ(50px); } /* Face 3 */
+        .dice-face:nth-child(4) { transform: rotateY(-90deg) translateZ(50px); } /* Face 4 */
+        .dice-face:nth-child(5) { transform: rotateX(90deg) translateZ(50px); } /* Face 5 */
+        .dice-face:nth-child(6) { transform: rotateX(-90deg) translateZ(50px); } /* Face 6 */
+
+        /* Rotações para exibir o número correto */
+        .show-1 { transform: rotateX(0deg) rotateY(0deg); }
+        .show-2 { transform: rotateX(0deg) rotateY(-90deg); }
+        .show-3 { transform: rotateX(0deg) rotateY(180deg); }
+        .show-4 { transform: rotateX(0deg) rotateY(90deg); }
+        .show-5 { transform: rotateX(-90deg) rotateY(0deg); }
+        .show-6 { transform: rotateX(90deg) rotateY(0deg); }
 
         .roll-button {
             padding: 15px 30px;
@@ -110,20 +119,20 @@
         <h1>Sorteador de Dados</h1>
         <div class="dice-container">
             <div class="dice" id="dice1">
-                <div class="dice-face dice-1">1</div>
-                <div class="dice-face dice-2">2</div>
-                <div class="dice-face dice-3">3</div>
-                <div class="dice-face dice-4">4</div>
-                <div class="dice-face dice-5">5</div>
-                <div class="dice-face dice-6">6</div>
+                <div class="dice-face">1</div>
+                <div class="dice-face">2</div>
+                <div class="dice-face">3</div>
+                <div class="dice-face">4</div>
+                <div class="dice-face">5</div>
+                <div class="dice-face">6</div>
             </div>
             <div class="dice" id="dice2">
-                <div class="dice-face dice-1">1</div>
-                <div class="dice-face dice-2">2</div>
-                <div class="dice-face dice-3">3</div>
-                <div class="dice-face dice-4">4</div>
-                <div class="dice-face dice-5">5</div>
-                <div class="dice-face dice-6">6</div>
+                <div class="dice-face">1</div>
+                <div class="dice-face">2</div>
+                <div class="dice-face">3</div>
+                <div class="dice-face">4</div>
+                <div class="dice-face">5</div>
+                <div class="dice-face">6</div>
             </div>
         </div>
         <button class="roll-button" onclick="rollDice()">Jogar os Dados</button>
@@ -131,6 +140,8 @@
     </div>
     
     <div class="confetti-container" id="confetti-container"></div>
+    
+    <audio id="dice-sound" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="auto"></audio>
 
     <script>
         function rollDice() {
@@ -138,36 +149,33 @@
             const dice2 = document.getElementById('dice2');
             const resultDiv = document.getElementById('result');
             const confettiContainer = document.getElementById('confetti-container');
+            const diceSound = document.getElementById('dice-sound');
+            
+            // Toca o som do dado
+            diceSound.currentTime = 0;
+            diceSound.play();
 
             const roll1 = Math.floor(Math.random() * 6) + 1;
             const roll2 = Math.floor(Math.random() * 6) + 1;
 
-            const rotations = {
-                1: 'rotateX(0deg) rotateY(0deg)',
-                2: 'rotateX(0deg) rotateY(90deg)',
-                3: 'rotateX(0deg) rotateY(180deg)',
-                4: 'rotateX(0deg) rotateY(-90deg)',
-                5: 'rotateX(90deg) rotateY(0deg)',
-                6: 'rotateX(-90deg) rotateY(0deg)'
-            };
-
+            dice1.classList.remove('show-1', 'show-2', 'show-3', 'show-4', 'show-5', 'show-6');
+            dice2.classList.remove('show-1', 'show-2', 'show-3', 'show-4', 'show-5', 'show-6');
+            
+            // Aplica uma rotação inicial para a animação
             dice1.style.transform = `rotateX(${Math.random() * 3600}deg) rotateY(${Math.random() * 3600}deg)`;
             dice2.style.transform = `rotateX(${Math.random() * 3600}deg) rotateY(${Math.random() * 3600}deg)`;
 
             setTimeout(() => {
-                dice1.style.transition = 'transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                dice2.style.transition = 'transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                dice1.style.transform = `${rotations[roll1]} translateZ(50px)`;
-                dice2.style.transform = `${rotations[roll2]} translateZ(50px)`;
+                dice1.classList.add(`show-${roll1}`);
+                dice2.classList.add(`show-${roll2}`);
 
                 setTimeout(() => {
                     resultDiv.innerHTML = `O resultado é: ${roll1 + roll2}`;
                     
-                    // Lança os confetes
                     if (roll1 + roll2) {
                         launchConfetti(confettiContainer);
                     }
-                }, 1500); // tempo de espera para a animação de rotação terminar
+                }, 1500);
             }, 50);
         }
 
