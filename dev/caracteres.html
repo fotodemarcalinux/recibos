@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador de Caracteres e Palavras</title>
+    <!-- Tailwind CSS CDN para um estilo moderno e responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'gray-custom': '#f3f4f6',
+                        'blue-custom': '#3b82f6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full">
+        <h1 class="text-3xl font-bold text-center mb-4 text-gray-800">Contador de Caracteres e Palavras</h1>
+        <p class="text-center text-gray-600 mb-6">Digite ou cole seu texto para obter a contagem em tempo real.</p>
+        
+        <textarea id="text-input" class="w-full h-64 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom transition-colors resize-y" placeholder="Comece a digitar aqui..."></textarea>
+        
+        <div class="mt-4 flex flex-wrap justify-between text-gray-700 font-semibold">
+            <div class="p-2 w-1/2 md:w-auto">
+                <span class="text-blue-custom" id="word-count">0</span> palavras
+            </div>
+            <div class="p-2 w-1/2 md:w-auto">
+                <span class="text-blue-custom" id="char-count">0</span> caracteres
+            </div>
+            <div class="p-2 w-1/2 md:w-auto">
+                <span class="text-blue-custom" id="line-count">1</span> linhas
+            </div>
+            <div class="p-2 w-1/2 md:w-auto">
+                <span class="text-blue-custom" id="paragraph-count">1</span> parágrafos
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('text-input').addEventListener('input', updateCounts);
+
+        function updateCounts() {
+            const text = document.getElementById('text-input').value;
+
+            // Contagem de caracteres
+            document.getElementById('char-count').textContent = text.length;
+
+            // Contagem de palavras
+            const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+            document.getElementById('word-count').textContent = words.length;
+
+            // Contagem de linhas
+            const lines = text.split('\n');
+            document.getElementById('line-count').textContent = lines.length;
+
+            // Contagem de parágrafos
+            const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+            if (text.length === 0) {
+                document.getElementById('paragraph-count').textContent = 0;
+            } else {
+                document.getElementById('paragraph-count').textContent = paragraphs.length || 1;
+            }
+        }
+    </script>
+</body>
+</html>
