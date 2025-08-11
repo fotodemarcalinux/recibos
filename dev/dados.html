@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteador de Dados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .dice-container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin: 30px 0;
+            perspective: 1000px;
+        }
+
+        .dice {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .dice-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            border: 2px solid #333;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .dice-1 { transform: rotateX(0deg) rotateY(0deg) translateZ(50px); }
+        .dice-2 { transform: rotateX(0deg) rotateY(90deg) translateZ(50px); }
+        .dice-3 { transform: rotateX(0deg) rotateY(180deg) translateZ(50px); }
+        .dice-4 { transform: rotateX(0deg) rotateY(-90deg) translateZ(50px); }
+        .dice-5 { transform: rotateX(90deg) rotateY(0deg) translateZ(50px); }
+        .dice-6 { transform: rotateX(-90deg) rotateY(0deg) translateZ(50px); }
+
+        .roll-button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 5px #0056b3;
+        }
+
+        .roll-button:active {
+            background-color: #0056b3;
+            box-shadow: 0 2px #003d80;
+            transform: translateY(3px);
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sorteador de Dados</h1>
+        <div class="dice-container">
+            <div class="dice" id="dice1">
+                <div class="dice-face dice-1">1</div>
+                <div class="dice-face dice-2">2</div>
+                <div class="dice-face dice-3">3</div>
+                <div class="dice-face dice-4">4</div>
+                <div class="dice-face dice-5">5</div>
+                <div class="dice-face dice-6">6</div>
+            </div>
+            <div class="dice" id="dice2">
+                <div class="dice-face dice-1">1</div>
+                <div class="dice-face dice-2">2</div>
+                <div class="dice-face dice-3">3</div>
+                <div class="dice-face dice-4">4</div>
+                <div class="dice-face dice-5">5</div>
+                <div class="dice-face dice-6">6</div>
+            </div>
+        </div>
+        <button class="roll-button" onclick="rollDice()">Jogar os Dados</button>
+        <div class="result" id="result"></div>
+    </div>
+    
+    <div class="confetti-container" id="confetti-container"></div>
+
+    <script>
+        function rollDice() {
+            const dice1 = document.getElementById('dice1');
+            const dice2 = document.getElementById('dice2');
+            const resultDiv = document.getElementById('result');
+            const confettiContainer = document.getElementById('confetti-container');
+
+            const roll1 = Math.floor(Math.random() * 6) + 1;
+            const roll2 = Math.floor(Math.random() * 6) + 1;
+
+            const rotations = {
+                1: 'rotateX(0deg) rotateY(0deg)',
+                2: 'rotateX(0deg) rotateY(90deg)',
+                3: 'rotateX(0deg) rotateY(180deg)',
+                4: 'rotateX(0deg) rotateY(-90deg)',
+                5: 'rotateX(90deg) rotateY(0deg)',
+                6: 'rotateX(-90deg) rotateY(0deg)'
+            };
+
+            dice1.style.transform = `rotateX(${Math.random() * 3600}deg) rotateY(${Math.random() * 3600}deg)`;
+            dice2.style.transform = `rotateX(${Math.random() * 3600}deg) rotateY(${Math.random() * 3600}deg)`;
+
+            setTimeout(() => {
+                dice1.style.transition = 'transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                dice2.style.transition = 'transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                dice1.style.transform = `${rotations[roll1]} translateZ(50px)`;
+                dice2.style.transform = `${rotations[roll2]} translateZ(50px)`;
+
+                setTimeout(() => {
+                    resultDiv.innerHTML = `O resultado é: ${roll1 + roll2}`;
+                    
+                    // Lança os confetes
+                    if (roll1 + roll2) {
+                        launchConfetti(confettiContainer);
+                    }
+                }, 1500); // tempo de espera para a animação de rotação terminar
+            }, 50);
+        }
+
+        function launchConfetti(container) {
+            const colors = ['#f4d35e', '#f25f5c', '#007bff', '#70c1b3', '#5a3b5d'];
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.position = 'absolute';
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.top = `${Math.random() * 100}vh`;
+                confetti.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`;
+                confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+                container.appendChild(confetti);
+            }
+
+            const styleSheet = document.createElement('style');
+            styleSheet.innerHTML = `@keyframes fall {
+                0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+                100% { transform: translateY(100vh) rotate(1080deg); opacity: 0; }
+            }`;
+            document.head.appendChild(styleSheet);
+
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
