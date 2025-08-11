@@ -4,166 +4,134 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Link para WhatsApp</title>
+    <!-- Tailwind CSS CDN para um estilo moderno e responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'whatsapp-green-dark': '#075E54',
+                        'whatsapp-green-light': '#25D366',
+                        'whatsapp-bg': '#E5DDD5',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-            text-align: center;
-        }
-
-        h1 {
-            color: #1a1a1a;
-            margin-bottom: 20px;
-            font-size: 2em;
-        }
-
-        p {
-            color: #555;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-
-        .form-group {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        input[type="tel"], textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 1em;
-            transition: border-color 0.3s;
-        }
-
-        input[type="tel"]:focus, textarea:focus {
-            outline: none;
-            border-color: #075E54;
-            box-shadow: 0 0 0 2px rgba(7, 94, 84, 0.2);
-        }
-
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .info-text {
-            font-size: 0.85em;
-            color: #777;
-            margin-top: 5px;
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            background-color: #25D366;
-            color: #fff;
-            font-size: 1.1em;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.1s ease;
-        }
-
-        button:hover {
-            background-color: #128C7E;
-        }
-
-        button:active {
-            transform: scale(0.99);
-        }
-
-        .result-container {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #e9f5e9;
-            border-radius: 8px;
-            text-align: left;
-            display: none; /* Esconde o resultado inicialmente */
-            word-break: break-all;
-        }
-
-        #result-link {
-            font-family: monospace;
-            font-size: 1.1em;
-            color: #075E54;
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
 
-<div class="container">
-    <h1>Gerador de Link para WhatsApp</h1>
-    <p>Preencha os campos abaixo para criar seu link personalizado com uma mensagem pré-definida.</p>
+    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-lg w-full">
+        <h1 class="text-3xl font-bold text-center mb-4 text-gray-800">Gerador de Link para WhatsApp</h1>
+        <p class="text-center text-gray-600 mb-6">Crie um link direto para o WhatsApp com uma mensagem pré-definida.</p>
+        
+        <div class="mb-5">
+            <label for="phone-number" class="block text-gray-700 font-semibold mb-2">Número de Telefone</label>
+            <input type="tel" id="phone-number" placeholder="Ex: 5541999998888" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-whatsapp-green-light transition-colors">
+            <p class="text-sm text-gray-500 mt-1">Inclua o código do país (55) e o DDD, sem espaços ou caracteres especiais.</p>
+        </div>
+        
+        <div class="mb-5">
+            <label for="message" class="block text-gray-700 font-semibold mb-2">Mensagem Personalizada (Opcional)</label>
+            <textarea id="message" placeholder="Olá! Gostaria de mais informações sobre o produto." rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-whatsapp-green-light transition-colors resize-y"></textarea>
+            <p class="text-sm text-gray-500 mt-1">Essa mensagem será preenchida automaticamente para quem clicar no link.</p>
+        </div>
+        
+        <button onclick="generateLink()" class="w-full bg-whatsapp-green-light text-white font-bold py-3 rounded-lg shadow-lg hover:bg-whatsapp-green-dark transition-colors duration-300">
+            Gerar Link
+        </button>
 
-    <div class="form-group">
-        <label for="phone-number">Número de Telefone</label>
-        <input type="tel" id="phone-number" placeholder="Ex: 5541999998888">
-        <div class="info-text">Inclua o código do país (55) e o DDD, sem espaços ou caracteres especiais.</div>
+        <div id="result-container" class="mt-8 hidden">
+            <div class="bg-gray-50 border-l-4 border-whatsapp-green-light text-gray-800 p-4 rounded-lg">
+                <p class="font-bold text-sm mb-2">Seu Link Encurtado</p>
+                <code id="result-link" class="text-sm break-all"></code>
+                <p id="loading-message" class="text-sm text-gray-500 mt-2 hidden">Gerando link encurtado...</p>
+            </div>
+            
+            <button onclick="copyToClipboard()" class="w-full mt-4 bg-gray-200 text-gray-700 font-bold py-3 rounded-lg shadow-md hover:bg-gray-300 transition-colors duration-300">
+                Copiar Link
+            </button>
+            <p id="copy-message" class="text-sm text-green-600 mt-2 hidden">Link copiado!</p>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label for="message">Mensagem Personalizada (Opcional)</label>
-        <textarea id="message" placeholder="Olá! Gostaria de mais informações."></textarea>
-        <div class="info-text">Essa mensagem será pré-preenchida para quem clicar no seu link.</div>
-    </div>
+    <script>
+        function generateLink() {
+            const phoneNumber = document.getElementById('phone-number').value.replace(/\D/g, '');
+            const message = document.getElementById('message').value;
+            const resultContainer = document.getElementById('result-container');
+            const resultLink = document.getElementById('result-link');
+            const copyMessage = document.getElementById('copy-message');
+            const loadingMessage = document.getElementById('loading-message');
 
-    <button onclick="generateLink()">Gerar Link</button>
+            // Limpa o resultado anterior e mostra a mensagem de carregamento
+            resultLink.textContent = '';
+            copyMessage.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+            loadingMessage.classList.remove('hidden');
 
-    <div class="result-container" id="result-container">
-        <label>Seu Link:</label>
-        <p id="result-link"></p>
-    </div>
-</div>
+            if (phoneNumber.length < 10) {
+                loadingMessage.classList.add('hidden');
+                alert("Por favor, insira um número de telefone válido com código do país e DDD (ex: 5541999998888).");
+                resultContainer.classList.add('hidden');
+                return;
+            }
 
-<script>
-    function generateLink() {
-        const phoneNumber = document.getElementById('phone-number').value.replace(/\D/g, ''); // Remove caracteres não numéricos
-        const message = document.getElementById('message').value;
-        const resultContainer = document.getElementById('result-container');
-        const resultLink = document.getElementById('result-link');
+            let whatsappURL = `https://wa.me/${phoneNumber}`;
 
-        if (phoneNumber.length < 10) {
-            alert('Por favor, insira um número de telefone válido (código do país + DDD + número).');
-            return;
+            if (message) {
+                const encodedMessage = encodeURIComponent(message);
+                whatsappURL += `?text=${encodedMessage}`;
+            }
+
+            // Encurta a URL usando a API TinyURL V1
+            const tinyUrlAPI = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(whatsappURL)}`;
+            
+            fetch(tinyUrlAPI)
+                .then(response => response.text())
+                .then(shortenedUrl => {
+                    loadingMessage.classList.add('hidden');
+                    if (shortenedUrl.startsWith('https://tinyurl.com/')) {
+                        resultLink.textContent = shortenedUrl;
+                    } else {
+                        resultLink.textContent = `Erro ao encurtar o link. Use o link longo: ${whatsappURL}`;
+                    }
+                })
+                .catch(error => {
+                    loadingMessage.classList.add('hidden');
+                    resultLink.textContent = `Erro ao encurtar o link. Use o link longo: ${whatsappURL}`;
+                    console.error('Erro ao acessar a API do TinyURL:', error);
+                });
         }
 
-        let whatsappURL = `https://wa.me/${phoneNumber}`;
+        function copyToClipboard() {
+            const resultLink = document.getElementById('result-link');
+            const copyMessage = document.getElementById('copy-message');
+            const textToCopy = resultLink.textContent;
 
-        if (message) {
-            const encodedMessage = encodeURIComponent(message);
-            whatsappURL += `?text=${encodedMessage}`;
+            const tempInput = document.createElement('textarea');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            
+            try {
+                document.execCommand('copy');
+                copyMessage.classList.remove('hidden');
+            } catch (err) {
+                console.error('Falha ao copiar: ', err);
+            }
+            document.body.removeChild(tempInput);
         }
-
-        resultLink.textContent = whatsappURL;
-        resultContainer.style.display = 'block';
-    }
-</script>
-
+    </script>
 </body>
 </html>
