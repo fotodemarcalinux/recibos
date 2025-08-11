@@ -2,16 +2,23 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Leitura de JSON</title>
+<title>Busca no JSON</title>
 <style>
-body { font-family: Arial, sans-serif; padding: 20px; }
-table { border-collapse: collapse; width: 100%; }
+body { font-family: Arial, sans-serif; padding: 20px; background: #f8f9fa; }
+h1 { text-align: center; }
+#busca { width: 100%; padding: 10px; font-size: 16px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; }
+table { border-collapse: collapse; width: 100%; background: white; }
 th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-th { background-color: #f4f4f4; }
+th { background-color: #007BFF; color: white; }
+tr:nth-child(even) { background-color: #f2f2f2; }
+#resultado { font-style: italic; margin-top: 10px; }
 </style>
 </head>
 <body>
-<h1>Lista de Pessoas</h1>
+
+<h1>Busca de Pessoas no JSON</h1>
+<input type="text" id="busca" placeholder="Digite um nome ou ID...">
+<div id="resultado"></div>
 <table id="tabela">
   <thead>
     <tr><th>ID</th><th>Nome</th><th>Idade</th></tr>
@@ -20,17 +27,38 @@ th { background-color: #f4f4f4; }
 </table>
 
 <script>
+let dados = [];
+
+// Carregar o JSON
 fetch('dados.json')
   .then(res => res.json())
   .then(lista => {
-    const tbody = document.querySelector('#tabela tbody');
-    lista.forEach(item => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${item.id}</td><td>${item.nome}</td><td>${item.idade}</td>`;
-      tbody.appendChild(tr);
-    });
+    dados = lista;
+    exibirTabela(dados);
   })
   .catch(err => console.error('Erro ao carregar JSON:', err));
+
+// Exibir na tabela
+function exibirTabela(lista) {
+  const tbody = document.querySelector('#tabela tbody');
+  tbody.innerHTML = '';
+  lista.forEach(item => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${item.id}</td><td>${item.nome}</td><td>${item.idade}</td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('resultado').textContent = `${lista.length} registro(s) encontrado(s)`;
+}
+
+// Filtrar ao digitar
+document.getElementById('busca').addEventListener('input', function() {
+  const termo = this.value.toLowerCase();
+  const filtrado = dados.filter(item => 
+    item.nome.toLowerCase().includes(termo) || item.id.toString().includes(termo)
+  );
+  exibirTabela(filtrado);
+});
 </script>
+
 </body>
 </html>
