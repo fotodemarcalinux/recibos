@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Pessoas Completo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujE7K7y1T1I71K3a9fB0C2O/3Bf0wN7/j3+N3W3U9LzB+Sj4I3W3Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e2e8f0;
+        }
+        /* Estilo para a div principal */
+        .card {
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-radius: 0.75rem;
+            padding: 2.5rem;
+            max-width: 90%;
+        }
+        /* Estilo para os títulos */
+        .section-title {
+            color: #1a202c;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        /* Estilo para os botões */
+        button {
+            transition: all 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        /* Estilo para os resultados */
+        .data-label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+    </style>
+</head>
+<body class="bg-gray-200 min-h-screen flex items-center justify-center p-4">
+
+    <div class="card w-full lg:w-3/5 xl:w-2/5 mx-auto">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Gerador de Pessoas</h1>
+        <p class="text-sm text-center text-gray-500 mb-6">Uma ferramenta para testes de software. O uso indevido é de total responsabilidade do usuário.</p>
+        
+        <div class="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label for="sexo" class="block text-sm font-medium text-gray-700 mb-2">Sexo</label>
+                <select id="sexo" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                    <option value="aleatorio">Aleatório</option>
+                    <option value="masculino">Masculino</option>
+                    <option value="feminino">Feminino</option>
+                </select>
+            </div>
+            <div>
+                <label for="nacionalidade" class="block text-sm font-medium text-gray-700 mb-2">Nacionalidade</label>
+                <select id="nacionalidade" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                    <option value="aleatorio">Aleatório</option>
+                    <option value="brasil">Brasil</option>
+                    <option value="estados_unidos">Estados Unidos</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button onclick="gerarPessoa()" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                Gerar Pessoa
+            </button>
+            <button onclick="baixarDados()" class="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                Baixar Dados
+            </button>
+        </div>
+
+        <div class="mt-8 p-6 bg-gray-100 rounded-lg">
+            <div id="dadosGerados" class="space-y-4">
+                <!-- DADOS PESSOAIS -->
+                <h2 class="text-xl font-bold section-title">DADOS PESSOAIS</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4">
+                    <div><span class="data-label">Nome:</span> <span id="nome" class="font-normal"></span></div>
+                    <div><span class="data-label">CPF/SSN:</span> <span id="cpf-ssn" class="font-normal"></span></div>
+                    <div><span class="data-label">Telefone:</span> <span id="telefone" class="font-normal"></span></div>
+                </div>
+
+                <!-- NASCIMENTO -->
+                <h2 class="text-xl font-bold section-title mt-6">NASCIMENTO</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-y-2 gap-x-4">
+                    <div><span class="data-label">Data de Nascimento:</span> <span id="dataNascimento" class="font-normal"></span></div>
+                    <div><span class="data-label">Idade:</span> <span id="idade" class="font-normal"></span></div>
+                    <div><span class="data-label">Signo:</span> <span id="signo" class="font-normal"></span></div>
+                </div>
+
+                <!-- ENDEREÇO -->
+                <h2 class="text-xl font-bold section-title mt-6">ENDEREÇO</h2>
+                <div class="grid grid-cols-1 gap-y-2 gap-x-4">
+                    <div><span class="data-label">CEP/ZIP Code:</span> <span id="cep-zip" class="font-normal"></span></div>
+                    <div><span class="data-label">Endereço:</span> <span id="endereco" class="font-normal"></span></div>
+                    <div><span class="data-label">Cidade:</span> <span id="cidade" class="font-normal"></span></div>
+                    <div><span class="data-label">Estado:</span> <span id="estado" class="font-normal"></span></div>
+                </div>
+
+                <!-- ONLINE -->
+                <h2 class="text-xl font-bold section-title mt-6">ONLINE</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4">
+                    <div><span class="data-label">E-Mail:</span> <span id="email" class="font-normal"></span></div>
+                    <div><span class="data-label">Nome de Usuário:</span> <span id="usuario" class="font-normal"></span></div>
+                    <div><span class="data-label">Senha:</span> <span id="senha" class="font-normal"></span></div>
+                </div>
+
+                <!-- CARTÃO DE CRÉDITO -->
+                <h2 class="text-xl font-bold section-title mt-6">CARTÃO DE CRÉDITO</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4">
+                    <div><span class="data-label">Bandeira:</span> <span id="bandeiraCartao" class="font-normal"></span></div>
+                    <div><span class="data-label">Número:</span> <span id="numeroCartao" class="font-normal"></span></div>
+                    <div><span class="data-label">Expiração:</span> <span id="expiracaoCartao" class="font-normal"></span></div>
+                    <div><span class="data-label">CVV2:</span> <span id="cvvCartao" class="font-normal"></span></div>
+                </div>
+
+                <!-- CARACTERÍSTICAS FÍSICAS -->
+                <h2 class="text-xl font-bold section-title mt-6">CARACTERÍSTICAS FÍSICAS</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-y-2 gap-x-4">
+                    <div><span class="data-label">Altura:</span> <span id="altura" class="font-normal"></span></div>
+                    <div><span class="data-label">Peso:</span> <span id="peso" class="font-normal"></span></div>
+                    <div><span class="data-label">Tipo Sanguíneo:</span> <span id="tipoSanguineo" class="font-normal"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- FUNÇÕES AUXILIARES GERAIS ---
+        
+        // Função para gerar um número aleatório em um intervalo
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // Função para formatar uma data
+        function formatarData(data) {
+            const dia = String(data.getDate()).padStart(2, '0');
+            const mes = String(data.getMonth() + 1).padStart(2, '0');
+            const ano = data.getFullYear();
+            return `${dia}/${mes}/${ano}`;
+        }
+        
+        // --- BANCO DE DADOS DE NOMES, SOBRENOMES, CIDADES, ETC. ---
+        
+        const nomesMasculinosBr = ["João", "Pedro", "Luiz", "Carlos", "Antônio", "Marcos", "Lucas", "Gabriel", "Rafael"];
+        const nomesFemininosBr = ["Maria", "Ana", "Juliana", "Patricia", "Camila", "Amanda", "Letícia", "Giovanna", "Isabela"];
+        const sobrenomesBr = ["Silva", "Santos", "Oliveira", "Souza", "Lima", "Pereira", "Ferreira", "Alves", "Rodrigues"];
+        const cidadesBr = ["São Paulo", "Rio de Janeiro", "Belo Horizonte", "Salvador", "Curitiba", "Porto Alegre", "Brasília", "Fortaleza"];
+        const estadosBr = ["SP", "RJ", "MG", "BA", "PR", "RS", "DF", "CE"];
+
+        const nomesMasculinosUs = ["John", "Michael", "William", "James", "Robert", "David", "Richard", "Charles", "Joseph"];
+        const nomesFemininosUs = ["Mary", "Jennifer", "Linda", "Elizabeth", "Patricia", "Susan", "Jessica", "Sarah", "Karen"];
+        const sobrenomesUs = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez"];
+        const cidadesUs = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia", "San Antonio", "San Diego"];
+        const estadosUs = ["NY", "CA", "IL", "TX", "AZ", "PA", "TX", "CA"];
+        
+        const bandeirasCartao = ["Visa", "Mastercard", "American Express", "Discover"];
+        const tiposSanguineos = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+        
+        // --- FUNÇÃO PRINCIPAL DE GERAÇÃO ---
+        
+        function gerarPessoa() {
+            const sexo = document.getElementById('sexo').value;
+            const nacionalidade = document.getElementById('nacionalidade').value;
+
+            // Define a nacionalidade a ser gerada
+            let nacionalidadeFinal = nacionalidade;
+            if (nacionalidade === 'aleatorio') {
+                nacionalidadeFinal = Math.random() < 0.5 ? 'brasil' : 'estados_unidos';
+            }
+
+            // Define o sexo a ser gerado
+            let sexoFinal = sexo;
+            if (sexo === 'aleatorio') {
+                sexoFinal = Math.random() < 0.5 ? 'masculino' : 'feminino';
+            }
+            
+            // Define as listas de dados baseadas na nacionalidade
+            const nomesM = nacionalidadeFinal === 'brasil' ? nomesMasculinosBr : nomesMasculinosUs;
+            const nomesF = nacionalidadeFinal === 'brasil' ? nomesFemininosBr : nomesFemininosUs;
+            const sobrenomes = nacionalidadeFinal === 'brasil' ? sobrenomesBr : sobrenomesUs;
+            const cidades = nacionalidadeFinal === 'brasil' ? cidadesBr : cidadesUs;
+            const estados = nacionalidadeFinal === 'brasil' ? estadosBr : estadosUs;
+
+            // --- 1. DADOS PESSOAIS ---
+            
+            // Geração de Nome
+            let nomeGerado;
+            if (sexoFinal === 'masculino') {
+                nomeGerado = `${nomesM[getRandomInt(0, nomesM.length - 1)]} ${sobrenomes[getRandomInt(0, sobrenomes.length - 1)]} ${sobrenomes[getRandomInt(0, sobrenomes.length - 1)]}`;
+            } else {
+                nomeGerado = `${nomesF[getRandomInt(0, nomesF.length - 1)]} ${sobrenomes[getRandomInt(0, sobrenomes.length - 1)]} ${sobrenomes[getRandomInt(0, sobrenomes.length - 1)]}`;
+            }
+            document.getElementById('nome').innerText = nomeGerado;
+
+            // Geração de CPF ou SSN
+            if (nacionalidadeFinal === 'brasil') {
+                document.getElementById('cpf-ssn').innerText = gerarCPF();
+            } else {
+                document.getElementById('cpf-ssn').innerText = gerarSSN();
+            }
+            
+            // Geração de Telefone
+            document.getElementById('telefone').innerText = nacionalidadeFinal === 'brasil' ? gerarTelefoneBr() : gerarTelefoneUs();
+            
+            // --- 2. NASCIMENTO ---
+            
+            // Geração de Data de Nascimento, Idade e Signo
+            const dataNascimento = gerarDataNascimento();
+            document.getElementById('dataNascimento').innerText = formatarData(dataNascimento);
+            document.getElementById('idade').innerText = calcularIdade(dataNascimento);
+            document.getElementById('signo').innerText = calcularSigno(dataNascimento);
+
+            // --- 3. ENDEREÇO ---
+            
+            // Geração de Endereço
+            const estado = estados[getRandomInt(0, estados.length - 1)];
+            const cidade = cidades[getRandomInt(0, cidades.length - 1)];
+            
+            document.getElementById('cep-zip').innerText = nacionalidadeFinal === 'brasil' ? gerarCEP() : gerarZIP();
+            document.getElementById('endereco').innerText = nacionalidadeFinal === 'brasil' ? `Rua ${sobrenomes[getRandomInt(0, sobrenomes.length - 1)]} ${sobrenomes[getRandomInt(0, sobrenomes.length - 1)]}, ${getRandomInt(100, 999)}` : `${getRandomInt(1000, 9999)} ${sobrenomes[getRandomInt(0, sobrenomes.length - 1)]} Street`;
+            document.getElementById('cidade').innerText = cidade;
+            document.getElementById('estado').innerText = estado;
+            
+            // --- 4. ONLINE ---
+            
+            // Geração de E-mail, Usuário e Senha
+            document.getElementById('email').innerText = gerarEmail(nomeGerado);
+            document.getElementById('usuario').innerText = gerarUsuario(nomeGerado);
+            document.getElementById('senha').innerText = gerarSenha();
+            
+            // --- 5. CARTÃO DE CRÉDITO ---
+            
+            // Geração de Cartão de Crédito
+            const bandeira = bandeirasCartao[getRandomInt(0, bandeirasCartao.length - 1)];
+            document.getElementById('bandeiraCartao').innerText = bandeira;
+            document.getElementById('numeroCartao').innerText = gerarNumeroCartao(bandeira);
+            document.getElementById('expiracaoCartao').innerText = gerarExpiracaoCartao();
+            document.getElementById('cvvCartao').innerText = gerarCVV2();
+            
+            // --- 6. CARACTERÍSTICAS FÍSICAS ---
+            
+            // Geração de Altura, Peso e Tipo Sanguíneo
+            document.getElementById('altura').innerText = `${(getRandomInt(150, 200) / 100).toFixed(2)} m`;
+            document.getElementById('peso').innerText = `${getRandomInt(50, 120)} kg`;
+            document.getElementById('tipoSanguineo').innerText = tiposSanguineos[getRandomInt(0, tiposSanguineos.length - 1)];
+        }
+        
+        // --- FUNÇÕES DE GERAÇÃO ESPECÍFICAS (CPF, Cartão, etc.) ---
+
+        // Geração e validação de CPF (para Brasil)
+        function gerarCPF() {
+            let n = 9;
+            let n1 = getRandomInt(0, 9);
+            let n2 = getRandomInt(0, 9);
+            let n3 = getRandomInt(0, 9);
+            let n4 = getRandomInt(0, 9);
+            let n5 = getRandomInt(0, 9);
+            let n6 = getRandomInt(0, 9);
+            let n7 = getRandomInt(0, 9);
+            let n8 = getRandomInt(0, 9);
+            let n9 = getRandomInt(0, 9);
+
+            let d1 = n9 * 2 + n8 * 3 + n7 * 4 + n6 * 5 + n5 * 6 + n4 * 7 + n3 * 8 + n2 * 9 + n1 * 10;
+            d1 = 11 - (d1 % 11);
+            if (d1 >= 10) d1 = 0;
+
+            let d2 = d1 * 2 + n9 * 3 + n8 * 4 + n7 * 5 + n6 * 6 + n5 * 7 + n4 * 8 + n3 * 9 + n2 * 10 + n1 * 11;
+            d2 = 11 - (d2 % 11);
+            if (d2 >= 10) d2 = 0;
+
+            return `${n1}${n2}${n3}.${n4}${n5}${n6}.${n7}${n8}${n9}-${d1}${d2}`;
+        }
+        
+        // Geração de SSN (para Estados Unidos - formato, não válido)
+        function gerarSSN() {
+            return `${getRandomInt(100, 999)}-${getRandomInt(10, 99)}-${getRandomInt(1000, 9999)}`;
+        }
+
+        // Geração de Telefone Brasileiro
+        function gerarTelefoneBr() {
+            const ddd = ["11", "21", "31", "41", "51", "61", "71", "81", "91"];
+            const dddAleatorio = ddd[getRandomInt(0, ddd.length - 1)];
+            const numero = `${getRandomInt(9000, 9999)}-${getRandomInt(1000, 9999)}`;
+            return `(${dddAleatorio}) 9${numero}`;
+        }
+
+        // Geração de Telefone Americano
+        function gerarTelefoneUs() {
+            return `(${getRandomInt(200, 999)}) ${getRandomInt(200, 999)}-${getRandomInt(1000, 9999)}`;
+        }
+
+        // Geração de Data de Nascimento
+        function gerarDataNascimento() {
+            const ano = getRandomInt(1950, 2005);
+            const mes = getRandomInt(0, 11);
+            const dia = getRandomInt(1, 28);
+            return new Date(ano, mes, dia);
+        }
+
+        // Cálculo de Idade
+        function calcularIdade(dataNascimento) {
+            const hoje = new Date();
+            let idade = hoje.getFullYear() - dataNascimento.getFullYear();
+            const m = hoje.getMonth() - dataNascimento.getMonth();
+            if (m < 0 || (m === 0 && hoje.getDate() < dataNascimento.getDate())) {
+                idade--;
+            }
+            return idade;
+        }
+
+        // Cálculo de Signo
+        function calcularSigno(data) {
+            const mes = data.getMonth() + 1;
+            const dia = data.getDate();
+            if ((mes == 1 && dia >= 20) || (mes == 2 && dia <= 18)) return "Aquário";
+            if ((mes == 2 && dia >= 19) || (mes == 3 && dia <= 20)) return "Peixes";
+            if ((mes == 3 && dia >= 21) || (mes == 4 && dia <= 19)) return "Áries";
+            if ((mes == 4 && dia >= 20) || (mes == 5 && dia <= 20)) return "Touro";
+            if ((mes == 5 && dia >= 21) || (mes == 6 && dia <= 20)) return "Gêmeos";
+            if ((mes == 6 && dia >= 21) || (mes == 7 && dia <= 22)) return "Câncer";
+            if ((mes == 7 && dia >= 23) || (mes == 8 && dia <= 22)) return "Leão";
+            if ((mes == 8 && dia >= 23) || (mes == 9 && dia <= 22)) return "Virgem";
+            if ((mes == 9 && dia >= 23) || (mes == 10 && dia <= 22)) return "Libra";
+            if ((mes == 10 && dia >= 23) || (mes == 11 && dia <= 21)) return "Escorpião";
+            if ((mes == 11 && dia >= 22) || (mes == 12 && dia <= 21)) return "Sagitário";
+            if ((mes == 12 && dia >= 22) || (mes == 1 && dia <= 19)) return "Capricórnio";
+        }
+        
+        // Geração de CEP (formato brasileiro)
+        function gerarCEP() {
+            return `${getRandomInt(10000, 99999)}-${getRandomInt(100, 999)}`;
+        }
+        
+        // Geração de ZIP Code (formato americano)
+        function gerarZIP() {
+            return `${getRandomInt(10000, 99999)}`;
+        }
+
+        // Geração de E-mail
+        function gerarEmail(nomeCompleto) {
+            const partes = nomeCompleto.toLowerCase().split(' ');
+            const usuario = `${partes[0]}.${partes[partes.length - 1]}`;
+            const dominios = ["gmail.com", "outlook.com", "yahoo.com", "live.com"];
+            return `${usuario}${getRandomInt(10, 99)}@${dominios[getRandomInt(0, dominios.length - 1)]}`;
+        }
+        
+        // Geração de Nome de Usuário
+        function gerarUsuario(nomeCompleto) {
+            const partes = nomeCompleto.toLowerCase().split(' ');
+            return `${partes[0]}${partes[partes.length - 1]}${getRandomInt(10, 99)}`;
+        }
+        
+        // Geração de Senha
+        function gerarSenha() {
+            const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+';
+            let senha = '';
+            for (let i = 0; i < 12; i++) {
+                senha += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+            }
+            return senha;
+        }
+
+        // Geração de Número de Cartão de Crédito (com Luhn)
+        function gerarNumeroCartao(bandeira) {
+            let prefixo;
+            switch(bandeira) {
+                case "Visa": prefixo = "4"; break;
+                case "Mastercard": prefixo = "5"; break;
+                case "American Express": prefixo = "37"; break;
+                case "Discover": prefixo = "6011"; break;
+            }
+            const tamanho = bandeira === "American Express" ? 15 : 16;
+            let numeroParcial = prefixo;
+            while(numeroParcial.length < tamanho - 1) {
+                numeroParcial += getRandomInt(0, 9);
+            }
+            const checksum = gerarLuhn(numeroParcial);
+            return `${numeroParcial}${checksum}`;
+        }
+
+        // Algoritmo de Luhn para validação de cartão
+        function gerarLuhn(numero) {
+            let soma = 0;
+            let paridade = false;
+            for (let i = numero.length - 1; i >= 0; i--) {
+                let digito = parseInt(numero.charAt(i));
+                if (paridade) {
+                    digito *= 2;
+                    if (digito > 9) digito -= 9;
+                }
+                soma += digito;
+                paridade = !paridade;
+            }
+            const checksum = (10 - (soma % 10)) % 10;
+            return checksum;
+        }
+        
+        // Geração de Data de Expiração de Cartão
+        function gerarExpiracaoCartao() {
+            const mes = getRandomInt(1, 12);
+            const ano = new Date().getFullYear() + getRandomInt(2, 6);
+            return `${String(mes).padStart(2, '0')}/${String(ano).slice(2)}`;
+        }
+
+        // Geração de CVV2
+        function gerarCVV2() {
+            return getRandomInt(100, 999);
+        }
+
+        // --- NOVA FUNÇÃO PARA BAIXAR OS DADOS ---
+        function baixarDados() {
+            // Pega a div que contém todos os dados gerados
+            const dadosDiv = document.getElementById('dadosGerados');
+            
+            // Se não houver dados, não faz nada
+            if (dadosDiv.innerText.trim() === '') {
+                return;
+            }
+
+            let dadosTexto = "Dados da Pessoa Gerada:\n\n";
+
+            // Itera sobre todos os elementos filhos da div de dados
+            const elementos = dadosDiv.children;
+            for (const elemento of elementos) {
+                if (elemento.tagName === 'H2') {
+                    // Adiciona o título da seção
+                    dadosTexto += `--- ${elemento.innerText.trim()} ---\n`;
+                } else if (elemento.tagName === 'DIV') {
+                    // Itera sobre os dados dentro de cada seção
+                    const campos = elemento.querySelectorAll('div > span');
+                    for (let i = 0; i < campos.length; i += 2) {
+                        const label = campos[i].innerText.trim();
+                        const valor = campos[i+1].innerText.trim();
+                        if (valor) { // Só inclui se o valor não estiver vazio
+                             dadosTexto += `${label.replace(':', '')}: ${valor}\n`;
+                        }
+                    }
+                    dadosTexto += '\n'; // Adiciona uma linha em branco entre as seções
+                }
+            }
+
+            // Cria um Blob (objeto de arquivo) com os dados
+            const blob = new Blob([dadosTexto], { type: 'text/plain' });
+
+            // Cria um link temporário para o download
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'pessoa_gerada.txt';
+            
+            // Adiciona o link ao corpo do documento e clica nele
+            document.body.appendChild(a);
+            a.click();
+            
+            // Remove o link temporário
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>
