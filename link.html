@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encurtador de Link Funcional</title>
+    <!-- Tailwind CSS CDN para um estilo moderno e responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'blue-custom': '#3b82f6',
+                        'green-custom': '#10b981',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-lg w-full">
+        <h1 class="text-3xl font-bold text-center mb-4 text-gray-800">Encurtador de Link Funcional</h1>
+        <p class="text-center text-gray-600 mb-6">Cole uma URL longa para gerar uma versão curta.</p>
+        
+        <div class="mb-5">
+            <label for="long-url" class="block text-gray-700 font-semibold mb-2">URL Longa</label>
+            <input type="url" id="long-url" placeholder="Ex: https://www.meusite.com.br/artigo-muito-longo" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom transition-colors">
+        </div>
+        
+        <button onclick="shortenLink()" class="w-full bg-blue-custom text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-800 transition-colors duration-300">
+            Encurtar Link
+        </button>
+
+        <div id="result-container" class="mt-8 hidden">
+            <div class="bg-gray-50 border-l-4 border-green-custom text-gray-800 p-4 rounded-lg">
+                <p class="font-bold text-sm mb-2">Seu Link Encurtado</p>
+                <code id="result-link" class="text-sm break-all"></code>
+                <p id="loading-message" class="text-sm text-gray-500 mt-2 hidden">Gerando link encurtado...</p>
+                <p id="error-message" class="text-sm text-red-500 mt-2 hidden"></p>
+            </div>
+            
+            <button onclick="copyToClipboard()" class="w-full mt-4 bg-gray-200 text-gray-700 font-bold py-3 rounded-lg shadow-md hover:bg-gray-300 transition-colors duration-300">
+                Copiar Link
+            </button>
+            <p id="copy-message" class="text-sm text-green-600 mt-2 hidden">Link copiado!</p>
+        </div>
+    </div>
+
+    <script>
+        function shortenLink() {
+            const longUrl = document.getElementById('long-url').value;
+            const resultContainer = document.getElementById('result-container');
+            const resultLink = document.getElementById('result-link');
+            const copyMessage = document.getElementById('copy-message');
+            const loadingMessage = document.getElementById('loading-message');
+            const errorMessage = document.getElementById('error-message');
+
+            // Limpa o resultado anterior e mostra a mensagem de carregamento
+            resultLink.textContent = '';
+            copyMessage.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+            loadingMessage.classList.remove('hidden');
+
+            if (!longUrl || !longUrl.startsWith('http')) {
+                loadingMessage.classList.add('hidden');
+                errorMessage.textContent = 'Por favor, insira uma URL longa válida (ex: https://...).';
+                errorMessage.classList.remove('hidden');
+                return;
+            }
+
+            const tinyUrlAPI = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`;
+            
+            fetch(tinyUrlAPI)
+                .then(response => response.text())
+                .then(shortenedUrl => {
+                    loadingMessage.classList.add('hidden');
+                    if (shortenedUrl.startsWith('https://tinyurl.com/')) {
+                        resultLink.textContent = shortenedUrl;
+                        // Oculta a mensagem de erro se a operação for bem-sucedida
+                        errorMessage.classList.add('hidden');
+                    } else {
+                        resultLink.textContent = `Erro ao encurtar o link. Tente novamente mais tarde.`;
+                        errorMessage.textContent = 'A API retornou um erro inesperado.';
+                        errorMessage.classList.remove('hidden');
+                    }
+                })
+                .catch(error => {
+                    loadingMessage.classList.add('hidden');
+                    resultLink.textContent = `Erro ao encurtar o link. Tente novamente mais tarde.`;
+                    errorMessage.textContent = 'Não foi possível conectar com a API.';
+                    errorMessage.classList.remove('hidden');
+                    console.error('Erro ao acessar a API do TinyURL:', error);
+                });
+        }
+
+        function copyToClipboard() {
+            const resultLink = document.getElementById('result-link');
+            const copyMessage = document.getElementById('copy-message');
+            const textToCopy = resultLink.textContent;
+
+            const tempInput = document.createElement('textarea');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            
+            try {
+                document.execCommand('copy');
+                copyMessage.classList.remove('hidden');
+            } catch (err) {
+                console.error('Falha ao copiar: ', err);
+            }
+            document.body.removeChild(tempInput);
+        }
+    </script>
+</body>
+</html>
