@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Nomes Aleatórios</title>
+    <!-- Tailwind CSS CDN para um estilo moderno e responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'blue-custom': '#3b82f6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-lg w-full">
+        <h1 class="text-3xl font-bold text-center mb-4 text-gray-800">Gerador de Nomes Aleatórios</h1>
+        <p class="text-center text-gray-600 mb-6">Selecione o tipo e clique no botão para gerar um nome aleatório.</p>
+
+        <div class="mb-5 flex flex-col items-center">
+            <select id="generation-type" class="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom transition-colors">
+                <option value="person">Pessoa</option>
+                <option value="city">Cidade</option>
+            </select>
+            
+            <div id="loading-spinner" class="hidden animate-spin h-10 w-10 border-4 border-blue-custom border-t-transparent rounded-full mb-4"></div>
+            <p id="generated-name" class="text-4xl font-bold text-gray-800 break-words text-center min-h-[56px]">...</p>
+        </div>
+        
+        <button onclick="generateItem()" class="w-full bg-blue-custom text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-800 transition-colors duration-300">
+            Gerar
+        </button>
+
+        <p id="error-message" class="text-sm text-red-500 mt-4 text-center hidden"></p>
+    </div>
+
+    <script>
+        // Função para buscar e exibir um nome de acordo com a seleção do usuário
+        async function generateItem() {
+            const type = document.getElementById('generation-type').value;
+            const generatedNameElement = document.getElementById('generated-name');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const errorMessageElement = document.getElementById('error-message');
+
+            // Limpa o estado anterior
+            generatedNameElement.textContent = '';
+            errorMessageElement.classList.add('hidden');
+            loadingSpinner.classList.remove('hidden');
+
+            try {
+                let name = '';
+                if (type === 'person') {
+                    // API para nomes de pessoas
+                    const response = await fetch('https://randomuser.me/api/?nat=br');
+                    if (!response.ok) {
+                        throw new Error('Erro ao buscar o nome de pessoa. Tente novamente mais tarde.');
+                    }
+                    const data = await response.json();
+                    const user = data.results[0];
+                    name = `${user.name.first} ${user.name.last}`;
+                } else if (type === 'city') {
+                    // API para nomes de cidades brasileiras (agora usando a API do IBGE)
+                    const response = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/municipios');
+                    if (!response.ok) {
+                        throw new Error('Erro ao buscar o nome da cidade. A API do IBGE pode estar indisponível.');
+                    }
+                    const data = await response.json();
+                    const randomCity = data[Math.floor(Math.random() * data.length)];
+                    name = randomCity.nome;
+                }
+
+                // Exibe o nome na tela
+                generatedNameElement.textContent = name;
+            } catch (error) {
+                console.error('Erro:', error);
+                errorMessageElement.textContent = error.message;
+                errorMessageElement.classList.remove('hidden');
+                generatedNameElement.textContent = 'Erro';
+            } finally {
+                // Oculta o spinner de carregamento, independente do resultado
+                loadingSpinner.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
