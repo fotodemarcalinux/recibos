@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Localizador de CEP</title>
+    <!-- Tailwind CSS CDN para um estilo moderno e responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'blue-custom': '#3b82f6',
+                        'green-custom': '#10b981',
+                        'gray-bg': '#f0f4f8',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-lg w-full">
+        <h1 class="text-3xl font-bold text-center mb-4 text-gray-800">Localizador de CEP</h1>
+        <p class="text-center text-gray-600 mb-6">Selecione a forma de busca para encontrar o endereço ou o CEP.</p>
+        
+        <div class="flex justify-center mb-6 space-x-4">
+            <button id="btn-cep-to-address" class="px-4 py-2 text-sm font-semibold rounded-lg shadow-md bg-blue-custom text-white">
+                CEP para Endereço
+            </button>
+            <button id="btn-address-to-cep" class="px-4 py-2 text-sm font-semibold rounded-lg shadow-md bg-gray-200 text-gray-700 hover:bg-gray-300">
+                Endereço para CEP
+            </button>
+        </div>
+
+        <!-- Seção de Busca por CEP -->
+        <div id="cep-search-section">
+            <div class="mb-5">
+                <label for="cep-input" class="block text-gray-700 font-semibold mb-2">CEP</label>
+                <input type="text" id="cep-input" placeholder="Ex: 01001000" maxlength="8" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom transition-colors">
+                <p class="text-sm text-gray-500 mt-1">Apenas números. O CEP deve ter 8 dígitos.</p>
+            </div>
+            <button onclick="searchCep()" class="w-full bg-blue-custom text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-800 transition-colors duration-300">
+                Buscar Endereço
+            </button>
+        </div>
+
+        <!-- Seção de Busca por Endereço (oculta por padrão) -->
+        <div id="address-search-section" class="hidden">
+            <div class="mb-4">
+                <label for="uf-input" class="block text-gray-700 font-semibold mb-2">Estado (UF)</label>
+                <input type="text" id="uf-input" placeholder="Ex: SP" maxlength="2" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom transition-colors">
+            </div>
+            <div class="mb-4">
+                <label for="city-input" class="block text-gray-700 font-semibold mb-2">Cidade</label>
+                <input type="text" id="city-input" placeholder="Ex: São Paulo" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom transition-colors">
+            </div>
+            <div class="mb-4">
+                <label for="street-input" class="block text-gray-700 font-semibold mb-2">Logradouro</label>
+                <input type="text" id="street-input" placeholder="Ex: Praça da Sé" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom transition-colors">
+            </div>
+            <button onclick="searchAddress()" class="w-full bg-blue-custom text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-800 transition-colors duration-300">
+                Buscar CEP
+            </button>
+        </div>
+
+        <div id="result-container" class="mt-8 hidden">
+            <div id="loading-spinner" class="hidden animate-spin h-8 w-8 border-4 border-blue-custom border-t-transparent rounded-full mx-auto mb-4"></div>
+            
+            <div id="address-info" class="p-4 bg-gray-50 rounded-lg border-l-4 border-green-custom">
+                <p class="text-sm font-bold text-gray-700 mb-2">Detalhes do Endereço:</p>
+                <p id="street" class="text-gray-600"></p>
+                <p id="neighborhood" class="text-gray-600"></p>
+                <p id="city-state" class="text-gray-600"></p>
+                <p id="cep-list" class="text-gray-600"></p>
+            </div>
+            
+            <p id="error-message" class="text-sm text-red-500 mt-4 text-center hidden"></p>
+        </div>
+    </div>
+
+    <script>
+        const cepSearchSection = document.getElementById('cep-search-section');
+        const addressSearchSection = document.getElementById('address-search-section');
+        const btnCepToAddress = document.getElementById('btn-cep-to-address');
+        const btnAddressToCep = document.getElementById('btn-address-to-cep');
+        const resultContainer = document.getElementById('result-container');
+
+        btnCepToAddress.addEventListener('click', () => toggleSearchMode('cep-to-address'));
+        btnAddressToCep.addEventListener('click', () => toggleSearchMode('address-to-cep'));
+
+        function toggleSearchMode(mode) {
+            resultContainer.classList.add('hidden');
+            if (mode === 'cep-to-address') {
+                cepSearchSection.classList.remove('hidden');
+                addressSearchSection.classList.add('hidden');
+                btnCepToAddress.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                btnCepToAddress.classList.add('bg-blue-custom', 'text-white');
+                btnAddressToCep.classList.remove('bg-blue-custom', 'text-white');
+                btnAddressToCep.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+            } else {
+                cepSearchSection.classList.add('hidden');
+                addressSearchSection.classList.remove('hidden');
+                btnAddressToCep.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                btnAddressToCep.classList.add('bg-blue-custom', 'text-white');
+                btnCepToAddress.classList.remove('bg-blue-custom', 'text-white');
+                btnCepToAddress.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+            }
+        }
+
+        async function searchCep() {
+            const cep = document.getElementById('cep-input').value.replace(/\D/g, '');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const addressInfo = document.getElementById('address-info');
+            const errorMessage = document.getElementById('error-message');
+
+            resultContainer.classList.remove('hidden');
+            addressInfo.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+            loadingSpinner.classList.remove('hidden');
+            
+            if (cep.length !== 8) {
+                loadingSpinner.classList.add('hidden');
+                errorMessage.textContent = 'Por favor, digite um CEP válido com 8 dígitos.';
+                errorMessage.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                // API pública do ViaCEP para buscar informações
+                const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+                if (!response.ok) {
+                    throw new Error('Erro na busca. A API do ViaCEP pode estar indisponível.');
+                }
+                const data = await response.json();
+
+                if (data.erro) {
+                    throw new Error('CEP não encontrado ou inválido.');
+                }
+                
+                document.getElementById('street').textContent = `Logradouro: ${data.logradouro || 'N/A'}`;
+                document.getElementById('neighborhood').textContent = `Bairro: ${data.bairro || 'N/A'}`;
+                document.getElementById('city-state').textContent = `Cidade/Estado: ${data.localidade || 'N/A'} - ${data.uf || 'N/A'}`;
+                document.getElementById('cep-list').textContent = ''; // Limpa a lista de CEPs
+                
+                addressInfo.classList.remove('hidden');
+            } catch (error) {
+                console.error('Erro:', error);
+                errorMessage.textContent = error.message;
+                errorMessage.classList.remove('hidden');
+            } finally {
+                loadingSpinner.classList.add('hidden');
+            }
+        }
+        
+        async function searchAddress() {
+            const uf = document.getElementById('uf-input').value;
+            const city = document.getElementById('city-input').value;
+            const street = document.getElementById('street-input').value;
+            
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const addressInfo = document.getElementById('address-info');
+            const errorMessage = document.getElementById('error-message');
+
+            resultContainer.classList.remove('hidden');
+            addressInfo.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+            loadingSpinner.classList.remove('hidden');
+
+            if (!uf || !city || !street) {
+                loadingSpinner.classList.add('hidden');
+                errorMessage.textContent = 'Por favor, preencha todos os campos do endereço para buscar o CEP.';
+                errorMessage.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                // API pública do ViaCEP para buscar por endereço
+                const response = await fetch(`https://viacep.com.br/ws/${uf}/${city}/${street}/json/`);
+                if (!response.ok) {
+                    throw new Error('Erro na busca. A API do ViaCEP pode estar indisponível.');
+                }
+                const data = await response.json();
+
+                if (data.length === 0) {
+                    throw new Error('CEP não encontrado para o endereço informado.');
+                }
+
+                // Cria uma lista de CEPs encontrados
+                const cepListElement = document.getElementById('cep-list');
+                cepListElement.innerHTML = `<p class="font-bold">CEPs encontrados:</p>`;
+                data.forEach(item => {
+                    const p = document.createElement('p');
+                    p.textContent = item.cep;
+                    cepListElement.appendChild(p);
+                });
+
+                // Preenche as informações dos primeiros resultados para visualização
+                const firstResult = data[0];
+                document.getElementById('street').textContent = `Logradouro: ${firstResult.logradouro || 'N/A'}`;
+                document.getElementById('neighborhood').textContent = `Bairro: ${firstResult.bairro || 'N/A'}`;
+                document.getElementById('city-state').textContent = `Cidade/Estado: ${firstResult.localidade || 'N/A'} - ${firstResult.uf || 'N/A'}`;
+                
+                addressInfo.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Erro:', error);
+                errorMessage.textContent = error.message;
+                errorMessage.classList.remove('hidden');
+            } finally {
+                loadingSpinner.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
