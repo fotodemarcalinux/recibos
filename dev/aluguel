@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Contrato de Aluguel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'blue-custom': '#3b82f6',
+                        'green-custom': '#10b981',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        @media print {
+            body {
+                background: none;
+            }
+            .no-print {
+                display: none;
+            }
+            #contract-output {
+                box-shadow: none;
+                border: none;
+                margin: 0;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-4xl w-full my-8 no-print">
+        <h1 class="text-3xl font-bold text-center mb-4 text-gray-800">Gerador de Contrato de Aluguel</h1>
+        <p class="text-center text-red-600 mb-6 font-bold">
+            AVISO: Este é apenas um modelo. Consulte um advogado para validar e personalizar o contrato.
+        </p>
+        
+        <form id="contract-form" class="grid md:grid-cols-2 gap-6">
+            <!-- Locador -->
+            <div class="p-6 bg-gray-50 rounded-lg shadow-md">
+                <h2 class="text-xl font-bold mb-4 text-blue-custom">Dados do Locador</h2>
+                <div class="mb-4">
+                    <label for="locador-nome" class="block text-gray-700 font-semibold mb-2">Nome Completo</label>
+                    <input type="text" id="locador-nome" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom">
+                </div>
+                <div class="mb-4">
+                    <label for="locador-rg" class="block text-gray-700 font-semibold mb-2">RG</label>
+                    <input type="text" id="locador-rg" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom">
+                </div>
+                <div class="mb-4">
+                    <label for="locador-cpf" class="block text-gray-700 font-semibold mb-2">CPF</label>
+                    <input type="text" id="locador-cpf" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom">
+                </div>
+            </div>
+
+            <!-- Locatário -->
+            <div class="p-6 bg-gray-50 rounded-lg shadow-md">
+                <h2 class="text-xl font-bold mb-4 text-blue-custom">Dados do Locatário</h2>
+                <div class="mb-4">
+                    <label for="locatario-nome" class="block text-gray-700 font-semibold mb-2">Nome Completo</label>
+                    <input type="text" id="locatario-nome" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom">
+                </div>
+                <div class="mb-4">
+                    <label for="locatario-rg" class="block text-gray-700 font-semibold mb-2">RG</label>
+                    <input type="text" id="locatario-rg" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom">
+                </div>
+                <div class="mb-4">
+                    <label for="locatario-cpf" class="block text-gray-700 font-semibold mb-2">CPF</label>
+                    <input type="text" id="locatario-cpf" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom">
+                </div>
+            </div>
+
+            <!-- Dados do Imóvel e Condições -->
+            <div class="md:col-span-2 p-6 bg-gray-50 rounded-lg shadow-md">
+                <h2 class="text-xl font-bold mb-4 text-blue-custom">Dados do Imóvel e Condições</h2>
+                <div class="mb-4">
+                    <label for="imovel-endereco" class="block text-gray-700 font-semibold mb-2">Endereço Completo do Imóvel</label>
+                    <textarea id="imovel-endereco" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom resize-y"></textarea>
+                </div>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="valor-aluguel" class="block text-gray-700 font-semibold mb-2">Valor do Aluguel (R$)</label>
+                        <input type="number" id="valor-aluguel" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom">
+                    </div>
+                    <div>
+                        <label for="inicio-contrato" class="block text-gray-700 font-semibold mb-2">Início do Contrato</label>
+                        <input type="date" id="inicio-contrato" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom">
+                    </div>
+                    <div>
+                        <label for="duracao-contrato" class="block text-gray-700 font-semibold mb-2">Duração do Contrato (meses)</label>
+                        <input type="number" id="duracao-contrato" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom">
+                    </div>
+                </div>
+            </div>
+            
+            <button type="button" onclick="generateContract()" class="md:col-span-2 w-full mt-4 bg-blue-custom text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-800 transition-colors duration-300">
+                Gerar Contrato
+            </button>
+        </form>
+    </div>
+
+    <div id="contract-output" class="bg-white rounded-2xl shadow-xl p-8 max-w-4xl w-full my-8 hidden">
+        <div class="no-print">
+            <h2 class="text-xl font-bold mb-4 text-green-custom">Modelo de Contrato Gerado</h2>
+            <p class="text-sm text-gray-500 mb-4">
+                Copie, imprima ou salve em PDF. Lembre-se de revisá-lo e consultar um profissional.
+            </p>
+        </div>
+        
+        <div id="contract-text" class="whitespace-pre-wrap text-gray-800 print-section"></div>
+
+        <div class="no-print mt-6 flex justify-end gap-4">
+            <button onclick="copyContract()" class="bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors duration-300">
+                Copiar Contrato
+            </button>
+            <button onclick="printContract()" class="bg-green-custom text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 transition-colors duration-300">
+                Imprimir / Salvar PDF
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function generateContract() {
+            const locadorNome = document.getElementById('locador-nome').value;
+            const locadorRG = document.getElementById('locador-rg').value;
+            const locadorCPF = document.getElementById('locador-cpf').value;
+            const locatarioNome = document.getElementById('locatario-nome').value;
+            const locatarioRG = document.getElementById('locatario-rg').value;
+            const locatarioCPF = document.getElementById('locatario-cpf').value;
+            const imovelEndereco = document.getElementById('imovel-endereco').value;
+            const valorAluguel = document.getElementById('valor-aluguel').value;
+            const inicioContrato = document.getElementById('inicio-contrato').value;
+            const duracaoContrato = document.getElementById('duracao-contrato').value;
+            const contractOutput = document.getElementById('contract-output');
+
+            if (!locadorNome || !locatarioNome || !imovelEndereco || !valorAluguel || !inicioContrato || !duracaoContrato) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            const valorAluguelFormatado = parseFloat(valorAluguel).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const dataInicio = new Date(inicioContrato).toLocaleDateString('pt-BR');
+            const dataFim = new Date(new Date(inicioContrato).setMonth(new Date(inicioContrato).getMonth() + parseInt(duracaoContrato))).toLocaleDateString('pt-BR');
+            
+            const contractHtml = `
+                <div class="p-8">
+                    <h2 class="text-2xl font-bold text-center mb-6">CONTRATO DE LOCAÇÃO DE IMÓVEL RESIDENCIAL</h2>
+                    
+                    <p class="text-lg font-semibold mb-2">IDENTIFICAÇÃO DAS PARTES CONTRATANTES</p>
+                    <p><strong>LOCADOR(A):</strong> ${locadorNome}, portador(a) do RG nº ${locadorRG} e CPF nº ${locadorCPF}.</p>
+                    <p><strong>LOCATÁRIO(A):</strong> ${locatarioNome}, portador(a) do RG nº ${locatarioRG} e CPF nº ${locatarioCPF}.</p>
+                    <br>
+                    <p>As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Locação de Imóvel Residencial, que se regerá pelas cláusulas e condições seguintes:</p>
+                    <br>
+                    
+                    <p class="text-lg font-semibold mb-2">CLÁUSULA PRIMEIRA – DO OBJETO DO CONTRATO</p>
+                    <p>O objeto deste contrato é a locação do imóvel residencial situado no endereço: ${imovelEndereco}.</p>
+                    <br>
+
+                    <p class="text-lg font-semibold mb-2">CLÁUSULA SEGUNDA – DO ALUGUEL</p>
+                    <p>O valor do aluguel mensal será de ${valorAluguelFormatado}, a ser pago até o dia 5 (cinco) de cada mês subsequente ao vencido.</p>
+                    <br>
+
+                    <p class="text-lg font-semibold mb-2">CLÁUSULA TERCEIRA – DA DURAÇÃO</p>
+                    <p>A locação terá a duração de ${duracaoContrato} meses, iniciando-se em ${dataInicio} e com término previsto em ${dataFim}.</p>
+                    <br>
+
+                    <p class="text-lg font-semibold mb-2">CLÁUSULA QUARTA – DAS OBRIGAÇÕES</p>
+                    <p>O(a) locatário(a) se obriga a manter o imóvel em perfeitas condições de uso, conservação e limpeza, responsabilizando-se por quaisquer danos causados.</p>
+                    <br>
+
+                    <p class="text-lg font-semibold mb-2">CLÁUSULA QUINTA – DAS PENALIDADES</p>
+                    <p>O atraso no pagamento do aluguel implicará em multa de 10% (dez por cento) sobre o valor do débito, acrescido de juros de 1% (um por cento) ao mês e correção monetária.</p>
+                    <br>
+
+                    <p>E, por estarem assim justos e contratados, assinam o presente contrato em 2 (duas) vias de igual teor e forma, na presença das testemunhas abaixo.</p>
+                    <br><br>
+
+                    <p class="text-center">___________________________________<br><strong>${locadorNome}</strong><br>Locador(a)</p>
+                    <br><br>
+
+                    <p class="text-center">___________________________________<br><strong>${locatarioNome}</strong><br>Locatário(a)</p>
+                    <br><br>
+
+                    <p class="text-center">___________________________________<br>Testemunha 1<br>Nome:<br>CPF:</p>
+                    <br>
+                    <p class="text-center">___________________________________<br>Testemunha 2<br>Nome:<br>CPF:</p>
+                </div>
+            `;
+
+            document.getElementById('contract-text').innerHTML = contractHtml;
+            contractOutput.classList.remove('hidden');
+        }
+
+        function copyContract() {
+            const contractTextElement = document.getElementById('contract-text');
+            const range = document.createRange();
+            range.selectNode(contractTextElement);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            alert('Contrato copiado para a área de transferência!');
+        }
+
+        function printContract() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
