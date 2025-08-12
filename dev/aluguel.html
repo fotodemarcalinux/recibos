@@ -157,14 +157,14 @@
             const dataFim = new Date(new Date(inicioContrato).setMonth(new Date(inicioContrato).getMonth() + parseInt(duracaoContrato))).toLocaleDateString('pt-BR');
             
             const contractHtml = `
-                <div class="p-8 text-sm">
-                    <h2 class="font-bold text-center text-lg mb-2">CONTRATO DE LOCAÇÃO DE IMÓVEL RESIDENCIAL</h2>
+                <div class="p-8 text-sm leading-snug">
+                    <h2 class="font-bold text-center text-lg mb-4">CONTRATO DE LOCAÇÃO DE IMÓVEL RESIDENCIAL</h2>
                     
-                    <p class="mt-4 mb-1"><strong>IDENTIFICAÇÃO DAS PARTES CONTRATANTES</strong></p>
-                    <p><strong>LOCADOR(A):</strong> ${locadorNome}, portador(a) do RG nº ${locadorRG} e CPF nº ${locadorCPF}.</p>
-                    <p><strong>LOCATÁRIO(A):</strong> ${locatarioNome}, portador(a) do RG nº ${locatarioRG} e CPF nº ${locatarioCPF}.</p>
+                    <p class="mb-2"><strong>IDENTIFICAÇÃO DAS PARTES CONTRATANTES</strong></p>
+                    <p class="mb-1"><strong>LOCADOR(A):</strong> ${locadorNome}, portador(a) do RG nº ${locadorRG} e CPF nº ${locadorCPF}.</p>
+                    <p class="mb-1"><strong>LOCATÁRIO(A):</strong> ${locatarioNome}, portador(a) do RG nº ${locatarioRG} e CPF nº ${locatarioCPF}.</p>
                     
-                    <p class="mt-3">As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Locação de Imóvel Residencial, que se regerá pelas cláusulas e condições seguintes:</p>
+                    <p class="mt-4">As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Locação de Imóvel Residencial, que se regerá pelas cláusulas e condições seguintes:</p>
 
                     <p class="mt-4"><strong>CLÁUSULA PRIMEIRA – DO OBJETO DO CONTRATO</strong></p>
                     <p>O objeto deste contrato é a locação do imóvel residencial situado no endereço: ${imovelEndereco}.</p>
@@ -183,21 +183,16 @@
 
                     <p class="mt-4">E, por estarem assim justos e contratados, assinam o presente contrato em 2 (duas) vias de igual teor e forma, na presença das testemunhas abaixo.</p>
 
-                    <div class="mt-12 text-center">___________________________________</div>
+                    <div class="mt-8 text-center">___________________________________</div>
                     <div class="text-center"><strong>${locadorNome}</strong></div>
                     <div class="text-center">Locador(a)</div>
 
-                    <div class="mt-12 text-center">___________________________________</div>
+                    <div class="mt-8 text-center">___________________________________</div>
                     <div class="text-center"><strong>${locatarioNome}</strong></div>
                     <div class="text-center">Locatário(a)</div>
 
-                    <div class="mt-12 text-center">___________________________________</div>
-                    <div class="text-center">Testemunha 1</div>
-                    <div class="text-center">Nome:</div>
-                    <div class="text-center">CPF:</div>
-                    
-                    <div class="mt-12 text-center">___________________________________</div>
-                    <div class="text-center">Testemunha 2</div>
+                    <div class="mt-8 text-center">___________________________________</div>
+                    <div class="text-center">Testemunha</div>
                     <div class="text-center">Nome:</div>
                     <div class="text-center">CPF:</div>
                 </div>
