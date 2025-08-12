@@ -158,47 +158,48 @@
             
             const contractHtml = `
                 <div class="p-8">
-                    <h2 class="text-2xl font-bold text-center mb-6">CONTRATO DE LOCAÇÃO DE IMÓVEL RESIDENCIAL</h2>
+                    <div class="text-2xl font-bold text-center mb-4">CONTRATO DE LOCAÇÃO DE IMÓVEL RESIDENCIAL</div>
                     
-                    <p class="text-lg font-semibold mb-2">IDENTIFICAÇÃO DAS PARTES CONTRATANTES</p>
-                    <p><strong>LOCADOR(A):</strong> ${locadorNome}, portador(a) do RG nº ${locadorRG} e CPF nº ${locadorCPF}.</p>
-                    <p><strong>LOCATÁRIO(A):</strong> ${locatarioNome}, portador(a) do RG nº ${locatarioRG} e CPF nº ${locatarioCPF}.</p>
-                    <br>
-                    <p>As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Locação de Imóvel Residencial, que se regerá pelas cláusulas e condições seguintes:</p>
-                    <br>
+                    <div class="text-lg font-semibold mt-6 mb-1">IDENTIFICAÇÃO DAS PARTES CONTRATANTES</div>
+                    <div class="mb-1"><strong>LOCADOR(A):</strong> ${locadorNome}, portador(a) do RG nº ${locadorRG} e CPF nº ${locadorCPF}.</div>
+                    <div class="mb-1"><strong>LOCATÁRIO(A):</strong> ${locatarioNome}, portador(a) do RG nº ${locatarioRG} e CPF nº ${locatarioCPF}.</div>
                     
-                    <p class="text-lg font-semibold mb-2">CLÁUSULA PRIMEIRA – DO OBJETO DO CONTRATO</p>
-                    <p>O objeto deste contrato é a locação do imóvel residencial situado no endereço: ${imovelEndereco}.</p>
-                    <br>
+                    <div class="mt-4 mb-1">As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Locação de Imóvel Residencial, que se regerá pelas cláusulas e condições seguintes:</div>
 
-                    <p class="text-lg font-semibold mb-2">CLÁUSULA SEGUNDA – DO ALUGUEL</p>
-                    <p>O valor do aluguel mensal será de ${valorAluguelFormatado}, a ser pago até o dia 5 (cinco) de cada mês subsequente ao vencido.</p>
-                    <br>
+                    <div class="text-lg font-semibold mt-6 mb-1">CLÁUSULA PRIMEIRA – DO OBJETO DO CONTRATO</div>
+                    <div class="mb-1">O objeto deste contrato é a locação do imóvel residencial situado no endereço: ${imovelEndereco}.</div>
 
-                    <p class="text-lg font-semibold mb-2">CLÁUSULA TERCEIRA – DA DURAÇÃO</p>
-                    <p>A locação terá a duração de ${duracaoContrato} meses, iniciando-se em ${dataInicio} e com término previsto em ${dataFim}.</p>
-                    <br>
+                    <div class="text-lg font-semibold mt-6 mb-1">CLÁUSULA SEGUNDA – DO ALUGUEL</div>
+                    <div class="mb-1">O valor do aluguel mensal será de ${valorAluguelFormatado}, a ser pago até o dia 5 (cinco) de cada mês subsequente ao vencido.</div>
 
-                    <p class="text-lg font-semibold mb-2">CLÁUSULA QUARTA – DAS OBRIGAÇÕES</p>
-                    <p>O(a) locatário(a) se obriga a manter o imóvel em perfeitas condições de uso, conservação e limpeza, responsabilizando-se por quaisquer danos causados.</p>
-                    <br>
+                    <div class="text-lg font-semibold mt-6 mb-1">CLÁUSULA TERCEIRA – DA DURAÇÃO</div>
+                    <div class="mb-1">A locação terá a duração de ${duracaoContrato} meses, iniciando-se em ${dataInicio} e com término previsto em ${dataFim}.</div>
 
-                    <p class="text-lg font-semibold mb-2">CLÁUSULA QUINTA – DAS PENALIDADES</p>
-                    <p>O atraso no pagamento do aluguel implicará em multa de 10% (dez por cento) sobre o valor do débito, acrescido de juros de 1% (um por cento) ao mês e correção monetária.</p>
-                    <br>
+                    <div class="text-lg font-semibold mt-6 mb-1">CLÁUSULA QUARTA – DAS OBRIGAÇÕES</div>
+                    <div class="mb-1">O(a) locatário(a) se obriga a manter o imóvel em perfeitas condições de uso, conservação e limpeza, responsabilizando-se por quaisquer danos causados.</div>
 
-                    <p>E, por estarem assim justos e contratados, assinam o presente contrato em 2 (duas) vias de igual teor e forma, na presença das testemunhas abaixo.</p>
-                    <br><br>
+                    <div class="text-lg font-semibold mt-6 mb-1">CLÁUSULA QUINTA – DAS PENALIDADES</div>
+                    <div class="mb-1">O atraso no pagamento do aluguel implicará em multa de 10% (dez por cento) sobre o valor do débito, acrescido de juros de 1% (um por cento) ao mês e correção monetária.</div>
 
-                    <p class="text-center">___________________________________<br><strong>${locadorNome}</strong><br>Locador(a)</p>
-                    <br><br>
+                    <div class="mt-6 mb-1">E, por estarem assim justos e contratados, assinam o presente contrato em 2 (duas) vias de igual teor e forma, na presença das testemunhas abaixo.</div>
 
-                    <p class="text-center">___________________________________<br><strong>${locatarioNome}</strong><br>Locatário(a)</p>
-                    <br><br>
+                    <div class="mt-8 mb-1 text-center">___________________________________</div>
+                    <div class="text-center"><strong>${locadorNome}</strong></div>
+                    <div class="text-center">Locador(a)</div>
 
-                    <p class="text-center">___________________________________<br>Testemunha 1<br>Nome:<br>CPF:</p>
-                    <br>
-                    <p class="text-center">___________________________________<br>Testemunha 2<br>Nome:<br>CPF:</p>
+                    <div class="mt-8 mb-1 text-center">___________________________________</div>
+                    <div class="text-center"><strong>${locatarioNome}</strong></div>
+                    <div class="text-center">Locatário(a)</div>
+
+                    <div class="mt-8 mb-1 text-center">___________________________________</div>
+                    <div class="text-center">Testemunha 1</div>
+                    <div class="text-center">Nome:</div>
+                    <div class="text-center">CPF:</div>
+                    
+                    <div class="mt-8 mb-1 text-center">___________________________________</div>
+                    <div class="text-center">Testemunha 2</div>
+                    <div class="text-center">Nome:</div>
+                    <div class="text-center">CPF:</div>
                 </div>
             `;
 
