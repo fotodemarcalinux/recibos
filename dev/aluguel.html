@@ -121,7 +121,7 @@
             </p>
         </div>
         
-        <div id="contract-text" class="whitespace-pre-wrap text-gray-800 print-section text-justify"></div>
+        <div id="contract-text" class="text-gray-800 print-section text-justify"></div>
 
         <div class="no-print mt-6 flex justify-end gap-4">
             <button onclick="copyContract()" class="bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors duration-300">
@@ -157,46 +157,46 @@
             const dataFim = new Date(new Date(inicioContrato).setMonth(new Date(inicioContrato).getMonth() + parseInt(duracaoContrato))).toLocaleDateString('pt-BR');
             
             const contractHtml = `
-                <div class="p-8">
-                    <div class="text-2xl font-bold text-center mb-4">CONTRATO DE LOCAÇÃO DE IMÓVEL RESIDENCIAL</div>
+                <div class="p-8 text-sm">
+                    <h2 class="font-bold text-center text-lg mb-2">CONTRATO DE LOCAÇÃO DE IMÓVEL RESIDENCIAL</h2>
                     
-                    <div class="text-lg font-semibold mt-6 mb-1">IDENTIFICAÇÃO DAS PARTES CONTRATANTES</div>
-                    <div class="mb-1"><strong>LOCADOR(A):</strong> ${locadorNome}, portador(a) do RG nº ${locadorRG} e CPF nº ${locadorCPF}.</div>
-                    <div class="mb-1"><strong>LOCATÁRIO(A):</strong> ${locatarioNome}, portador(a) do RG nº ${locatarioRG} e CPF nº ${locatarioCPF}.</div>
+                    <p class="mt-4 mb-1"><strong>IDENTIFICAÇÃO DAS PARTES CONTRATANTES</strong></p>
+                    <p><strong>LOCADOR(A):</strong> ${locadorNome}, portador(a) do RG nº ${locadorRG} e CPF nº ${locadorCPF}.</p>
+                    <p><strong>LOCATÁRIO(A):</strong> ${locatarioNome}, portador(a) do RG nº ${locatarioRG} e CPF nº ${locatarioCPF}.</p>
                     
-                    <div class="mt-4 mb-1">As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Locação de Imóvel Residencial, que se regerá pelas cláusulas e condições seguintes:</div>
+                    <p class="mt-3">As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Locação de Imóvel Residencial, que se regerá pelas cláusulas e condições seguintes:</p>
 
-                    <div class="text-lg font-semibold mt-6 mb-1">CLÁUSULA PRIMEIRA – DO OBJETO DO CONTRATO</div>
-                    <div class="mb-1">O objeto deste contrato é a locação do imóvel residencial situado no endereço: ${imovelEndereco}.</div>
+                    <p class="mt-4"><strong>CLÁUSULA PRIMEIRA – DO OBJETO DO CONTRATO</strong></p>
+                    <p>O objeto deste contrato é a locação do imóvel residencial situado no endereço: ${imovelEndereco}.</p>
 
-                    <div class="text-lg font-semibold mt-6 mb-1">CLÁUSULA SEGUNDA – DO ALUGUEL</div>
-                    <div class="mb-1">O valor do aluguel mensal será de ${valorAluguelFormatado}, a ser pago até o dia 5 (cinco) de cada mês subsequente ao vencido.</div>
+                    <p class="mt-4"><strong>CLÁUSULA SEGUNDA – DO ALUGUEL</strong></p>
+                    <p>O valor do aluguel mensal será de ${valorAluguelFormatado}, a ser pago até o dia 5 (cinco) de cada mês subsequente ao vencido.</p>
 
-                    <div class="text-lg font-semibold mt-6 mb-1">CLÁUSULA TERCEIRA – DA DURAÇÃO</div>
-                    <div class="mb-1">A locação terá a duração de ${duracaoContrato} meses, iniciando-se em ${dataInicio} e com término previsto em ${dataFim}.</div>
+                    <p class="mt-4"><strong>CLÁUSULA TERCEIRA – DA DURAÇÃO</strong></p>
+                    <p>A locação terá a duração de ${duracaoContrato} meses, iniciando-se em ${dataInicio} e com término previsto em ${dataFim}.</p>
 
-                    <div class="text-lg font-semibold mt-6 mb-1">CLÁUSULA QUARTA – DAS OBRIGAÇÕES</div>
-                    <div class="mb-1">O(a) locatário(a) se obriga a manter o imóvel em perfeitas condições de uso, conservação e limpeza, responsabilizando-se por quaisquer danos causados.</div>
+                    <p class="mt-4"><strong>CLÁUSULA QUARTA – DAS OBRIGAÇÕES</strong></p>
+                    <p>O(a) locatário(a) se obriga a manter o imóvel em perfeitas condições de uso, conservação e limpeza, responsabilizando-se por quaisquer danos causados.</p>
 
-                    <div class="text-lg font-semibold mt-6 mb-1">CLÁUSULA QUINTA – DAS PENALIDADES</div>
-                    <div class="mb-1">O atraso no pagamento do aluguel implicará em multa de 10% (dez por cento) sobre o valor do débito, acrescido de juros de 1% (um por cento) ao mês e correção monetária.</div>
+                    <p class="mt-4"><strong>CLÁUSULA QUINTA – DAS PENALIDADES</strong></p>
+                    <p>O atraso no pagamento do aluguel implicará em multa de 10% (dez por cento) sobre o valor do débito, acrescido de juros de 1% (um por cento) ao mês e correção monetária.</p>
 
-                    <div class="mt-6 mb-1">E, por estarem assim justos e contratados, assinam o presente contrato em 2 (duas) vias de igual teor e forma, na presença das testemunhas abaixo.</div>
+                    <p class="mt-4">E, por estarem assim justos e contratados, assinam o presente contrato em 2 (duas) vias de igual teor e forma, na presença das testemunhas abaixo.</p>
 
-                    <div class="mt-8 mb-1 text-center">___________________________________</div>
+                    <div class="mt-12 text-center">___________________________________</div>
                     <div class="text-center"><strong>${locadorNome}</strong></div>
                     <div class="text-center">Locador(a)</div>
 
-                    <div class="mt-8 mb-1 text-center">___________________________________</div>
+                    <div class="mt-12 text-center">___________________________________</div>
                     <div class="text-center"><strong>${locatarioNome}</strong></div>
                     <div class="text-center">Locatário(a)</div>
 
-                    <div class="mt-8 mb-1 text-center">___________________________________</div>
+                    <div class="mt-12 text-center">___________________________________</div>
                     <div class="text-center">Testemunha 1</div>
                     <div class="text-center">Nome:</div>
                     <div class="text-center">CPF:</div>
                     
-                    <div class="mt-8 mb-1 text-center">___________________________________</div>
+                    <div class="mt-12 text-center">___________________________________</div>
                     <div class="text-center">Testemunha 2</div>
                     <div class="text-center">Nome:</div>
                     <div class="text-center">CPF:</div>
