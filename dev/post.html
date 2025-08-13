@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criador de Postagens Simples</title>
-    <!-- Incluindo Tailwind CSS para um design moderno e responsivo -->
+    <title>Criador de Postagens para Blogger</title>
+    <!-- Incluindo Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluindo EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        emailjs.init('4RbQgOdqiUQJJhn4o'); // Sua chave pública do EmailJS
+    </script>
     <style>
-        /* Estilo da fonte Inter para uma aparência limpa */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
         body {
             font-family: 'Inter', sans-serif;
@@ -16,28 +20,22 @@
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
 
-    <!-- Container principal com card de design arredondado -->
     <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl w-full max-w-2xl">
         <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">
-            Criador de Postagens para Blog
+            Criador de Postagens para Blogger
         </h1>
         
         <p class="text-center text-gray-600 mb-8">
-            Preencha os campos abaixo para enviar o conteúdo da sua postagem por e-mail.
+            Preencha os campos abaixo para enviar o conteúdo diretamente para seu blog.
         </p>
 
-        <!-- 
-            O "action" do formulário agora usa o seu endpoint pessoal do Formspree.
-            É a única configuração necessária para que o formulário funcione.
-        -->
-        <form action="https://formspree.io/f/meoznewz" method="POST" class="space-y-6">
-            
+        <!-- Formulário modificado para usar EmailJS -->
+        <form id="blog-form" class="space-y-6">
             <div>
                 <label for="titulo" class="block text-gray-700 font-medium mb-2">Título da Postagem</label>
                 <input 
                     type="text" 
                     id="titulo" 
-                    name="Título" 
                     placeholder="Ex: Minha primeira postagem no blog"
                     required 
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -48,7 +46,6 @@
                 <label for="conteudo" class="block text-gray-700 font-medium mb-2">Conteúdo da Postagem</label>
                 <textarea 
                     id="conteudo" 
-                    name="Conteúdo" 
                     rows="10"
                     placeholder="Escreva o conteúdo da sua postagem aqui..."
                     required 
@@ -56,20 +53,32 @@
                 ></textarea>
             </div>
 
-            <!-- Campo oculto para o assunto do e-mail -->
-            <input type="hidden" name="_subject" value="Nova Postagem para o Blog (Enviado via Criador)">
-            
-            <!-- Campo oculto para garantir que as respostas vão para o e-mail do seu blog -->
-            <input type="hidden" name="_replyto" value="euestradaonzeteste@blogger.com">
-
             <button 
-                type="submit" 
+                type="button" 
+                onclick="sendEmail()" 
                 class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105"
             >
-                Enviar para o E-mail
+                Enviar para o Blogger
             </button>
         </form>
     </div>
+
+    <script>
+        function sendEmail() {
+            emailjs.send('service_vxod09i', 'template_ify492s', {
+                titulo: document.getElementById('titulo').value,
+                conteudo: document.getElementById('conteudo').value
+            }).then(
+                () => {
+                    alert('✅ Postagem enviada com sucesso!');
+                    document.getElementById('blog-form').reset(); // Limpa o formulário
+                },
+                (error) => {
+                    alert('❌ Erro ao enviar: ' + error.text);
+                }
+            );
+        }
+    </script>
 
 </body>
 </html>
