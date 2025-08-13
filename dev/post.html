@@ -4,22 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criador de Postagens para Blogger</title>
-    <!-- Incluindo Tailwind CSS -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Incluindo EmailJS -->
+    <!-- EmailJS -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
-        emailjs.init('4RbQgOdqiUQJJhn4o'); // Sua chave pública do EmailJS
+        emailjs.init('4RbQgOdqiUQJJhn4o'); // User ID público
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
         body {
             font-family: 'Inter', sans-serif;
         }
+        .animate-pulse {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
-
     <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl w-full max-w-2xl">
         <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">
             Criador de Postagens para Blogger
@@ -29,7 +35,6 @@
             Preencha os campos abaixo para enviar o conteúdo diretamente para seu blog.
         </p>
 
-        <!-- Formulário modificado para usar EmailJS -->
         <form id="blog-form" class="space-y-6">
             <div>
                 <label for="titulo" class="block text-gray-700 font-medium mb-2">Título da Postagem</label>
@@ -53,41 +58,66 @@
                 ></textarea>
             </div>
 
+            <div id="status-message" class="hidden text-center p-3 rounded-lg"></div>
+
             <button 
                 type="button" 
                 onclick="sendEmail()" 
-                class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105"
+                id="submit-btn"
+                class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center gap-2"
             >
-                Enviar para o Blogger
+                <svg id="spinner" class="hidden w-5 h-5 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span id="btn-text">Enviar para o Blogger</span>
             </button>
         </form>
     </div>
 
     <script>
-    function sendEmail() {
-        const btn = document.querySelector('button[type="button"]');
+    async function sendEmail() {
+        const btn = document.getElementById('submit-btn');
+        const spinner = document.getElementById('spinner');
+        const btnText = document.getElementById('btn-text');
+        const statusMsg = document.getElementById('status-message');
+
+        // Reset e preparação UI
+        statusMsg.classList.add('hidden');
         btn.disabled = true;
-        btn.textContent = 'Enviando...';
+        spinner.classList.remove('hidden');
+        btnText.textContent = 'Enviando...';
 
-        emailjs.send('service_vxod09i', 'template_ify492s', {
-            titulo: document.getElementById('titulo').value,
-            conteudo: document.getElementById('conteudo').value,
-            _replyto: 'euestradaonzeteste@blogger.com'  // Adiciona cabeçalho Reply-To
-        }).then(
-            (response) => {
-                alert(`✅ Enviado! ID: ${response.text}`);
-                btn.textContent = 'Enviar novamente';
-            },
-            (error) => {
-                console.error('Erro detalhado:', error);
-                alert(`❌ Falha: ${error.text || 'Verifique o console'}`);
-                btn.textContent = 'Tentar novamente';
-            }
-        ).finally(() => {
+        try {
+            const response = await emailjs.send('service_vxod09i', 'template_ify492s', {
+                titulo: document.getElementById('titulo').value,
+                conteudo: document.getElementById('conteudo').value,
+                _replyto: 'euestradaonzeteste@blogger.com',
+                _smtp_secure: true
+            });
+
+            // Sucesso
+            statusMsg.textContent = '✅ Postagem enviada com sucesso!';
+            statusMsg.className = 'bg-green-100 text-green-800 block';
+            document.getElementById('blog-form').reset();
+            
+        } catch (error) {
+            // Erro
+            console.error('Detalhes do erro:', error);
+            statusMsg.innerHTML = `❌ Erro no envio: <span class="font-mono">${error.text || 'Verifique o console'}</span>`;
+            statusMsg.className = 'bg-red-100 text-red-800 block';
+            
+        } finally {
+            // Reset UI
+            spinner.classList.add('hidden');
+            btnText.textContent = 'Enviar novamente';
             btn.disabled = false;
-        });
+            statusMsg.classList.remove('hidden');
+            
+            // Scroll para mensagem
+            statusMsg.scrollIntoView({ behavior: 'smooth' });
+        }
     }
-</script>
-
+    </script>
 </body>
 </html>
