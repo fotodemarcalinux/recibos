@@ -64,21 +64,30 @@
     </div>
 
     <script>
-        function sendEmail() {
-            emailjs.send('service_vxod09i', 'template_ify492s', {
-                titulo: document.getElementById('titulo').value,
-                conteudo: document.getElementById('conteudo').value
-            }).then(
-                () => {
-                    alert('✅ Postagem enviada com sucesso!');
-                    document.getElementById('blog-form').reset(); // Limpa o formulário
-                },
-                (error) => {
-                    alert('❌ Erro ao enviar: ' + error.text);
-                }
-            );
-        }
-    </script>
+    function sendEmail() {
+        const btn = document.querySelector('button[type="button"]');
+        btn.disabled = true;
+        btn.textContent = 'Enviando...';
+
+        emailjs.send('service_vxod09i', 'template_ify492s', {
+            titulo: document.getElementById('titulo').value,
+            conteudo: document.getElementById('conteudo').value,
+            _replyto: 'euestradaonzeteste@blogger.com'  // Adiciona cabeçalho Reply-To
+        }).then(
+            (response) => {
+                alert(`✅ Enviado! ID: ${response.text}`);
+                btn.textContent = 'Enviar novamente';
+            },
+            (error) => {
+                console.error('Erro detalhado:', error);
+                alert(`❌ Falha: ${error.text || 'Verifique o console'}`);
+                btn.textContent = 'Tentar novamente';
+            }
+        ).finally(() => {
+            btn.disabled = false;
+        });
+    }
+</script>
 
 </body>
 </html>
