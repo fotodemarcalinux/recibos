@@ -1,34 +1,135 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de HTML para Recibos</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gerador de HTML para Recibos</title>
+  <style>
+    :root{
+      --brand:#0e7490;
+      --ink:#334155;
+      --muted:#64748b;
+      --bg:#ffffff;
+      --card:#f8fafc;
+    }
+    *{box-sizing:border-box}
+    body{
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      margin:0; padding:0;
+    }
+    .container{
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    header.site-header{
+      display:flex; align-items:center; gap:12px;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 12px 0;
+    }
+    header.site-header img.brand{
+      height:40px; width:auto;
+    }
+    header.site-header .title{
+      font-size: 18px; font-weight: 700;
+      color: var(--brand);
+    }
+    .card{
+      background: var(--card);
+      border:1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 16px;
+      margin: 16px 0;
+    }
+    h2.section-title{margin:0 0 12px 0; font-size:20px}
+    label{display:block; font-weight:700; font-size:14px; margin:10px 0 6px}
+    input[type="text"], input[type="file"], input[type="date"],
+    input[type="number"], textarea, select{
+      width: 100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px;
+      font-size:14px;
+    }
+    button.primary{
+      display:inline-block; width:100%; max-width:280px;
+      background:#0ea5e9; color:#fff; border:none; border-radius:10px;
+      padding:12px 16px; font-weight:700; cursor:pointer;
+    }
+    button.primary:hover{background:#0284c7}
+    footer.site-footer{
+      margin-top: 24px; padding: 16px 0;
+      border-top: 1px solid #e2e8f0; text-align:center; font-size:12px; color:var(--muted);
+    }
+    footer.site-footer .footer-brand{
+      height:24px; vertical-align:middle; margin-bottom:8px;
+    }
+  </style>
 </head>
-<body style="font-family: 'Arial', sans-serif; background-color: #ffffff; display: flex; flex-direction: column; align-items: center; margin: 0; padding: 20px; color: #333;">
-    <h2 style="color: #4a5568; font-size: 24px; font-weight: bold; margin-bottom: 20px;">Gerador de HTML para Recibo Offline</h2>
-    <form id="empresaForm">
+<body>
+  <div class="container">
+    <header class="site-header">
+      <!-- Cabeçalho do GERADOR com logo JN2M3A DIGITAL (via URL) -->
+      <img class="brand" src="https://i.ibb.co/prsT1vXN/JN2-M3-ADIGITAL-H-1-removebg-preview.png" alt="JN2M3A DIGITAL" />
+      <div class="title">Gerador de HTML para Recibo Offline</div>
+    </header>
+
+    <div class="card">
+      <h2 class="section-title">Dados da empresa e arquivos</h2>
+      <form id="empresaForm">
         <label>Nome da Empresa:</label>
-        <input type="text" id="nomeEmpresa" class="form-field" required style="width: 100%; max-width: 400px; margin-bottom: 10px; padding: 8px; font-size: 14px; border: 1px solid #cbd5e0; border-radius: 5px;"><br>
+        <input type="text" id="nomeEmpresa" class="form-field" required />
 
         <label>Endereço:</label>
-        <input type="text" id="endereco" class="form-field" required style="width: 100%; max-width: 400px; margin-bottom: 10px; padding: 8px; font-size: 14px; border: 1px solid #cbd5e0; border-radius: 5px;"><br>
+        <input type="text" id="endereco" class="form-field" required />
 
         <label>Telefone:</label>
-        <input type="text" id="telefone" class="form-field" required style="width: 100%; max-width: 400px; margin-bottom: 10px; padding: 8px; font-size: 14px; border: 1px solid #cbd5e0; border-radius: 5px;"><br>
+        <input type="text" id="telefone" class="form-field" required />
 
-        <label>Logo da Empresa (PNG):</label>
-        <input type="file" id="logoUpload" class="form-field" accept="image/png" required style="width: 100%; max-width: 400px; margin-bottom: 10px; padding: 8px; font-size: 14px; border: 1px solid #cbd5e0; border-radius: 5px;"><br>
+        <label>Logo da Empresa (PNG) — será duplicada (topo da página e cabeçalho do recibo):</label>
+        <input type="file" id="logoUpload" class="form-field" accept="image/png" required />
 
-        <label>Código de Barras:</label>
-        <input type="file" id="barcodeUpload" class="form-field" accept="image/webp" required style="width: 100%; max-width: 400px; margin-bottom: 10px; padding: 8px; font-size: 14px; border: 1px solid #cbd5e0; border-radius: 5px;"><br>
+        <label>Código de Barras (imagem):</label>
+        <input type="file" id="barcodeUpload" class="form-field" accept="image/*" required />
 
-        <button type="button" onclick="gerarHtmlPersonalizado()" style="padding: 10px 20px; background-color: #3182ce; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;"
-            onmouseover="this.style.backgroundColor='#2b6cb0'" onmouseout="this.style.backgroundColor='#3182ce'">Gerar HTML Personalizado</button>
-    </form>
+        <label>Logo da © JN2M3A DIGITAL (PNG) — usada no rodapé da página do cliente (Base64):</label>
+        <input type="file" id="jn2m3aLogoUpload" class="form-field" accept="image/png" required />
 
-    <a id="downloadLink" style="display: none; margin-top: 20px; text-decoration: none; color: #48bb78; font-weight: bold;">Baixar HTML Personalizado</a>
+        
+        <label>Validade da Página Gerada (opcional):</label>
+        <select id="validade" class="form-field">
+          <option value="">Sem expiração</option>
+          <option value="5m">5 minutos</option>
+          <option value="10m">10 minutos</option>
+          <option value="30m">30 minutos</option>
+          <option value="1h">1 hora</option>
+          <option value="1d">1 dia</option>
+          <option value="5d">5 dias</option>
+          <option value="30d">30 dias (1 mês)</option>
+          <option value="60d">60 dias (2 meses)</option>
+          <option value="90d">90 dias (3 meses)</option>
+          <option value="120d">120 dias (4 meses)</option>
+          <option value="150d">150 dias (5 meses)</option>
+          <option value="180d">180 dias (6 meses)</option>
+          <option value="365d">1 ano</option>
+        </select>
+    
+        <div style="margin-top:16px">
+          <button type="button" class="primary" onclick="gerarHtmlPersonalizado()">Gerar HTML Personalizado</button>
+        </div>
+      </form>
 
-    <script src="script.js"></script>
+      <a id="downloadLink" style="display:none; margin-top:16px; font-weight:700; color:#16a34a;">Baixar HTML Personalizado</a>
+    </div>
+
+    <footer class="site-footer">
+      <!-- Rodapé do GERADOR com logo JN2M3A DIGITAL (via URL) e informações -->
+      <img class="footer-brand" src="https://i.ibb.co/prsT1vXN/JN2-M3-ADIGITAL-H-1-removebg-preview.png" alt="JN2M3A DIGITAL" />
+      <div>Uma marca do Grupo Foto de Marca</div>
+      <div>WhatsApp (79) 99896-5081</div>
+      <div>© 2024 JN2M3A DIGITAL. Desenvolvendo soluções que facilitam o seu dia a dia.</div>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
