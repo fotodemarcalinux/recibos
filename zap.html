@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Link para WhatsApp</title>
+    <title>Gerador de Link para WhatsApp - SETE DIGITAL</title>
     <!-- Tailwind CSS CDN para um estilo moderno e responsivo -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script>
+        // Configuração do Tailwind CSS para usar cores personalizadas e a fonte Inter
         tailwind.config = {
             theme: {
                 extend: {
@@ -16,41 +21,54 @@
                     colors: {
                         'whatsapp-green-dark': '#075E54',
                         'whatsapp-green-light': '#25D366',
-                        'whatsapp-bg': '#E5DDD5',
+                        'sete-digital-primary': '#1a202c', // Cor para a marca
                     }
                 }
             }
         }
     </script>
     <style>
+        /* Estilo base para o corpo da página */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f0f2f5;
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
 
-    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-lg w-full">
-        <h1 class="text-3xl font-bold text-center mb-4 text-gray-800">Gerador de Link para WhatsApp</h1>
-        <p class="text-center text-gray-600 mb-6">Crie um link direto para o WhatsApp com uma mensagem pré-definida.</p>
-        
-        <div class="mb-5">
-            <label for="phone-number" class="block text-gray-700 font-semibold mb-2">Número de Telefone</label>
-            <input type="tel" id="phone-number" placeholder="Ex: 5541999998888" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-whatsapp-green-light transition-colors">
-            <p class="text-sm text-gray-500 mt-1">Inclua o código do país (55) e o DDD, sem espaços ou caracteres especiais.</p>
+    <!-- Container principal da aplicação -->
+    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-lg w-full mb-8">
+        <!-- Logotipo da SETE DIGITAL -->
+        <div class="flex justify-center mb-6">
+            <img src="https://i.ibb.co/Fkq7k7FQ/SETE-1-removebg-preview.png" alt="Logotipo SETE DIGITAL" class="h-24 w-24 object-contain">
         </div>
         
+        <h1 class="text-3xl font-bold text-center mb-2 text-gray-800">Gerador de Link para WhatsApp</h1>
+        <p class="text-center text-gray-600 mb-8">Crie um link direto para o WhatsApp com uma mensagem pré-definida.</p>
+        
+        <!-- Campo para o número de telefone -->
+        <div class="mb-5">
+            <label for="phone-number" class="block text-gray-700 font-semibold mb-2">Número de Telefone</label>
+            <input type="tel" id="phone-number" placeholder="Ex: 5579998965081" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-whatsapp-green-light transition-colors">
+            <p class="text-sm text-gray-500 mt-1">Inclua o código do país (55) e o DDD, sem espaços ou caracteres especiais.</p>
+            <!-- Mensagem de erro para o telefone -->
+            <p id="phone-error" class="text-sm text-red-600 mt-2 hidden">Por favor, insira um número de telefone válido.</p>
+        </div>
+        
+        <!-- Campo para a mensagem personalizada -->
         <div class="mb-5">
             <label for="message" class="block text-gray-700 font-semibold mb-2">Mensagem Personalizada (Opcional)</label>
-            <textarea id="message" placeholder="Olá! Gostaria de mais informações sobre o produto." rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-whatsapp-green-light transition-colors resize-y"></textarea>
+            <textarea id="message" placeholder="Olá! Gostaria de mais informações sobre seus serviços." rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-whatsapp-green-light transition-colors resize-y"></textarea>
             <p class="text-sm text-gray-500 mt-1">Essa mensagem será preenchida automaticamente para quem clicar no link.</p>
         </div>
         
+        <!-- Botão para gerar o link -->
         <button onclick="generateLink()" class="w-full bg-whatsapp-green-light text-white font-bold py-3 rounded-lg shadow-lg hover:bg-whatsapp-green-dark transition-colors duration-300">
             Gerar Link
         </button>
 
+        <!-- Container para exibir o resultado -->
         <div id="result-container" class="mt-8 hidden">
             <div class="bg-gray-50 border-l-4 border-whatsapp-green-light text-gray-800 p-4 rounded-lg">
                 <p class="font-bold text-sm mb-2">Seu Link Encurtado</p>
@@ -58,34 +76,54 @@
                 <p id="loading-message" class="text-sm text-gray-500 mt-2 hidden">Gerando link encurtado...</p>
             </div>
             
+            <!-- Botão para copiar o link -->
             <button onclick="copyToClipboard()" class="w-full mt-4 bg-gray-200 text-gray-700 font-bold py-3 rounded-lg shadow-md hover:bg-gray-300 transition-colors duration-300">
                 Copiar Link
             </button>
-            <p id="copy-message" class="text-sm text-green-600 mt-2 hidden">Link copiado!</p>
+            <p id="copy-message" class="text-sm text-center text-green-600 mt-2 hidden">Link copiado para a área de transferência!</p>
         </div>
     </div>
 
+    <!-- Rodapé com informações da marca -->
+    <footer class="text-center text-gray-600 w-full max-w-lg">
+        <div class="flex justify-center mb-4">
+            <img src="https://i.ibb.co/BVZSBJcr/SETE-3-removebg-preview.png" alt="Logotipo Horizontal SETE DIGITAL" class="h-10 object-contain">
+        </div>
+        <p class="text-sm">Uma marca do <strong>Grupo Foto de Marca</strong></p>
+        <p class="text-sm font-semibold mt-1">WhatsApp (79) 99896-5081</p>
+        <p class="text-xs mt-4">© 2024 SETE DIGITAL. Desenvolvendo soluções que facilitam o seu dia a dia.</p>
+    </footer>
+
     <script>
+        // Função para gerar o link do WhatsApp
         function generateLink() {
-            const phoneNumber = document.getElementById('phone-number').value.replace(/\D/g, '');
+            const phoneNumberInput = document.getElementById('phone-number');
+            const phoneNumber = phoneNumberInput.value.replace(/\D/g, ''); // Remove caracteres não numéricos
             const message = document.getElementById('message').value;
             const resultContainer = document.getElementById('result-container');
             const resultLink = document.getElementById('result-link');
             const copyMessage = document.getElementById('copy-message');
             const loadingMessage = document.getElementById('loading-message');
+            const phoneError = document.getElementById('phone-error');
 
-            // Limpa o resultado anterior e mostra a mensagem de carregamento
+            // Limpa o estado da interface
             resultLink.textContent = '';
             copyMessage.classList.add('hidden');
-            resultContainer.classList.remove('hidden');
-            loadingMessage.classList.remove('hidden');
+            phoneError.classList.add('hidden');
+            phoneNumberInput.classList.remove('border-red-500');
 
+            // Validação do número de telefone
             if (phoneNumber.length < 10) {
-                loadingMessage.classList.add('hidden');
-                alert("Por favor, insira um número de telefone válido com código do país e DDD (ex: 5541999998888).");
+                phoneError.textContent = "Por favor, insira um número de telefone válido com código do país e DDD (ex: 5579998965081).";
+                phoneError.classList.remove('hidden');
+                phoneNumberInput.classList.add('border-red-500');
                 resultContainer.classList.add('hidden');
                 return;
             }
+
+            // Mostra o container de resultado e a mensagem de carregamento
+            resultContainer.classList.remove('hidden');
+            loadingMessage.classList.remove('hidden');
 
             let whatsappURL = `https://wa.me/${phoneNumber}`;
 
@@ -94,43 +132,66 @@
                 whatsappURL += `?text=${encodedMessage}`;
             }
 
-            // Encurta a URL usando a API TinyURL V1
+            // Encurta a URL usando a API TinyURL
             const tinyUrlAPI = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(whatsappURL)}`;
             
             fetch(tinyUrlAPI)
-                .then(response => response.text())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('A resposta da rede não foi bem-sucedida.');
+                    }
+                    return response.text();
+                })
                 .then(shortenedUrl => {
                     loadingMessage.classList.add('hidden');
+                    // Verifica se a URL retornada é válida
                     if (shortenedUrl.startsWith('https://tinyurl.com/')) {
                         resultLink.textContent = shortenedUrl;
                     } else {
-                        resultLink.textContent = `Erro ao encurtar o link. Use o link longo: ${whatsappURL}`;
+                        // Se a API falhar, mostra o link longo como fallback
+                        resultLink.textContent = whatsappURL;
+                        console.warn('Falha ao encurtar o link, usando o link longo.', shortenedUrl);
                     }
                 })
                 .catch(error => {
                     loadingMessage.classList.add('hidden');
-                    resultLink.textContent = `Erro ao encurtar o link. Use o link longo: ${whatsappURL}`;
+                    // Em caso de erro de rede, mostra o link longo
+                    resultLink.textContent = whatsappURL;
                     console.error('Erro ao acessar a API do TinyURL:', error);
                 });
         }
 
+        // Função para copiar o texto para a área de transferência
         function copyToClipboard() {
             const resultLink = document.getElementById('result-link');
             const copyMessage = document.getElementById('copy-message');
             const textToCopy = resultLink.textContent;
 
-            const tempInput = document.createElement('textarea');
-            tempInput.value = textToCopy;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            
-            try {
-                document.execCommand('copy');
+            // Usa a API Clipboard para uma abordagem mais moderna e segura
+            navigator.clipboard.writeText(textToCopy).then(() => {
                 copyMessage.classList.remove('hidden');
-            } catch (err) {
-                console.error('Falha ao copiar: ', err);
-            }
-            document.body.removeChild(tempInput);
+                // Esconde a mensagem após 3 segundos
+                setTimeout(() => {
+                    copyMessage.classList.add('hidden');
+                }, 3000);
+            }).catch(err => {
+                console.error('Falha ao copiar o texto: ', err);
+                // Fallback para o método execCommand
+                try {
+                    const tempInput = document.createElement('textarea');
+                    tempInput.value = textToCopy;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                    copyMessage.classList.remove('hidden');
+                    setTimeout(() => {
+                        copyMessage.classList.add('hidden');
+                    }, 3000);
+                } catch (execErr) {
+                    console.error('Falha no método de fallback de cópia: ', execErr);
+                }
+            });
         }
     </script>
 </body>
