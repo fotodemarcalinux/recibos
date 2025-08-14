@@ -3,203 +3,492 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Termos de Uso e Política de Privacidade - ZapRecibo</title>
-    <!-- Tailwind CSS -->
+    <title>ZapRecibo - Termos de Uso, Política de Privacidade e Valor Jurídico</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
         .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        .fade-in { opacity: 0; transform: translateY(30px); animation: fadeInUp 0.8s ease forwards; }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        .legal-badge { background: linear-gradient(45deg, #10b981, #059669); }
+        .protection-badge { background: linear-gradient(45deg, #3b82f6, #1d4ed8); }
+        .organization-badge { background: linear-gradient(45deg, #8b5cf6, #7c3aed); }
         .section-card { transition: all 0.3s ease; }
-        .section-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        .section-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
-
+<body class="bg-gray-50">
     <!-- Header -->
-    <header class="gradient-bg text-white py-12 shadow-lg">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold mb-3">📄 ZapRecibo</h1>
-            <h2 class="text-2xl font-light mb-4">Termos de Uso e Política de Privacidade</h2>
-            <p class="text-lg opacity-90">Desenvolvido por JN2M3A DIGITAL</p>
-            <p class="text-sm opacity-75 mt-1">Uma marca do Grupo Foto de Marca</p>
-            <div class="mt-6 inline-block bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-                <span class="text-sm font-medium">Última atualização: 14 de agosto de 2025</span>
+    <header class="gradient-bg text-white py-16">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center">
+                <div class="inline-flex items-center bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-6">
+                    <span class="text-2xl mr-3">📄</span>
+                    <span class="font-bold text-lg">ZapRecibo</span>
+                </div>
+                <h1 class="text-5xl font-bold mb-6">Termos, Privacidade e Valor Jurídico</h1>
+                <p class="text-xl opacity-90 max-w-3xl mx-auto leading-relaxed">
+                    Conheça nossos termos de uso, política de privacidade e descubra o valor jurídico dos recibos no Brasil
+                </p>
+                <div class="flex flex-wrap justify-center gap-4 mt-8">
+                    <div class="bg-yellow-400 text-gray-900 rounded-full px-6 py-3 font-semibold">
+                        ⚖️ Valor Legal
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
+                        🔒 Privacidade
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
+                        📋 Termos de Uso
+                    </div>
+                </div>
+                <p class="text-sm opacity-75 mt-6">
+                    Desenvolvido por JN2M3A DIGITAL (Uma marca do Grupo Foto de Marca)<br>
+                    Última atualização: 14 de agosto de 2025
+                </p>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
-        <!-- Introduction -->
-        <div class="bg-white rounded-xl shadow-lg p-8 mb-8 section-card">
-            <div class="flex items-center mb-4">
-                <span class="text-2xl mr-3">⚖️</span>
-                <h3 class="text-xl font-semibold text-gray-800">Concordância com os Termos</h3>
-            </div>
-            <p class="text-gray-600 leading-relaxed">
-                Ao utilizar o ZapRecibo, você concorda com os seguintes termos de uso e com nossa política de privacidade.
-            </p>
-        </div>
-
-        <!-- Terms of Use -->
-        <section class="bg-white rounded-xl shadow-lg p-8 mb-8 section-card">
-            <div class="flex items-center mb-6">
-                <span class="text-3xl mr-4">📋</span>
-                <h2 class="text-2xl font-bold text-gray-800">Termo de Uso</h2>
-            </div>
-
-            <!-- Section 1 -->
-            <div class="mb-8">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <span class="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">1</span>
-                    Funcionalidade do ZapRecibo
-                </h3>
-                <p class="text-gray-600 leading-relaxed pl-9">
-                    O ZapRecibo é uma ferramenta que gera páginas HTML personalizadas para a criação de recibos em formato de imagem estática (canvas) para uso offline. O objetivo é facilitar a emissão de comprovantes de venda para pequenos negócios, autônomos e vendedores em geral. Os arquivos gerados são puramente informativos, sem funcionalidades de armazenamento de dados ou coleta de informações por parte da JN2M3A DIGITAL.
-                </p>
-            </div>
-
-            <!-- Section 2 -->
-            <div class="mb-8">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <span class="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">2</span>
-                    Para Contratantes
-                </h3>
-                <div class="pl-9 space-y-4">
-                    <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                        <h4 class="font-medium text-gray-800 mb-2">🌐 Acesso à Página</h4>
-                        <p class="text-gray-600 text-sm">Você receberá uma página HTML personalizada para o seu negócio, que pode ser acessada diretamente pelo navegador do celular ou computador.</p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                        <h4 class="font-medium text-gray-800 mb-2">⏰ Validade</h4>
-                        <p class="text-gray-600 text-sm">A página possui validade conforme o período contratado (por exemplo, 180 dias ou 1 ano). Após a expiração, a página exibirá uma tela de renovação, e a funcionalidade de geração de recibos será desativada.</p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                        <h4 class="font-medium text-gray-800 mb-2">⚠️ Responsabilidade</h4>
-                        <p class="text-gray-600 text-sm">O contratante é o único responsável por verificar a precisão dos dados inseridos nos recibos gerados e por cumprir com as obrigações fiscais e legais aplicáveis à sua jurisdição.</p>
-                    </div>
+    <main class="max-w-6xl mx-auto px-6 py-16">
+        <!-- Agreement Section -->
+        <section class="mb-16 fade-in">
+            <div class="bg-white rounded-2xl shadow-xl p-8 section-card">
+                <div class="flex items-center mb-4">
+                    <span class="text-2xl mr-3">⚖️</span>
+                    <h3 class="text-xl font-semibold text-gray-800">Concordância com os Termos</h3>
                 </div>
-            </div>
-
-            <!-- Section 3 -->
-            <div class="mb-8">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <span class="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">3</span>
-                    Sobre os Recibos
-                </h3>
-                <div class="pl-9 space-y-4">
-                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
-                        <h4 class="font-medium text-yellow-800 mb-2">📄 Natureza e Valor Jurídico</h4>
-                        <p class="text-yellow-700 text-sm">Os recibos gerados são imagens estáticas. Embora não substituam a nota fiscal (documento com validade fiscal), eles funcionam como um importante comprovante de pagamento e quitação de dívida. O recibo formaliza o acordo financeiro entre as partes, servindo como evidência da transação e protegendo tanto quem paga quanto quem recebe em caso de futuras disputas.</p>
-                    </div>
-                    <div class="bg-green-50 border-l-4 border-green-400 p-4 rounded-r-lg">
-                        <h4 class="font-medium text-green-800 mb-2">📱 Compartilhamento</h4>
-                        <p class="text-green-700 text-sm">Os recibos podem ser baixados como imagem (JPEG) e compartilhados ilimitadamente via WhatsApp ou outras plataformas, sendo de inteira responsabilidade do usuário a distribuição e o uso do comprovante gerado.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 4 -->
-            <div class="mb-8">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <span class="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">4</span>
-                    Limitação de Garantias
-                </h3>
-                <p class="text-gray-600 leading-relaxed pl-9">
-                    A JN2M3A DIGITAL não garante que o conteúdo ou a estrutura do recibo gerado seja adequado para todos os fins legais ou fiscais. Não nos responsabilizamos por eventuais problemas decorrentes do uso inadequado dos HTMLs criados.
-                </p>
-            </div>
-
-            <!-- Section 5 -->
-            <div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <span class="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">5</span>
-                    Alterações no Termo de Uso
-                </h3>
-                <p class="text-gray-600 leading-relaxed pl-9">
-                    A JN2M3A DIGITAL reserva-se o direito de atualizar este Termo de Uso a qualquer momento. É responsabilidade do usuário revisar este termo periodicamente.
+                <p class="text-gray-600 leading-relaxed">
+                    Ao utilizar o ZapRecibo, você concorda com os seguintes termos de uso e com nossa política de privacidade.
                 </p>
             </div>
         </section>
 
-        <!-- Privacy Policy -->
-        <section class="bg-white rounded-xl shadow-lg p-8 mb-8 section-card">
-            <div class="flex items-center mb-6">
-                <span class="text-3xl mr-4">🔒</span>
-                <h2 class="text-2xl font-bold text-gray-800">Política de Privacidade</h2>
-            </div>
-            
-            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6 rounded-r-lg">
-                <p class="text-blue-800 font-medium">
-                    A privacidade e a segurança dos seus dados são de extrema importância para nós. A Política de Privacidade do ZapRecibo é simples e direta.
-                </p>
-            </div>
+        <!-- Terms of Use -->
+        <section class="mb-16 fade-in">
+            <div class="bg-white rounded-2xl shadow-xl p-8 section-card">
+                <div class="flex items-center mb-6">
+                    <span class="text-3xl mr-4">📋</span>
+                    <h2 class="text-2xl font-bold text-gray-800">Termos de Uso</h2>
+                </div>
 
-            <!-- Privacy Section 1 -->
-            <div class="mb-8">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <span class="bg-green-100 text-green-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">1</span>
-                    Dados não Armazenados
-                </h3>
-                <div class="pl-9">
-                    <div class="bg-green-50 rounded-lg p-6 mb-4 border border-green-200">
-                        <h4 class="font-bold text-green-800 mb-3 text-lg">🚫 Nós NÃO armazenamos, processamos ou temos acesso a:</h4>
-                        <ul class="space-y-2 text-gray-700">
-                            <li class="flex items-start">
-                                <span class="text-red-500 mr-2 mt-1">❌</span>
-                                Dados dos recibos (como valores, nomes de clientes, descrições de serviços).
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-red-500 mr-2 mt-1">❌</span>
-                                Informações inseridas na página gerada (como nome da empresa, endereço, telefone).
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                        <p class="text-blue-800 text-sm">
-                            <span class="font-semibold">🔐 Garantia de Privacidade:</span> Todo o processamento para a criação do recibo em imagem ocorre diretamente no seu dispositivo, garantindo total privacidade e controle sobre suas informações.
-                        </p>
+                <!-- Section 1 -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                        <span class="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">1</span>
+                        Funcionalidade do ZapRecibo
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed ml-9">
+                        O ZapRecibo é uma ferramenta que gera páginas HTML personalizadas para a criação de recibos em formato de imagem estática (canvas) para uso offline. O objetivo é facilitar a emissão de comprovantes de venda para pequenos negócios, autônomos e vendedores em geral. Os arquivos gerados são puramente informativos, sem funcionalidades de armazenamento de dados ou coleta de informações por parte da JN2M3A DIGITAL.
+                    </p>
+                </div>
+
+                <!-- Section 2 -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                        <span class="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">2</span>
+                        Para Contratantes
+                    </h3>
+                    <div class="ml-9 space-y-4">
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h4 class="font-medium text-gray-800 mb-2">🌐 Acesso à Página</h4>
+                            <p class="text-gray-600 text-sm">Você receberá uma página HTML personalizada para o seu negócio, que pode ser acessada diretamente pelo navegador do celular ou computador.</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h4 class="font-medium text-gray-800 mb-2">⏰ Validade</h4>
+                            <p class="text-gray-600 text-sm">A página possui validade conforme o período contratado (por exemplo, 180 dias ou 1 ano). Após a expiração, a página exibirá uma tela de renovação, e a funcionalidade de geração de recibos será desativada.</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h4 class="font-medium text-gray-800 mb-2">⚠️ Responsabilidade</h4>
+                            <p class="text-gray-600 text-sm">O contratante é o único responsável por verificar a precisão dos dados inseridos nos recibos gerados e por cumprir com as obrigações fiscais e legais aplicáveis à sua jurisdição.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Privacy Section 2 -->
-            <div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <span class="bg-green-100 text-green-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">2</span>
-                    Informações Coletadas
-                </h3>
-                <div class="pl-9 bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <p class="text-gray-600 font-medium">
-                        A JN2M3A DIGITAL não coleta nenhuma informação pessoal de seus usuários através da página de geração de recibos.
+                <!-- Section 3 -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                        <span class="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">3</span>
+                        Sobre os Recibos
+                    </h3>
+                    <div class="ml-9 space-y-4">
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <h4 class="font-medium text-gray-800 mb-2">📄 Natureza dos Recibos</h4>
+                            <p class="text-gray-600 text-sm">Os recibos gerados são imagens estáticas e não possuem validade técnica ou fiscal. Eles servem como um comprovante informal de pagamento para o cliente.</p>
+                        </div>
+                        <div class="bg-green-50 border-l-4 border-green-400 p-4">
+                            <h4 class="font-medium text-gray-800 mb-2">📱 Compartilhamento</h4>
+                            <p class="text-gray-600 text-sm">Os recibos podem ser baixados como imagem (JPEG) e compartilhados ilimitadamente via WhatsApp ou outras plataformas, sendo de inteira responsabilidade do usuário a distribuição e uso.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4 -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                        <span class="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">4</span>
+                        Limitação de Garantias
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed ml-9">
+                        A JN2M3A DIGITAL não garante que o conteúdo ou a estrutura do recibo gerado seja adequado para todos os fins legais ou fiscais. Não nos responsabilizamos por eventuais problemas decorrentes do uso inadequado dos HTMLs criados.
+                    </p>
+                </div>
+
+                <!-- Section 5 -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                        <span class="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">5</span>
+                        Alterações no Termo de Uso
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed ml-9">
+                        A JN2M3A DIGITAL reserva-se o direito de atualizar este Termo de Uso a qualquer momento. É responsabilidade do usuário revisar este termo periodicamente.
                     </p>
                 </div>
             </div>
         </section>
 
-        <!-- Contact Section -->
-        <section class="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl shadow-lg p-8 section-card">
-            <div class="text-center">
-                <h2 class="text-2xl font-bold mb-6 flex items-center justify-center">
-                    <span class="text-3xl mr-3">📞</span>
-                    Contato e Suporte
-                </h2>
+        <!-- Privacy Policy -->
+        <section class="mb-16 fade-in">
+            <div class="bg-white rounded-2xl shadow-xl p-8 section-card">
+                <div class="flex items-center mb-6">
+                    <span class="text-3xl mr-4">🔒</span>
+                    <h2 class="text-2xl font-bold text-gray-800">Política de Privacidade</h2>
+                </div>
                 
-                <div class="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6">
-                        <div class="text-3xl mb-3">💬</div>
-                        <h3 class="font-semibold mb-2">WhatsApp</h3>
-                        <p class="text-lg font-mono">(79) 99896-5081</p>
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+                    <p class="text-gray-700 font-medium">
+                        A privacidade e a segurança dos seus dados são de extrema importância para nós. A Política de Privacidade do ZapRecibo é simples e direta.
+                    </p>
+                </div>
+
+                <!-- Privacy Section 1 -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <span class="bg-green-100 text-green-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">1</span>
+                        Dados não Armazenados
+                    </h3>
+                    <div class="ml-9">
+                        <div class="bg-green-50 rounded-lg p-6 mb-4">
+                            <h4 class="font-bold text-green-800 mb-3 text-lg">🚫 Nós NÃO armazenamos, processamos ou temos acesso a:</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li class="flex items-center">
+                                    <span class="text-red-500 mr-2">❌</span>
+                                    Dados dos recibos (como valores, nomes de clientes, descrições de serviços)
+                                </li>
+                                <li class="flex items-center">
+                                    <span class="text-red-500 mr-2">❌</span>
+                                    Informações inseridas na página gerada (como nome da empresa, endereço, telefone)
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="bg-blue-50 rounded-lg p-4">
+                            <p class="text-gray-700 text-sm">
+                                <span class="font-semibold">🔐 Garantia de Privacidade:</span> Todo o processamento para a criação do recibo em imagem ocorre diretamente no seu dispositivo, garantindo total privacidade e controle sobre suas informações.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy Section 2 -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                        <span class="bg-green-100 text-green-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">2</span>
+                        Informações Coletadas
+                    </h3>
+                    <div class="ml-9 bg-gray-50 rounded-lg p-4">
+                        <p class="text-gray-600 font-medium">
+                            A JN2M3A DIGITAL não coleta nenhuma informação pessoal de seus usuários através da página de geração de recibos.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Legal Value Overview -->
+        <section class="mb-16 fade-in">
+            <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                        <span class="text-2xl">🏛️</span>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Valor Jurídico dos Recibos</h2>
+                </div>
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border-l-4 border-blue-500">
+                    <p class="text-lg text-gray-700 leading-relaxed">
+                        No Brasil, um recibo tem <strong>valor jurídico</strong> como comprovante de pagamento e quitação de uma dívida. 
+                        Ele serve como evidência de que uma transação financeira ocorreu, protegendo tanto o pagador quanto o 
+                        recebedor em casos de disputas ou questões legais. Embora não substitua a nota fiscal em contextos onde 
+                        esta é exigida por lei, o recibo é uma ferramenta importante para manter a organização financeira e evitar problemas.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Functions -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Principais Funções do Recibo</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Payment Proof -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 card-hover fade-in">
+                    <div class="legal-badge text-white rounded-full w-16 h-16 flex items-center justify-center mb-6 mx-auto">
+                        <span class="text-2xl">💰</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Comprovante de Pagamento</h3>
+                    <p class="text-gray-600 text-center leading-relaxed">
+                        O recibo atesta que um pagamento foi realizado, seja de um serviço, compra ou qualquer outra transação financeira.
+                    </p>
+                    <div class="mt-6 bg-green-50 rounded-lg p-4">
+                        <p class="text-sm text-green-800 font-medium text-center">
+                            ✅ Evidência oficial da transação
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Debt Settlement -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 card-hover fade-in" style="animation-delay: 0.2s;">
+                    <div class="protection-badge text-white rounded-full w-16 h-16 flex items-center justify-center mb-6 mx-auto">
+                        <span class="text-2xl">🤝</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Quitação de Dívida</h3>
+                    <p class="text-gray-600 text-center leading-relaxed">
+                        Confirma que uma dívida foi paga, seja ela total ou parcial, e que o credor reconhece o recebimento.
+                    </p>
+                    <div class="mt-6 bg-blue-50 rounded-lg p-4">
+                        <p class="text-sm text-blue-800 font-medium text-center">
+                            ✅ Reconhecimento oficial da quitação
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Legal Protection -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 card-hover fade-in" style="animation-delay: 0.4s;">
+                    <div class="organization-badge text-white rounded-full w-16 h-16 flex items-center justify-center mb-6 mx-auto">
+                        <span class="text-2xl">🛡️</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Proteção Legal</h3>
+                    <p class="text-gray-600 text-center leading-relaxed">
+                        Serve como evidência em casos de disputas judiciais ou administrativas, comprovando a realização do pagamento.
+                    </p>
+                    <div class="mt-6 bg-purple-50 rounded-lg p-4">
+                        <p class="text-sm text-purple-800 font-medium text-center">
+                            ✅ Defesa em processos legais
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Importance Section -->
+        <section class="mb-16 fade-in">
+            <div class="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl shadow-xl p-8 text-white">
+                <div class="text-center mb-8">
+                    <span class="text-4xl mb-4 block">⚖️</span>
+                    <h2 class="text-3xl font-bold mb-4">Importância Legal</h2>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6">
+                        <h3 class="text-xl font-bold mb-4">👥 Para Pessoas Físicas e Jurídicas</h3>
+                        <p class="leading-relaxed">
+                            Tanto pessoas físicas quanto jurídicas podem utilizar recibos para documentar suas transações 
+                            financeiras e manter a organização de seus registros.
+                        </p>
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6">
+                        <h3 class="text-xl font-bold mb-4">🛒 Direito do Consumidor</h3>
+                        <p class="leading-relaxed">
+                            O consumidor tem o direito de exigir um recibo no ato do pagamento e pode recusar-se a 
+                            efetuar o pagamento caso o recibo não seja fornecido.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Receipt vs Invoice -->
+        <section class="mb-16 fade-in">
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <div class="text-center mb-8">
+                    <span class="text-3xl mb-4 block">📊</span>
+                    <h2 class="text-3xl font-bold text-gray-800">Recibo vs Nota Fiscal</h2>
+                </div>
+                <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-lg">
+                    <div class="flex items-start">
+                        <span class="text-2xl mr-4 mt-1">⚠️</span>
+                        <div>
+                            <h3 class="font-bold text-amber-800 mb-2">Importante Distinção</h3>
+                            <p class="text-amber-700 leading-relaxed">
+                                O recibo <strong>não substitui</strong> a nota fiscal em contextos onde esta é exigida por lei, 
+                                como em vendas comerciais. A nota fiscal tem validade fiscal e jurídica específica que o recibo não possui.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6 mt-8">
+                    <div class="bg-green-50 rounded-xl p-6 border border-green-200">
+                        <h4 class="font-bold text-green-800 mb-3 flex items-center">
+                            <span class="mr-2">📄</span> Recibo
+                        </h4>
+                        <ul class="text-green-700 space-y-2 text-sm">
+                            <li>• Comprovante de pagamento</li>
+                            <li>• Quitação de dívidas</li>
+                            <li>• Proteção em disputas</li>
+                            <li>• Organização financeira</li>
+                        </ul>
+                    </div>
+                    <div class="bg-blue-50 rounded-xl p-6 border border-blue-200">
+                        <h4 class="font-bold text-blue-800 mb-3 flex items-center">
+                            <span class="mr-2">🧾</span> Nota Fiscal
+                        </h4>
+                        <ul class="text-blue-700 space-y-2 text-sm">
+                            <li>• Obrigação fiscal</li>
+                            <li>• Controle tributário</li>
+                            <li>• Vendas comerciais</li>
+                            <li>• Validade fiscal específica</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Usage Situations -->
+        <section class="mb-16 fade-in">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Situações de Uso</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center card-hover">
+                    <span class="text-3xl mb-4 block">🏠</span>
+                    <h3 class="font-bold text-gray-800 mb-2">Aluguel</h3>
+                    <p class="text-gray-600 text-sm">Comprovante de pagamento mensal</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center card-hover">
+                    <span class="text-3xl mb-4 block">🔧</span>
+                    <h3 class="font-bold text-gray-800 mb-2">Serviços</h3>
+                    <p class="text-gray-600 text-sm">Prestação de serviços diversos</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center card-hover">
+                    <span class="text-3xl mb-4 block">🛍️</span>
+                    <h3 class="font-bold text-gray-800 mb-2">Compras</h3>
+                    <p class="text-gray-600 text-sm">Transações comerciais simples</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center card-hover">
+                    <span class="text-3xl mb-4 block">💼</span>
+                    <h3 class="font-bold text-gray-800 mb-2">Freelances</h3>
+                    <p class="text-gray-600 text-sm">Trabalhos autônomos</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Best Practices -->
+        <section class="mb-16 fade-in">
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <div class="text-center mb-8">
+                    <span class="text-3xl mb-4 block">💡</span>
+                    <h2 class="text-3xl font-bold text-gray-800">Boas Práticas</h2>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="bg-green-100 rounded-full p-2 mr-4 mt-1">
+                                <span class="text-green-600">📁</span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800 mb-2">Guarda e Organização</h3>
+                                <p class="text-gray-600 text-sm">
+                                    Mantenha os recibos organizados por data e categoria. Eles podem ser solicitados 
+                                    para fins fiscais ou para comprovar pagamentos.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 rounded-full p-2 mr-4 mt-1">
+                                <span class="text-blue-600">☁️</span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800 mb-2">Digitalização</h3>
+                                <p class="text-gray-600 text-sm">
+                                    Digitalize os recibos e armazene-os em locais seguros, como na nuvem, 
+                                    para evitar perdas e facilitar o acesso.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6">
+                        <h3 class="font-bold text-gray-800 mb-4 text-center">📱 ZapRecibo Facilita</h3>
+                        <ul class="space-y-3 text-sm text-gray-700">
+                            <li class="flex items-center">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Geração rápida de recibos profissionais
+                            </li>
+                            <li class="flex items-center">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Download em formato de imagem
+                            </li>
+                            <li class="flex items-center">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Compartilhamento via WhatsApp
+                            </li>
+                            <li class="flex items-center">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Organização digital automática
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="mb-16 fade-in">
+            <div class="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl shadow-lg p-8 section-card">
+                <div class="text-center">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center justify-center">
+                        <span class="text-3xl mr-3">📞</span>
+                        Contato e Suporte
+                    </h2>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6">
+                            <div class="text-3xl mb-3">💬</div>
+                            <h3 class="font-semibold mb-2">WhatsApp</h3>
+                            <p class="text-lg font-mono">(79) 99896-5081</p>
+                        </div>
+                        
+                        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6">
+                            <div class="text-3xl mb-3">🕒</div>
+                            <h3 class="font-semibold mb-2">Horário de Atendimento</h3>
+                            <p class="text-sm">Segunda a Sexta</p>
+                            <p class="text-sm">das 8h às 18h</p>
+                        </div>
                     </div>
                     
-                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6">
-                        <div class="text-3xl mb-3">🕒</div>
-                        <h3 class="font-semibold mb-2">Horário de Atendimento</h3>
-                        <p class="text-sm">Segunda a Sexta, das 8h às 18h</p>
+                    <div class="mt-8 pt-6 border-t border-white/20">
+                        <p class="text-sm opacity-90">
+                            <span class="font-semibold">Desenvolvido por:</span> JN2M3A DIGITAL
+                        </p>
+                        <p class="text-xs opacity-75 mt-1">
+                            Uma marca do Grupo Foto de Marca
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="text-center fade-in">
+            <div class="gradient-bg text-white rounded-2xl shadow-xl p-12">
+                <span class="text-4xl mb-6 block">🚀</span>
+                <h2 class="text-3xl font-bold mb-4">Proteja Seus Direitos</h2>
+                <p class="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
+                    Use o ZapRecibo para gerar recibos profissionais com valor jurídico e manter suas transações sempre documentadas
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div class="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
+                        <span class="font-semibold">📞 (79) 99896-5081</span>
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
+                        <span class="font-semibold">💬 WhatsApp</span>
                     </div>
                 </div>
             </div>
@@ -207,35 +496,53 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8 mt-12">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <div class="flex items-center justify-center mb-4">
-                <span class="text-2xl mr-2">📄</span>
-                <span class="font-bold text-lg">ZapRecibo</span>
+    <footer class="bg-gray-800 text-white py-12 mt-16">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <div class="flex items-center justify-center mb-6">
+                <span class="text-3xl mr-3">📄</span>
+                <span class="font-bold text-2xl">ZapRecibo</span>
             </div>
-            <p class="text-gray-400 text-sm">
-                © 2025 JN2M3A DIGITAL - Todos os direitos reservados
+            <p class="text-gray-400 mb-2">
+                Desenvolvido por JN2M3A DIGITAL - Uma marca do Grupo Foto de Marca
             </p>
-            <p class="text-gray-500 text-xs mt-2">
-                Uma marca do Grupo Foto de Marca
+            <p class="text-gray-500 text-sm">
+                © 2025 - Todos os direitos reservados
             </p>
         </div>
     </footer>
 
     <script>
-        // Simple animation for cards on page load
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
+        });
+
+        // Smooth scrolling for better UX
         document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.section-card');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 100 + 50);
+            const cards = document.querySelectorAll('.card-hover');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
             });
         });
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f443a25011cdc3',t:'MTc1NTIxNDQ3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
