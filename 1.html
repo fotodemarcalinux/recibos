@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validador de Prazo (TESTE)</title>
+    <!-- Incluindo Tailwind CSS para um estilo moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluindo a fonte Inter do Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Definindo a fonte padrão */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-2xl">
+        <!-- Conteúdo principal da sua página (será ocultado se a assinatura expirar) -->
+        <div id="main-content" class="text-center p-8 sm:p-12 bg-white rounded-xl shadow-lg transition-opacity duration-500">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Bem-vindo à sua Página Exclusiva!</h1>
+            <p class="text-gray-600 text-lg">Todo o seu conteúdo premium está aqui. Aproveite!</p>
+            <div id="status-test" class="mt-6 p-4 bg-blue-100 text-blue-800 rounded-lg">
+                <p>Status: <span class="font-bold">ASSINATURA ATIVA</span></p>
+                <p>Esta página irá expirar e recarregar automaticamente para o modo "Expirado".</p>
+            </div>
+            <!-- Adicione aqui o conteúdo que você quer vender -->
+            <div class="mt-8 p-6 border-t border-gray-200">
+                <p class="text-left text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.</p>
+            </div>
+        </div>
+
+        <!-- Mensagem de expiração (inicialmente oculta) -->
+        <div id="expiration-message" class="hidden text-center p-8 sm:p-12 bg-white rounded-xl shadow-lg max-w-md mx-auto transition-opacity duration-500">
+            <svg class="mx-auto h-16 w-16 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h1 class="text-3xl md:text-4xl font-bold text-red-600 mt-4 mb-4">Sua Assinatura Expirou!</h1>
+            <p class="text-gray-700 mb-8 text-lg">Seu acesso a esta página terminou. Para continuar utilizando, por favor, renove sua assinatura.</p>
+            <a href="#" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 inline-block">
+                Renovar Assinatura
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURAÇÃO DA DATA DE EXPIRAÇÃO (PARA TESTE) ---
+
+        // IMPORTANTE: Defina a data E HORA exatas da expiração aqui.
+        // O formato deve ser 'AAAA-MM-DDTHH:MM:SS'.
+        // Configurado para expirar em 14 de Agosto de 2025, às 15:09.
+        const dataHoraExpiracao = '2025-08-14T15:09:00';
+
+
+        // --- LÓGICA DE VALIDAÇÃO (NÃO PRECISA MODIFICAR ABAIXO) ---
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const conteudoPrincipal = document.getElementById('main-content');
+            const mensagemExpiracao = document.getElementById('expiration-message');
+
+            // Converte a string da data de expiração para um objeto de Data do JavaScript.
+            const dataExpiracao = new Date(dataHoraExpiracao);
+
+            // Pega a data e hora atual.
+            const dataAtual = new Date();
+
+            // Imprime as datas no console do navegador para depuração (pressione F12 para ver).
+            console.log(`Acesso Válido Até: ${dataExpiracao.toLocaleString('pt-BR')}`);
+            console.log(`Data e Hora Atual: ${dataAtual.toLocaleString('pt-BR')}`);
+
+            // Compara se a data atual é maior ou igual à data de expiração.
+            if (dataAtual >= dataExpiracao) {
+                // Se já expirou, esconde o conteúdo principal e mostra a mensagem de renovação.
+                conteudoPrincipal.style.display = 'none';
+                mensagemExpiracao.style.display = 'block';
+            } else {
+                // Se a assinatura ainda está válida, mostra o conteúdo principal.
+                conteudoPrincipal.style.display = 'block';
+                mensagemExpiracao.style.display = 'none';
+
+                // Calcula o tempo restante em milissegundos.
+                const tempoRestante = dataExpiracao.getTime() - dataAtual.getTime();
+
+                // Agenda um recarregamento da página para quando o tempo expirar.
+                // Adicionamos 1 segundo de margem para garantir que a data de expiração já passou.
+                if (tempoRestante > 0) {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, tempoRestante + 1000); 
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
