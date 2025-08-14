@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encurtador de Link Funcional</title>
+    <title>Encurtador de Link - SETE DIGITAL</title>
     <!-- Tailwind CSS CDN para um estilo moderno e responsivo -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script>
+        // Configuração do Tailwind CSS
         tailwind.config = {
             theme: {
                 extend: {
@@ -28,101 +33,142 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
 
-    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-lg w-full">
-        <h1 class="text-3xl font-bold text-center mb-4 text-gray-800">Encurtador de Link Funcional</h1>
-        <p class="text-center text-gray-600 mb-6">Cole uma URL longa para gerar uma versão curta.</p>
+    <!-- Container principal da aplicação -->
+    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-lg w-full mb-8">
+        <!-- Logotipo da SETE DIGITAL -->
+        <div class="flex justify-center mb-6">
+            <img src="https://i.ibb.co/Fkq7k7FQ/SETE-1-removebg-preview.png" alt="Logotipo SETE DIGITAL" class="h-24 w-24 object-contain">
+        </div>
+
+        <h1 class="text-3xl font-bold text-center mb-4 text-gray-800">Encurtador de Link</h1>
+        <p class="text-center text-gray-600 mb-6">Cole uma URL longa para gerar uma versão curta e fácil de compartilhar.</p>
         
+        <!-- Campo para a URL longa -->
         <div class="mb-5">
             <label for="long-url" class="block text-gray-700 font-semibold mb-2">URL Longa</label>
-            <input type="url" id="long-url" placeholder="Ex: https://www.meusite.com.br/artigo-muito-longo" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom transition-colors">
+            <input type="url" id="long-url" placeholder="Ex: https://www.seusite.com.br/um-artigo-muito-longo" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-custom transition-colors">
+            <!-- Mensagem de erro para a URL -->
+            <p id="url-error" class="text-sm text-red-600 mt-2 hidden"></p>
         </div>
         
-        <button onclick="shortenLink()" class="w-full bg-blue-custom text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-800 transition-colors duration-300">
+        <!-- Botão para encurtar -->
+        <button onclick="shortenLink()" class="w-full bg-blue-custom text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-700 transition-colors duration-300">
             Encurtar Link
         </button>
 
+        <!-- Container do resultado -->
         <div id="result-container" class="mt-8 hidden">
             <div class="bg-gray-50 border-l-4 border-green-custom text-gray-800 p-4 rounded-lg">
                 <p class="font-bold text-sm mb-2">Seu Link Encurtado</p>
                 <code id="result-link" class="text-sm break-all"></code>
                 <p id="loading-message" class="text-sm text-gray-500 mt-2 hidden">Gerando link encurtado...</p>
-                <p id="error-message" class="text-sm text-red-500 mt-2 hidden"></p>
             </div>
             
+            <!-- Botão para copiar -->
             <button onclick="copyToClipboard()" class="w-full mt-4 bg-gray-200 text-gray-700 font-bold py-3 rounded-lg shadow-md hover:bg-gray-300 transition-colors duration-300">
                 Copiar Link
             </button>
-            <p id="copy-message" class="text-sm text-green-600 mt-2 hidden">Link copiado!</p>
+            <p id="copy-message" class="text-sm text-center text-green-600 mt-2 hidden">Link copiado para a área de transferência!</p>
         </div>
     </div>
 
+    <!-- Rodapé com informações da marca -->
+    <footer class="text-center text-gray-600 w-full max-w-lg">
+        <div class="flex justify-center mb-4">
+            <img src="https://i.ibb.co/BVZSBJcr/SETE-3-removebg-preview.png" alt="Logotipo Horizontal SETE DIGITAL" class="h-10 object-contain">
+        </div>
+        <p class="text-sm">Uma marca do <strong>Grupo Foto de Marca</strong></p>
+        <p class="text-sm font-semibold mt-1">WhatsApp (79) 99896-5081</p>
+        <p class="text-xs mt-4">© 2024 SETE DIGITAL. Desenvolvendo soluções que facilitam o seu dia a dia.</p>
+    </footer>
+
     <script>
+        // Função para encurtar o link
         function shortenLink() {
-            const longUrl = document.getElementById('long-url').value;
+            const longUrlInput = document.getElementById('long-url');
+            const longUrl = longUrlInput.value;
             const resultContainer = document.getElementById('result-container');
             const resultLink = document.getElementById('result-link');
             const copyMessage = document.getElementById('copy-message');
             const loadingMessage = document.getElementById('loading-message');
-            const errorMessage = document.getElementById('error-message');
+            const urlError = document.getElementById('url-error');
 
-            // Limpa o resultado anterior e mostra a mensagem de carregamento
+            // Limpa a interface
             resultLink.textContent = '';
             copyMessage.classList.add('hidden');
-            errorMessage.classList.add('hidden');
-            resultContainer.classList.remove('hidden');
-            loadingMessage.classList.remove('hidden');
+            urlError.classList.add('hidden');
+            longUrlInput.classList.remove('border-red-500');
 
-            if (!longUrl || !longUrl.startsWith('http')) {
+            // Validação da URL
+            try {
+                new URL(longUrl);
+            } catch (_) {
                 loadingMessage.classList.add('hidden');
-                errorMessage.textContent = 'Por favor, insira uma URL longa válida (ex: https://...).';
-                errorMessage.classList.remove('hidden');
+                urlError.textContent = 'Por favor, insira uma URL válida (ex: https://...).';
+                urlError.classList.remove('hidden');
+                longUrlInput.classList.add('border-red-500');
+                resultContainer.classList.add('hidden');
                 return;
             }
+
+            // Mostra o carregamento
+            resultContainer.classList.remove('hidden');
+            loadingMessage.classList.remove('hidden');
 
             const tinyUrlAPI = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`;
             
             fetch(tinyUrlAPI)
-                .then(response => response.text())
+                .then(response => {
+                    if (!response.ok) throw new Error('Resposta de rede inválida');
+                    return response.text();
+                })
                 .then(shortenedUrl => {
                     loadingMessage.classList.add('hidden');
                     if (shortenedUrl.startsWith('https://tinyurl.com/')) {
                         resultLink.textContent = shortenedUrl;
-                        // Oculta a mensagem de erro se a operação for bem-sucedida
-                        errorMessage.classList.add('hidden');
                     } else {
-                        resultLink.textContent = `Erro ao encurtar o link. Tente novamente mais tarde.`;
-                        errorMessage.textContent = 'A API retornou um erro inesperado.';
-                        errorMessage.classList.remove('hidden');
+                        throw new Error('API retornou um formato inesperado.');
                     }
                 })
                 .catch(error => {
                     loadingMessage.classList.add('hidden');
-                    resultLink.textContent = `Erro ao encurtar o link. Tente novamente mais tarde.`;
-                    errorMessage.textContent = 'Não foi possível conectar com a API.';
-                    errorMessage.classList.remove('hidden');
+                    urlError.textContent = 'Erro ao encurtar o link. Tente novamente.';
+                    urlError.classList.remove('hidden');
                     console.error('Erro ao acessar a API do TinyURL:', error);
                 });
         }
 
+        // Função para copiar para a área de transferência
         function copyToClipboard() {
             const resultLink = document.getElementById('result-link');
             const copyMessage = document.getElementById('copy-message');
             const textToCopy = resultLink.textContent;
 
-            const tempInput = document.createElement('textarea');
-            tempInput.value = textToCopy;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            
-            try {
-                document.execCommand('copy');
+            if (!textToCopy) return;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
                 copyMessage.classList.remove('hidden');
-            } catch (err) {
-                console.error('Falha ao copiar: ', err);
-            }
-            document.body.removeChild(tempInput);
+                setTimeout(() => {
+                    copyMessage.classList.add('hidden');
+                }, 3000);
+            }).catch(err => {
+                console.error('Falha ao copiar o texto: ', err);
+                // Fallback para método antigo
+                try {
+                    const tempInput = document.createElement('textarea');
+                    tempInput.value = textToCopy;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                    copyMessage.classList.remove('hidden');
+                    setTimeout(() => { copyMessage.classList.add('hidden'); }, 3000);
+                } catch (execErr) {
+                    console.error('Falha no método de fallback de cópia: ', execErr);
+                }
+            });
         }
     </script>
 </body>
