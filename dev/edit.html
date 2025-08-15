@@ -36,133 +36,124 @@
         </div>
 
         <!-- Upload Area -->
-        <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 mb-6">
-            <div class="border-2 border-dashed border-blue-300 rounded-xl p-8 text-center">
-                <input type="file" id="imageInput" accept="image/*" class="hidden">
-                <label for="imageInput" class="cursor-pointer">
-                    <div class="text-6xl mb-4">📁</div>
-                    <p class="text-white text-lg mb-2">Clique para carregar uma foto</p>
-                    <p class="text-blue-200 text-sm">Suporta JPG, PNG, GIF</p>
-                </label>
-            </div>
+        <div class="text-center mb-6">
+            <input type="file" id="imageInput" accept="image/*" class="hidden">
+            <label for="imageInput" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium cursor-pointer transition-colors">
+                📁 Carregar Foto
+            </label>
         </div>
 
         <!-- Editor Interface -->
         <div id="editorInterface" class="hidden">
-            <!-- Tools Panel -->
-            <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 mb-6">
-                <h3 class="text-xl font-semibold text-white mb-4">🛠️ Ferramentas</h3>
-                
-                <!-- Tool Buttons -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <button id="cropBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-medium transition-colors">
+            <!-- Toolbar Compacta -->
+            <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-3 mb-4">
+                <div class="flex flex-wrap justify-center gap-2">
+                    <button id="cropBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg font-medium transition-colors text-xs">
                         ✂️ Recortar
                     </button>
-                    <button id="resizeBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-medium transition-colors">
+                    <button id="resizeBtn" class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg font-medium transition-colors text-xs">
                         📏 Redimensionar
                     </button>
-                    <button id="filtersBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-lg font-medium transition-colors">
+                    <button id="filtersBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg font-medium transition-colors text-xs">
                         🎨 Filtros
                     </button>
-                    <button id="resetBtn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg font-medium transition-colors">
+                    <button id="resetBtn" class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg font-medium transition-colors text-xs">
                         🔄 Resetar
                     </button>
+                    <button id="downloadBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-lg font-medium transition-colors text-xs">
+                        💾 Baixar
+                    </button>
                 </div>
+            </div>
 
-                <!-- Resize Controls -->
-                <div id="resizeControls" class="hidden mb-6">
-                    <h4 class="text-white font-medium mb-3">Redimensionar Imagem</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-blue-200 text-sm mb-1">Largura (px)</label>
-                            <input type="number" id="widthInput" class="w-full px-3 py-2 bg-white/20 text-white rounded-lg border border-blue-300">
-                        </div>
-                        <div>
-                            <label class="block text-blue-200 text-sm mb-1">Altura (px)</label>
-                            <input type="number" id="heightInput" class="w-full px-3 py-2 bg-white/20 text-white rounded-lg border border-blue-300">
-                        </div>
-                        <div class="flex items-end">
-                            <button id="applyResize" class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                                Aplicar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Filter Controls -->
-                <div id="filterControls" class="hidden mb-6">
-                    <h4 class="text-white font-medium mb-3">Filtros e Ajustes</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-blue-200 text-sm mb-2">Brilho</label>
-                            <input type="range" id="brightnessSlider" min="0" max="200" value="100" class="w-full">
-                            <span id="brightnessValue" class="text-blue-200 text-sm">100%</span>
-                        </div>
-                        <div>
-                            <label class="block text-blue-200 text-sm mb-2">Contraste</label>
-                            <input type="range" id="contrastSlider" min="0" max="200" value="100" class="w-full">
-                            <span id="contrastValue" class="text-blue-200 text-sm">100%</span>
-                        </div>
-                        <div>
-                            <label class="block text-blue-200 text-sm mb-2">Saturação</label>
-                            <input type="range" id="saturationSlider" min="0" max="200" value="100" class="w-full">
-                            <span id="saturationValue" class="text-blue-200 text-sm">100%</span>
-                        </div>
-                        <div>
-                            <label class="block text-blue-200 text-sm mb-2">Desfoque</label>
-                            <input type="range" id="blurSlider" min="0" max="10" value="0" class="w-full">
-                            <span id="blurValue" class="text-blue-200 text-sm">0px</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Quick Filters -->
-                    <div class="mt-6">
-                        <h5 class="text-white font-medium mb-3">Filtros Rápidos</h5>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                            <button class="filter-preset bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-lg text-sm transition-colors" data-filter="grayscale(100%)">
-                                P&B
-                            </button>
-                            <button class="filter-preset bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-2 rounded-lg text-sm transition-colors" data-filter="sepia(100%)">
-                                Sépia
-                            </button>
-                            <button class="filter-preset bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm transition-colors" data-filter="hue-rotate(180deg)">
-                                Invertido
-                            </button>
-                            <button class="filter-preset bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm transition-colors" data-filter="contrast(150%) saturate(150%)">
-                                Vibrante
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Crop Instructions -->
-                <div id="cropInstructions" class="hidden">
-                    <div class="bg-blue-600/20 border border-blue-400 rounded-lg p-4">
-                        <p class="text-blue-200 text-sm">
-                            ✂️ <strong>Modo Recorte Ativo:</strong> Clique e arraste na imagem para selecionar a área de recorte. Clique em "Aplicar Recorte" quando estiver satisfeito.
-                        </p>
-                        <button id="applyCrop" class="mt-3 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                            Aplicar Recorte
-                        </button>
-                        <button id="cancelCrop" class="mt-3 ml-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                            Cancelar
-                        </button>
+            <!-- Image Preview - Foco Principal -->
+            <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-4 mb-4">
+                <div class="bg-white/5 rounded-xl p-3 text-center">
+                    <div id="imageContainer" class="inline-block">
+                        <canvas id="imageCanvas" class="max-w-full max-h-[70vh] h-auto rounded-lg shadow-lg"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- Image Preview -->
-            <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-semibold text-white">🖼️ Preview</h3>
-                    <button id="downloadBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
-                        💾 Baixar Imagem
-                    </button>
+            <!-- Panels de Controle (Suspensos) -->
+            <div class="space-y-3">
+
+                <!-- Crop Instructions -->
+                <div id="cropInstructions" class="hidden bg-white/10 backdrop-blur-lg rounded-xl p-3">
+                    <div class="bg-blue-600/20 border border-blue-400 rounded-lg p-3">
+                        <p class="text-blue-200 text-xs mb-2">
+                            ✂️ Clique e arraste na imagem para selecionar a área
+                        </p>
+                        <div class="flex gap-2">
+                            <button id="applyCrop" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition-colors">
+                                Aplicar
+                            </button>
+                            <button id="cancelCrop" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-xs transition-colors">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="bg-white/5 rounded-xl p-4 text-center">
-                    <div id="imageContainer" class="inline-block">
-                        <canvas id="imageCanvas" class="max-w-full h-auto rounded-lg shadow-lg"></canvas>
+
+                <!-- Resize Controls -->
+                <div id="resizeControls" class="hidden bg-white/10 backdrop-blur-lg rounded-xl p-4">
+                    <div class="grid grid-cols-3 gap-3 items-end">
+                        <div>
+                            <label class="block text-blue-200 text-xs mb-1">Largura</label>
+                            <input type="number" id="widthInput" class="w-full px-2 py-1 bg-white/20 text-white rounded text-sm border border-blue-300">
+                        </div>
+                        <div>
+                            <label class="block text-blue-200 text-xs mb-1">Altura</label>
+                            <input type="number" id="heightInput" class="w-full px-2 py-1 bg-white/20 text-white rounded text-sm border border-blue-300">
+                        </div>
+                        <button id="applyResize" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded font-medium transition-colors text-xs">
+                            Aplicar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter Controls -->
+                <div id="filterControls" class="hidden bg-white/10 backdrop-blur-lg rounded-xl p-4">
+                    <!-- Quick Filters -->
+                    <div class="mb-4">
+                        <div class="flex flex-wrap justify-center gap-2 mb-3">
+                            <button class="filter-preset bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-xs transition-colors" data-filter="grayscale(100%)">
+                                P&B
+                            </button>
+                            <button class="filter-preset bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded text-xs transition-colors" data-filter="sepia(100%)">
+                                Sépia
+                            </button>
+                            <button class="filter-preset bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition-colors" data-filter="hue-rotate(180deg)">
+                                Invertido
+                            </button>
+                            <button class="filter-preset bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs transition-colors" data-filter="contrast(150%) saturate(150%)">
+                                Vibrante
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sliders -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-blue-200 text-xs mb-1">Brilho</label>
+                            <input type="range" id="brightnessSlider" min="0" max="200" value="100" class="w-full">
+                            <span id="brightnessValue" class="text-blue-200 text-xs">100%</span>
+                        </div>
+                        <div>
+                            <label class="block text-blue-200 text-xs mb-1">Contraste</label>
+                            <input type="range" id="contrastSlider" min="0" max="200" value="100" class="w-full">
+                            <span id="contrastValue" class="text-blue-200 text-xs">100%</span>
+                        </div>
+                        <div>
+                            <label class="block text-blue-200 text-xs mb-1">Saturação</label>
+                            <input type="range" id="saturationSlider" min="0" max="200" value="100" class="w-full">
+                            <span id="saturationValue" class="text-blue-200 text-xs">100%</span>
+                        </div>
+                        <div>
+                            <label class="block text-blue-200 text-xs mb-1">Desfoque</label>
+                            <input type="range" id="blurSlider" min="0" max="10" value="0" class="w-full">
+                            <span id="blurValue" class="text-blue-200 text-xs">0px</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -446,5 +437,5 @@
             link.click();
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f50a2161ca1433',t:'MTc1NTIyMjYxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f51b8e5519e83a',t:'MTc1NTIyMzMyNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
