@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Removedor de Fundo - IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .drag-area {
+            border: 2px dashed #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        
+        .drag-area.dragover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        
+        .processing {
+            background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #3b82f6 100%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .image-container {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .before-after {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slider {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background: white;
+            cursor: ew-resize;
+            z-index: 10;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        
+        .slider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -8px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">🎨 Removedor de Fundo</h1>
+            <p class="text-gray-600 text-lg">Remova o fundo das suas imagens com IA em segundos</p>
+        </div>
+
+        <!-- Upload Area -->
+        <div class="max-w-4xl mx-auto">
+            <div id="uploadArea" class="drag-area bg-white rounded-2xl p-8 text-center shadow-lg mb-6">
+                <div class="mb-4">
+                    <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Arraste sua imagem aqui</h3>
+                <p class="text-gray-500 mb-4">ou clique para selecionar um arquivo</p>
+                <input type="file" id="imageInput" accept="image/*" class="hidden">
+                <button onclick="document.getElementById('imageInput').click()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                    Escolher Arquivo
+                </button>
+                <p class="text-sm text-gray-400 mt-3">Suporta JPG, PNG, WebP até 10MB</p>
+            </div>
+
+            <!-- Processing Status -->
+            <div id="processingStatus" class="hidden bg-white rounded-2xl p-6 shadow-lg mb-6">
+                <div class="flex items-center justify-center">
+                    <div class="processing h-2 w-64 rounded-full mr-4"></div>
+                    <span class="text-gray-600 font-medium">Processando com IA...</span>
+                </div>
+            </div>
+
+            <!-- Results Area -->
+            <div id="resultsArea" class="hidden bg-white rounded-2xl p-6 shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-gray-800">Resultado</h3>
+                    <div class="flex gap-2">
+                        <button id="downloadBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                            📥 Download
+                        </button>
+                        <button id="newImageBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                            🔄 Nova Imagem
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Before/After Comparison -->
+                <div class="before-after rounded-lg overflow-hidden" style="height: 400px;">
+                    <div class="relative w-full h-full">
+                        <img id="originalImage" class="absolute top-0 left-0 w-full h-full object-contain" style="clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);">
+                        <img id="processedImage" class="absolute top-0 left-0 w-full h-full object-contain">
+                        <div id="slider" class="slider" style="left: 50%;"></div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between text-sm text-gray-500 mt-2">
+                    <span>← Original</span>
+                    <span>Sem Fundo →</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const imageInput = document.getElementById('imageInput');
+        const processingStatus = document.getElementById('processingStatus');
+        const resultsArea = document.getElementById('resultsArea');
+        const originalImage = document.getElementById('originalImage');
+        const processedImage = document.getElementById('processedImage');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const newImageBtn = document.getElementById('newImageBtn');
+        const slider = document.getElementById('slider');
+
+        let currentProcessedImage = null;
+        let isDragging = false;
+
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleImageUpload(files[0]);
+            }
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleImageUpload(e.target.files[0]);
+            }
+        });
+
+        // Slider functionality
+        slider.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            const rect = resultsArea.querySelector('.before-after').getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+            
+            slider.style.left = percentage + '%';
+            originalImage.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        function handleImageUpload(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Por favor, selecione um arquivo de imagem válido.');
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                alert('O arquivo é muito grande. Por favor, selecione uma imagem menor que 10MB.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                processImage(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function processImage(imageSrc) {
+            // Show processing status
+            uploadArea.classList.add('hidden');
+            processingStatus.classList.remove('hidden');
+            resultsArea.classList.add('hidden');
+
+            // Set original image
+            originalImage.src = imageSrc;
+
+            // Simulate AI processing (in a real app, this would call an AI service)
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // Create processed image with transparent background
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            img.onload = () => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                
+                // Draw the original image
+                ctx.drawImage(img, 0, 0);
+                
+                // Simple background removal simulation (removes similar colors to corners)
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                
+                // Get corner colors for background detection
+                const cornerColors = [
+                    [data[0], data[1], data[2]], // top-left
+                    [data[(canvas.width - 1) * 4], data[(canvas.width - 1) * 4 + 1], data[(canvas.width - 1) * 4 + 2]], // top-right
+                    [data[(canvas.height - 1) * canvas.width * 4], data[(canvas.height - 1) * canvas.width * 4 + 1], data[(canvas.height - 1) * canvas.width * 4 + 2]], // bottom-left
+                ];
+                
+                // Remove background (simplified algorithm)
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+                    
+                    // Check if pixel is similar to any corner color
+                    for (let corner of cornerColors) {
+                        const diff = Math.abs(r - corner[0]) + Math.abs(g - corner[1]) + Math.abs(b - corner[2]);
+                        if (diff < 100) { // Threshold for similarity
+                            data[i + 3] = 0; // Make transparent
+                            break;
+                        }
+                    }
+                }
+                
+                ctx.putImageData(imageData, 0, 0);
+                
+                // Set processed image
+                currentProcessedImage = canvas.toDataURL('image/png');
+                processedImage.src = currentProcessedImage;
+                
+                // Show results
+                processingStatus.classList.add('hidden');
+                resultsArea.classList.remove('hidden');
+            };
+            
+            img.src = imageSrc;
+        }
+
+        downloadBtn.addEventListener('click', () => {
+            if (currentProcessedImage) {
+                const link = document.createElement('a');
+                link.download = 'imagem-sem-fundo.png';
+                link.href = currentProcessedImage;
+                link.click();
+            }
+        });
+
+        newImageBtn.addEventListener('click', () => {
+            uploadArea.classList.remove('hidden');
+            processingStatus.classList.add('hidden');
+            resultsArea.classList.add('hidden');
+            imageInput.value = '';
+            currentProcessedImage = null;
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96fc95a9307ac585',t:'MTc1NTMwMTcyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
