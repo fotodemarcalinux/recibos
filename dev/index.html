@@ -154,14 +154,48 @@
         const nomesMasculinosBr = ["João", "Pedro", "Luiz", "Carlos", "Antônio", "Marcos", "Lucas", "Gabriel", "Rafael"];
         const nomesFemininosBr = ["Maria", "Ana", "Juliana", "Patricia", "Camila", "Amanda", "Letícia", "Giovanna", "Isabela"];
         const sobrenomesBr = ["Silva", "Santos", "Oliveira", "Souza", "Lima", "Pereira", "Ferreira", "Alves", "Rodrigues"];
-        const cidadesBr = ["São Paulo", "Rio de Janeiro", "Belo Horizonte", "Salvador", "Curitiba", "Porto Alegre", "Brasília", "Fortaleza"];
-        const estadosBr = ["SP", "RJ", "MG", "BA", "PR", "RS", "DF", "CE"];
+        
+        // Cidades brasileiras com seus respectivos estados
+        const cidadesBr = [
+            { cidade: "São Paulo", estado: "SP" },
+            { cidade: "Rio de Janeiro", estado: "RJ" },
+            { cidade: "Belo Horizonte", estado: "MG" },
+            { cidade: "Salvador", estado: "BA" },
+            { cidade: "Curitiba", estado: "PR" },
+            { cidade: "Porto Alegre", estado: "RS" },
+            { cidade: "Brasília", estado: "DF" },
+            { cidade: "Fortaleza", estado: "CE" },
+            { cidade: "Recife", estado: "PE" },
+            { cidade: "Manaus", estado: "AM" },
+            { cidade: "Florianópolis", estado: "SC" },
+            { cidade: "Vitória", estado: "ES" },
+            { cidade: "Goiânia", estado: "GO" },
+            { cidade: "Aracaju", estado: "SE" },
+            { cidade: "Maceió", estado: "AL" }
+        ];
 
         const nomesMasculinosUs = ["John", "Michael", "William", "James", "Robert", "David", "Richard", "Charles", "Joseph"];
         const nomesFemininosUs = ["Mary", "Jennifer", "Linda", "Elizabeth", "Patricia", "Susan", "Jessica", "Sarah", "Karen"];
         const sobrenomesUs = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez"];
-        const cidadesUs = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia", "San Antonio", "San Diego"];
-        const estadosUs = ["NY", "CA", "IL", "TX", "AZ", "PA", "TX", "CA"];
+        
+        // Cidades americanas com seus respectivos estados
+        const cidadesUs = [
+            { cidade: "New York", estado: "NY" },
+            { cidade: "Los Angeles", estado: "CA" },
+            { cidade: "Chicago", estado: "IL" },
+            { cidade: "Houston", estado: "TX" },
+            { cidade: "Phoenix", estado: "AZ" },
+            { cidade: "Philadelphia", estado: "PA" },
+            { cidade: "San Antonio", estado: "TX" },
+            { cidade: "San Diego", estado: "CA" },
+            { cidade: "Dallas", estado: "TX" },
+            { cidade: "San Jose", estado: "CA" },
+            { cidade: "Austin", estado: "TX" },
+            { cidade: "Jacksonville", estado: "FL" },
+            { cidade: "San Francisco", estado: "CA" },
+            { cidade: "Indianapolis", estado: "IN" },
+            { cidade: "Columbus", estado: "OH" }
+        ];
         
         const bandeirasCartao = ["Visa", "Mastercard", "American Express", "Discover"];
         const tiposSanguineos = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -189,7 +223,6 @@
             const nomesF = nacionalidadeFinal === 'brasil' ? nomesFemininosBr : nomesFemininosUs;
             const sobrenomes = nacionalidadeFinal === 'brasil' ? sobrenomesBr : sobrenomesUs;
             const cidades = nacionalidadeFinal === 'brasil' ? cidadesBr : cidadesUs;
-            const estados = nacionalidadeFinal === 'brasil' ? estadosBr : estadosUs;
 
             // --- 1. DADOS PESSOAIS ---
             
@@ -223,8 +256,9 @@
             // --- 3. ENDEREÇO ---
             
             // Geração de Endereço
-            const estado = estados[getRandomInt(0, estados.length - 1)];
-            const cidade = cidades[getRandomInt(0, cidades.length - 1)];
+            const localidade = cidades[getRandomInt(0, cidades.length - 1)];
+            const cidade = localidade.cidade;
+            const estado = localidade.estado;
             
             document.getElementById('cep-zip').innerText = nacionalidadeFinal === 'brasil' ? gerarCEP() : gerarZIP();
             document.getElementById('endereco').innerText = nacionalidadeFinal === 'brasil' ? `Rua ${sobrenomes[getRandomInt(0, sobrenomes.length - 1)]} ${sobrenomes[getRandomInt(0, sobrenomes.length - 1)]}, ${getRandomInt(100, 999)}` : `${getRandomInt(1000, 9999)} ${sobrenomes[getRandomInt(0, sobrenomes.length - 1)]} Street`;
