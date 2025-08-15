@@ -207,6 +207,10 @@ async function gerarHtmlPersonalizado() {
     <div>Uma marca do Grupo Foto de Marca</div>
     <div>WhatsApp (79) 99896-5081</div>
     <div>© 2024 JN2M3A DIGITAL. Desenvolvendo soluções que facilitam o seu dia a dia.</div>
+    <div style="margin-top: 10px; font-size: 11px;">
+      <a href="https://rec.sou.net.br/termo_de_uso.html" target="_blank" style="color: var(--muted); text-decoration: none;">Termos de Uso</a> | 
+      <a href="https://rec.sou.net.br/faq" target="_blank" style="color: var(--muted); text-decoration: none;">Perguntas Frequentes</a>
+    </div>
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -291,6 +295,10 @@ async function gerarHtmlPersonalizado() {
                 <p>Uma marca do Grupo Foto de Marca</p>
                 <p>WhatsApp (79) 99896-5081</p>
                 <p>© 2024 JN2M3A DIGITAL. Desenvolvendo soluções que facilitam o seu dia a dia.</p>
+                <p style="margin-top: 10px;">
+                  <a href="https://rec.sou.net.br/termo_de_uso.html" target="_blank" style="color: #6b7280; text-decoration: none;">Termos de Uso</a> | 
+                  <a href="https://rec.sou.net.br/faq" target="_blank" style="color: #6b7280; text-decoration: none;">Perguntas Frequentes</a>
+                </p>
               </div>
             </div>
           \`;
