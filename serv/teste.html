@@ -22,7 +22,14 @@
         }
         .sticker-image {
             object-fit: cover;
+            object-position: center;
             border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .sticker-image-round {
+            object-fit: cover;
+            object-position: center;
+            border-radius: 50%;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
     </style>
@@ -38,10 +45,10 @@
         <!-- Page Navigation -->
         <div class="flex justify-center mb-6">
             <div class="bg-white rounded-full p-2 shadow-lg">
-                <button onclick="showPage(1)" id="page-btn-1" class="px-4 py-2 rounded-full bg-purple-500 text-white font-semibold mx-1">Página 1</button>
-                <button onclick="showPage(2)" id="page-btn-2" class="px-4 py-2 rounded-full bg-gray-300 text-gray-700 font-semibold mx-1">Página 2</button>
-                <button onclick="showPage(3)" id="page-btn-3" class="px-4 py-2 rounded-full bg-gray-300 text-gray-700 font-semibold mx-1">Página 3</button>
-                <button onclick="showPage(4)" id="page-btn-4" class="px-4 py-2 rounded-full bg-gray-300 text-gray-700 font-semibold mx-1">Página 4</button>
+                <button onclick="showPage(1)" id="page-btn-1" class="px-3 py-2 rounded-full bg-purple-500 text-white font-semibold mx-1 text-sm">9 Figurinhas</button>
+                <button onclick="showPage(2)" id="page-btn-2" class="px-3 py-2 rounded-full bg-gray-300 text-gray-700 font-semibold mx-1 text-sm">6 Figurinhas</button>
+                <button onclick="showPage(3)" id="page-btn-3" class="px-3 py-2 rounded-full bg-gray-300 text-gray-700 font-semibold mx-1 text-sm">4 Figurinhas</button>
+                <button onclick="showPage(4)" id="page-btn-4" class="px-3 py-2 rounded-full bg-gray-300 text-gray-700 font-semibold mx-1 text-sm">9 Especial</button>
             </div>
         </div>
 
@@ -81,8 +88,8 @@
                         </div>
                     </div>
 
-                    <!-- Pages 2, 3, 4 (hidden initially) -->
-                    <div id="page-2" class="page-content grid grid-cols-3 gap-4 h-full hidden">
+                    <!-- Page 2 - 6 figurinhas (2x3) -->
+                    <div id="page-2" class="page-content grid grid-cols-2 gap-6 h-full hidden place-items-center">
                         <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(2, 1)">
                             <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
                         </div>
@@ -101,74 +108,54 @@
                         <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(2, 6)">
                             <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
                         </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(2, 7)">
+                    </div>
+
+                    <!-- Page 3 - 4 figurinhas (2x2) -->
+                    <div id="page-3" class="page-content grid grid-cols-2 gap-8 h-full hidden place-items-center">
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all w-48 h-48" onclick="selectSlot(3, 1)">
                             <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
                         </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(2, 8)">
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all w-48 h-48" onclick="selectSlot(3, 2)">
                             <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
                         </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(2, 9)">
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all w-48 h-48" onclick="selectSlot(3, 3)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all w-48 h-48" onclick="selectSlot(3, 4)">
                             <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
                         </div>
                     </div>
 
-                    <div id="page-3" class="page-content grid grid-cols-3 gap-4 h-full hidden">
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 1)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                    <!-- Page 4 - 9 figurinhas especial (layout hexagonal) -->
+                    <div id="page-4" class="page-content h-full hidden relative">
+                        <!-- Centro -->
+                        <div class="sticker-slot rounded-full border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all absolute w-32 h-32 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" onclick="selectSlot(4, 1)">
+                            <span class="text-white/70 text-xs text-center">📷 Centro</span>
                         </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 2)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        <!-- Círculo ao redor -->
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all absolute w-24 h-24 top-16 left-1/2 transform -translate-x-1/2" onclick="selectSlot(4, 2)">
+                            <span class="text-white/70 text-xs">📷</span>
                         </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 3)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all absolute w-24 h-24 top-32 right-16" onclick="selectSlot(4, 3)">
+                            <span class="text-white/70 text-xs">📷</span>
                         </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 4)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all absolute w-24 h-24 bottom-32 right-16" onclick="selectSlot(4, 4)">
+                            <span class="text-white/70 text-xs">📷</span>
                         </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 5)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all absolute w-24 h-24 bottom-16 left-1/2 transform -translate-x-1/2" onclick="selectSlot(4, 5)">
+                            <span class="text-white/70 text-xs">📷</span>
                         </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 6)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all absolute w-24 h-24 bottom-32 left-16" onclick="selectSlot(4, 6)">
+                            <span class="text-white/70 text-xs">📷</span>
                         </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 7)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all absolute w-24 h-24 top-32 left-16" onclick="selectSlot(4, 7)">
+                            <span class="text-white/70 text-xs">📷</span>
                         </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 8)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all absolute w-24 h-24 top-1/2 right-8 transform -translate-y-1/2" onclick="selectSlot(4, 8)">
+                            <span class="text-white/70 text-xs">📷</span>
                         </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 9)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
-                        </div>
-                    </div>
-
-                    <div id="page-4" class="page-content grid grid-cols-3 gap-4 h-full hidden">
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 1)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
-                        </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 2)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
-                        </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 3)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
-                        </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 4)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
-                        </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 5)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
-                        </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 6)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
-                        </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 7)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
-                        </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 8)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
-                        </div>
-                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 9)">
-                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all absolute w-24 h-24 top-1/2 left-8 transform -translate-y-1/2" onclick="selectSlot(4, 9)">
+                            <span class="text-white/70 text-xs">📷</span>
                         </div>
                     </div>
                 </div>
@@ -231,6 +218,14 @@
             4: {}
         };
 
+        // Configurações de layout para cada página
+        const pageLayouts = {
+            1: { cols: 3, rows: 3, total: 9, type: 'grid' },
+            2: { cols: 2, rows: 3, total: 6, type: 'grid' },
+            3: { cols: 2, rows: 2, total: 4, type: 'grid' },
+            4: { cols: 3, rows: 3, total: 9, type: 'circular' }
+        };
+
         // Show specific page
         function showPage(pageNum) {
             // Hide all pages
@@ -269,8 +264,19 @@
                 albumData[page][slot] = imageUrl;
                 
                 // Update the slot display
-                const slotElement = document.querySelector(`#page-${page} .sticker-slot:nth-child(${slot})`);
-                slotElement.innerHTML = `<img src="${imageUrl}" class="w-full h-full sticker-image" alt="Figurinha ${slot}">`;
+                let slotElement;
+                if (page === 4) {
+                    // Para página 4 (layout circular), usar seletor diferente
+                    const slots = document.querySelectorAll(`#page-${page} .sticker-slot`);
+                    slotElement = slots[slot - 1];
+                } else {
+                    slotElement = document.querySelector(`#page-${page} .sticker-slot:nth-child(${slot})`);
+                }
+                
+                // Determinar classe da imagem baseada no layout
+                const imageClass = (page === 4 && slot === 1) ? 'w-full h-full sticker-image-round' : 'w-full h-full sticker-image';
+                
+                slotElement.innerHTML = `<img src="${imageUrl}" class="${imageClass}" alt="Figurinha ${slot}">`;
                 slotElement.onclick = () => removeSticker(page, slot);
                 
                 selectedSlot = null;
@@ -305,41 +311,95 @@
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, size, size);
             
-            // Calculate grid layout
-            const padding = 80;
-            const gridSize = 3;
-            const cellSize = (size - padding * 2) / gridSize;
-            const gap = 40;
-            const stickerSize = cellSize - gap;
-            
-            let loadedImages = 0;
+            const layout = pageLayouts[currentPage];
             const totalImages = Object.keys(albumData[currentPage]).length;
             
             if (totalImages === 0) {
-                // No images, just download the background
                 downloadCanvas(canvas, `album-page-${currentPage}.jpg`);
                 return;
             }
             
-            // Load and draw each image
+            let loadedImages = 0;
+            
+            // Load and draw each image based on layout
             Object.entries(albumData[currentPage]).forEach(([slot, imageUrl]) => {
                 const img = new Image();
                 img.onload = function() {
                     const slotIndex = parseInt(slot) - 1;
-                    const row = Math.floor(slotIndex / gridSize);
-                    const col = slotIndex % gridSize;
+                    let x, y, stickerSize, isRound = false;
                     
-                    const x = padding + col * cellSize + gap / 2;
-                    const y = padding + row * cellSize + gap / 2;
+                    if (layout.type === 'circular' && currentPage === 4) {
+                        // Layout circular especial para página 4
+                        const centerX = size / 2;
+                        const centerY = size / 2;
+                        const radius = 200;
+                        
+                        if (slot == 1) {
+                            // Centro
+                            x = centerX - 80;
+                            y = centerY - 80;
+                            stickerSize = 160;
+                            isRound = true;
+                        } else {
+                            // Ao redor do centro
+                            const angle = ((slot - 2) * 45) * (Math.PI / 180);
+                            x = centerX + Math.cos(angle) * radius - 60;
+                            y = centerY + Math.sin(angle) * radius - 60;
+                            stickerSize = 120;
+                        }
+                    } else {
+                        // Layout grid normal
+                        const padding = 80;
+                        const cellSize = (size - padding * 2) / layout.cols;
+                        const gap = layout.total === 4 ? 60 : 40;
+                        stickerSize = cellSize - gap;
+                        
+                        const row = Math.floor(slotIndex / layout.cols);
+                        const col = slotIndex % layout.cols;
+                        
+                        x = padding + col * cellSize + gap / 2;
+                        y = padding + row * cellSize + gap / 2;
+                        
+                        // Centralizar para layouts com menos elementos
+                        if (layout.total === 6) {
+                            y += 60; // Ajuste vertical para 6 elementos
+                        } else if (layout.total === 4) {
+                            x += 60; // Ajuste horizontal para 4 elementos
+                            y += 120; // Ajuste vertical para 4 elementos
+                        }
+                    }
                     
-                    // Draw rounded rectangle background
+                    // Draw image with proper clipping
                     ctx.save();
                     ctx.beginPath();
-                    ctx.roundRect(x, y, stickerSize, stickerSize, 20);
+                    if (isRound) {
+                        ctx.arc(x + stickerSize/2, y + stickerSize/2, stickerSize/2, 0, 2 * Math.PI);
+                    } else {
+                        ctx.roundRect(x, y, stickerSize, stickerSize, 20);
+                    }
                     ctx.clip();
                     
-                    // Draw image
-                    ctx.drawImage(img, x, y, stickerSize, stickerSize);
+                    // Calculate image dimensions to maintain aspect ratio and center crop
+                    const imgAspect = img.width / img.height;
+                    const slotAspect = 1; // Square slots
+                    
+                    let drawWidth, drawHeight, drawX, drawY;
+                    
+                    if (imgAspect > slotAspect) {
+                        // Image is wider - crop sides
+                        drawHeight = stickerSize;
+                        drawWidth = drawHeight * imgAspect;
+                        drawX = x - (drawWidth - stickerSize) / 2;
+                        drawY = y;
+                    } else {
+                        // Image is taller - crop top/bottom
+                        drawWidth = stickerSize;
+                        drawHeight = drawWidth / imgAspect;
+                        drawX = x;
+                        drawY = y - (drawHeight - stickerSize) / 2;
+                    }
+                    
+                    ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
                     ctx.restore();
                     
                     // Add shadow effect
@@ -350,7 +410,11 @@
                     ctx.strokeStyle = 'rgba(255,255,255,0.1)';
                     ctx.lineWidth = 2;
                     ctx.beginPath();
-                    ctx.roundRect(x, y, stickerSize, stickerSize, 20);
+                    if (isRound) {
+                        ctx.arc(x + stickerSize/2, y + stickerSize/2, stickerSize/2, 0, 2 * Math.PI);
+                    } else {
+                        ctx.roundRect(x, y, stickerSize, stickerSize, 20);
+                    }
                     ctx.stroke();
                     ctx.shadowColor = 'transparent';
                     
@@ -383,7 +447,16 @@
                 albumData[currentPage] = {};
                 const slots = document.querySelectorAll(`#page-${currentPage} .sticker-slot`);
                 slots.forEach((slot, index) => {
-                    slot.innerHTML = '<span class="text-white/70 text-sm">📷 Clique para adicionar</span>';
+                    if (currentPage === 4) {
+                        // Layout especial da página 4
+                        if (index === 0) {
+                            slot.innerHTML = '<span class="text-white/70 text-xs text-center">📷 Centro</span>';
+                        } else {
+                            slot.innerHTML = '<span class="text-white/70 text-xs">📷</span>';
+                        }
+                    } else {
+                        slot.innerHTML = '<span class="text-white/70 text-sm">📷 Clique para adicionar</span>';
+                    }
                     slot.onclick = () => selectSlot(currentPage, index + 1);
                 });
             }
@@ -406,5 +479,5 @@
             };
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f5b1749510f183',t:'MTc1NTIyOTQ2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f5bb14337ff183',t:'MTc1NTIyOTg1OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
