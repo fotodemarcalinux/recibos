@@ -115,6 +115,12 @@
                         📋 Copiar Mensagem
                     </button>
 
+                    <button id="whatsappBtn" onclick="compartilharWhatsApp()" 
+                            class="copy-button w-full bg-green-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed" 
+                            disabled>
+                        📱 Compartilhar no WhatsApp
+                    </button>
+
                     <div id="sucessoCopia" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
                         ✅ Mensagem copiada com sucesso!
                     </div>
@@ -239,8 +245,9 @@ Obrigado por confiar em nós! 🚀`;
             const preview = document.getElementById('mensagemPreview');
             preview.innerHTML = `<pre class="whitespace-pre-wrap text-sm text-gray-800 leading-relaxed">${mensagem}</pre>`;
             
-            // Habilitar botão de copiar
+            // Habilitar botões
             document.getElementById('copiarBtn').disabled = false;
+            document.getElementById('whatsappBtn').disabled = false;
             
             // Armazenar mensagem para cópia
             window.mensagemGerada = mensagem;
@@ -274,6 +281,52 @@ Obrigado por confiar em nós! 🚀`;
                 }, 3000);
             });
         }
+
+        function compartilharWhatsApp() {
+            if (!window.mensagemGerada) return;
+            
+            // Criar uma versão limpa da mensagem (removendo caracteres problemáticos)
+            const mensagemLimpa = window.mensagemGerada
+                .replace(/\n/g, "%0A") // Converte quebras de linha
+                .replace(/ /g, "%20"); // Converte espaços
+            
+            // Detectar dispositivo
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            // URL para compartilhamento
+            let whatsappUrl;
+            
+            if (isMobile) {
+                // Para dispositivos móveis
+                whatsappUrl = `https://wa.me/?text=${mensagemLimpa}`;
+                
+                // Tentar abrir diretamente no app
+                const intentUrl = `intent://send?text=${mensagemLimpa}#Intent;package=com.whatsapp;scheme=https;end`;
+                window.location.href = intentUrl;
+                
+                // Fallback após 500ms se não abrir o app
+                setTimeout(() => {
+                    window.open(whatsappUrl, '_blank');
+                }, 500);
+            } else {
+                // Para desktop
+                whatsappUrl = `https://web.whatsapp.com/send?text=${mensagemLimpa}`;
+                
+                // Tentar abrir em nova aba
+                const novaAba = window.open(whatsappUrl, '_blank');
+                
+                // Se pop-up foi bloqueado, oferecer alternativa
+                if (!novaAba || novaAba.closed) {
+                    // Copiar mensagem para área de transferência
+                    navigator.clipboard.writeText(window.mensagemGerada).then(() => {
+                        alert('A mensagem foi copiada! Cole no WhatsApp Web: https://web.whatsapp.com');
+                    }).catch(() => {
+                        // Mostrar mensagem para copiar manualmente
+                        prompt('Copie esta mensagem e cole no WhatsApp:', window.mensagemGerada);
+                    });
+                }
+            }
+        }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f5808e746e7a2f',t:'MTc1NTIyNzQ2MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
