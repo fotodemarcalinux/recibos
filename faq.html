@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - ZapRecibo | Perguntas Frequentes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .faq-item { transition: all 0.3s ease; }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .faq-answer.open { max-height: 500px; }
+        .faq-icon { transition: transform 0.3s ease; }
+        .faq-icon.rotate { transform: rotate(180deg); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg">
+        <div class="max-w-4xl mx-auto px-6 py-8">
+            <div class="text-center">
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">💬 FAQ - ZapRecibo</h1>
+                <p class="text-lg text-gray-600">Tire suas dúvidas sobre nossa ferramenta de recibos digitais</p>
+                <div class="mt-4 inline-flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
+                    <span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                    Desenvolvido pela JN2M3A DIGITAL
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-6 py-12">
+        <!-- Search Box -->
+        <div class="mb-8">
+            <div class="relative">
+                <input type="text" id="searchInput" placeholder="🔍 Buscar pergunta..." 
+                       class="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none shadow-sm">
+            </div>
+        </div>
+
+        <!-- FAQ Categories -->
+        <div class="grid gap-8">
+            <!-- Categoria: Sobre o ZapRecibo -->
+            <section class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-white flex items-center">
+                        📋 Sobre o ZapRecibo
+                    </h2>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div class="faq-item border-b border-gray-100 pb-4">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-3 hover:text-blue-600 transition-colors">
+                            <span class="font-medium text-gray-800">O que é o ZapRecibo?</span>
+                            <svg class="faq-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="pt-3 text-gray-600 leading-relaxed">
+                                O ZapRecibo é uma ferramenta prática desenvolvida pela JN2M3A DIGITAL para gerar recibos digitais no Brasil. Permite criar recibos profissionais com validade jurídica para comprovar pagamentos e quitação de dívidas de forma rápida e segura.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item border-b border-gray-100 pb-4">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-3 hover:text-blue-600 transition-colors">
+                            <span class="font-medium text-gray-800">Como funciona a ferramenta?</span>
+                            <svg class="faq-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="pt-3 text-gray-600 leading-relaxed">
+                                O ZapRecibo funciona 100% no seu navegador, sem necessidade de servidores. Você preenche os dados do recibo, a ferramenta gera em HTML e converte para JPEG. Pode baixar o arquivo ou compartilhar diretamente via WhatsApp.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-3 hover:text-blue-600 transition-colors">
+                            <span class="font-medium text-gray-800">Quais são as principais funcionalidades?</span>
+                            <svg class="faq-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="pt-3 text-gray-600 leading-relaxed">
+                                ✔ Geração rápida de recibos profissionais<br>
+                                ✔ Download em formato JPEG<br>
+                                ✔ Compartilhamento direto via WhatsApp<br>
+                                ✔ Página personalizável com dados da sua empresa<br>
+                                ✔ Organização digital segura (sem armazenamento na nuvem)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categoria: Validade Jurídica -->
+            <section class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-white flex items-center">
+                        ⚖️ Validade Jurídica
+                    </h2>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div class="faq-item border-b border-gray-100 pb-4">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-3 hover:text-blue-600 transition-colors">
+                            <span class="font-medium text-gray-800">Os recibos têm validade jurídica?</span>
+                            <svg class="faq-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="pt-3 text-gray-600 leading-relaxed">
+                                Sim! Os recibos gerados são válidos como comprovante de pagamento para serviços, produtos e aluguéis. Reconhecem a quitação de obrigações financeiras e podem ser usados como prova em disputas judiciais.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item border-b border-gray-100 pb-4">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-3 hover:text-blue-600 transition-colors">
+                            <span class="font-medium text-gray-800">Qual a diferença entre recibo e nota fiscal?</span>
+                            <svg class="faq-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="pt-3 text-gray-600 leading-relaxed">
+                                <strong>Recibo:</strong> Comprova pagamento, sem validade fiscal, indicado para autônomos, freelancers e aluguéis.<br>
+                                <strong>Nota Fiscal:</strong> Registro tributário com validade fiscal, obrigatória para empresas e vendas comerciais.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-3 hover:text-blue-600 transition-colors">
+                            <span class="font-medium text-gray-800">Posso usar para qualquer tipo de transação?</span>
+                            <svg class="faq-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="pt-3 text-gray-600 leading-relaxed">
+                                O recibo é ideal para transações informais como serviços pontuais, freelances e aluguéis. Não substitui nota fiscal quando esta é obrigatória (ex: vendas comerciais). Em casos específicos, consulte um contador.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categoria: Privacidade e Segurança -->
+            <section class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-purple-600 to-purple-700 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-white flex items-center">
+                        🔐 Privacidade e Segurança
+                    </h2>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div class="faq-item border-b border-gray-100 pb-4">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-3 hover:text-blue-600 transition-colors">
+                            <span class="font-medium text-gray-800">Meus dados ficam armazenados?</span>
+                            <svg class="faq-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="pt-3 text-gray-600 leading-relaxed">
+                                <strong>Zero armazenamento!</strong> Os dados dos recibos (nomes, valores) não são coletados nem armazenados. Tudo é processado apenas no seu dispositivo, garantindo total privacidade.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item border-b border-gray-100 pb-4">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-3 hover:text-blue-600 transition-colors">
+                            <span class="font-medium text-gray-800">A ferramenta funciona offline?</span>
+                            <svg class="faq-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="pt-3 text-gray-600 leading-relaxed">
+                                Sim! O ZapRecibo funciona offline no seu navegador. Não há rastreamento nem necessidade de conexão constante com a internet para gerar os recibos.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-3 hover:text-blue-600 transition-colors">
+                            <span class="font-medium text-gray-800">Como organizar meus recibos com segurança?</span>
+                            <svg class="faq-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="pt-3 text-gray-600 leading-relaxed">
+                                💡 <strong>Dicas:</strong><br>
+                                • Organize recibos por data/categoria<br>
+                                • Salve cópias em locais seguros (ex: nuvem pessoal)<br>
+                                • Mantenha backup dos arquivos importantes<br>
+                                • Use nomes descritivos para facilitar a busca
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categoria: Planos e Acesso -->
+            <section class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-orange-600 to-orange-700 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-white flex items-center">
+                        💳 Planos e Acesso
+                    </h2>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div class="faq-item border-b border-gray-100 pb-4">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-3 hover:text-blue-600 transition-colors">
+                            <span class="font-medium text-gray-800">Como funciona o acesso aos planos?</span>
+                            <svg class="faq-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="pt-3 text-gray-600 leading-relaxed">
+                                O acesso é conforme o plano contratado (exemplo: 180 dias ou 1 ano). Após expirar, a página solicitará renovação. Você pode personalizar com nome, telefone e endereço da sua empresa.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item border-b border-gray-100 pb-4">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-3 hover:text-blue-600 transition-colors">
+                            <span class="font-medium text-gray-800">O que acontece quando o plano expira?</span>
+                            <svg class="faq-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="pt-3 text-gray-600 leading-relaxed">
+                                Quando o plano expira, a página solicitará renovação. Os recibos já gerados continuam válidos, mas você precisará renovar para continuar criando novos recibos.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-3 hover:text-blue-600 transition-colors">
+                            <span class="font-medium text-gray-800">Posso personalizar minha página?</span>
+                            <svg class="faq-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="pt-3 text-gray-600 leading-relaxed">
+                                Sim! Você pode personalizar sua página com os dados da sua empresa: nome, telefone e endereço. Isso deixa os recibos mais profissionais e personalizados.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categoria: Suporte -->
+            <section class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-red-600 to-red-700 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-white flex items-center">
+                        📞 Suporte e Contato
+                    </h2>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div class="faq-item border-b border-gray-100 pb-4">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-3 hover:text-blue-600 transition-colors">
+                            <span class="font-medium text-gray-800">Como entrar em contato com o suporte?</span>
+                            <svg class="faq-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="pt-3 text-gray-600 leading-relaxed">
+                                📱 <strong>WhatsApp:</strong> (79) 99896-5081<br>
+                                🕒 <strong>Horário:</strong> Segunda a Sexta, 8h às 18h<br><br>
+                                Nossa equipe está pronta para ajudar com qualquer dúvida sobre o ZapRecibo!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-3 hover:text-blue-600 transition-colors">
+                            <span class="font-medium text-gray-800">Quais são minhas responsabilidades como usuário?</span>
+                            <svg class="faq-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="pt-3 text-gray-600 leading-relaxed">
+                                Como usuário, você deve:<br>
+                                • Garantir a veracidade dos dados inseridos<br>
+                                • Cumprir suas obrigações legais<br>
+                                • Revisar periodicamente os termos de uso<br>
+                                • Consultar um contador em casos específicos
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Aviso Legal -->
+        <div class="mt-12 bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-r-xl">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-yellow-400 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-yellow-800">Aviso Legal</h3>
+                    <div class="mt-2 text-sm text-yellow-700">
+                        O ZapRecibo não garante adequação para todos os fins fiscais. Em casos específicos, consulte um contador. Os termos podem ser atualizados periodicamente.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-16">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <p class="text-lg font-medium mb-2">ZapRecibo - Recibos Digitais Profissionais</p>
+            <p class="text-gray-400">Desenvolvido pela JN2M3A DIGITAL (Grupo Foto de Marca)</p>
+            <div class="mt-4 flex justify-center items-center space-x-4">
+                <span class="bg-green-600 text-white px-3 py-1 rounded-full text-sm">📱 (79) 99896-5081</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Toggle Functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const icon = question.querySelector('.faq-icon');
+                
+                // Close all other answers
+                document.querySelectorAll('.faq-answer').forEach(otherAnswer => {
+                    if (otherAnswer !== answer) {
+                        otherAnswer.classList.remove('open');
+                        otherAnswer.previousElementSibling.querySelector('.faq-icon').classList.remove('rotate');
+                    }
+                });
+                
+                // Toggle current answer
+                answer.classList.toggle('open');
+                icon.classList.toggle('rotate');
+            });
+        });
+
+        // Search Functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question span').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = searchTerm === '' ? 'block' : 'none';
+                }
+            });
+        });
+
+        // Smooth scroll for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f47dc357efb4e8',t:'MTc1NTIxNjg2MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
