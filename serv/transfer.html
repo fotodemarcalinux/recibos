@@ -54,10 +54,16 @@
             <div class="bg-white rounded-xl shadow-lg p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-gray-800">Mensagem Gerada</h2>
-                    <button onclick="copyMessage()" id="copyBtn" 
-                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors opacity-0">
-                        Copiar
-                    </button>
+                    <div class="flex space-x-2">
+                        <button onclick="copyMessage()" id="copyBtn" 
+                                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors opacity-0">
+                            Copiar
+                        </button>
+                        <button onclick="shareWhatsApp()" id="whatsappBtn" 
+                                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors opacity-0">
+                            WhatsApp
+                        </button>
+                    </div>
                 </div>
                 
                 <div id="messagePreview" class="bg-gray-50 rounded-lg p-4 min-h-96 border-2 border-dashed border-gray-300">
@@ -93,6 +99,9 @@
         // Set today's date by default
         document.getElementById('currentDate').valueAsDate = new Date();
 
+        // Store the generated message globally
+        let generatedMessage = '';
+
         function generateMessage() {
             const clientName = document.getElementById('clientName').value.trim();
             const downloadLink = document.getElementById('downloadLink').value.trim();
@@ -112,7 +121,7 @@
                 year: 'numeric'
             });
 
-            const message = `Olá, ${clientName}!
+            generatedMessage = `Olá, ${clientName}!
 
 Agradecemos por utilizar nossos serviços. Suas fotos estão disponíveis para download e, embora possam ser acessadas por até 60 dias a partir de hoje, ${formattedDate}, recomendamos que você as baixe em até 30 dias para garantir fácil acesso.
 
@@ -128,29 +137,84 @@ Se precisar de ajuda, estamos à disposição!
 
 Agradecemos pela sua confiança! 📸✨`;
 
-            document.getElementById('messagePreview').innerHTML = `<pre class="whitespace-pre-wrap text-gray-800 font-normal leading-relaxed">${message}</pre>`;
+            document.getElementById('messagePreview').innerHTML = `<pre class="whitespace-pre-wrap text-gray-800 font-normal leading-relaxed">${generatedMessage}</pre>`;
             document.getElementById('copyBtn').classList.remove('opacity-0');
+            document.getElementById('whatsappBtn').classList.remove('opacity-0');
         }
 
         function copyMessage() {
-            const messageText = document.getElementById('messagePreview').textContent;
+            if (!generatedMessage) return;
             
-            if (messageText && !messageText.includes('Preencha os dados')) {
-                navigator.clipboard.writeText(messageText).then(() => {
-                    const btn = document.getElementById('copyBtn');
-                    const originalText = btn.textContent;
-                    btn.textContent = 'Copiado!';
-                    btn.classList.remove('bg-green-600', 'hover:bg-green-700');
-                    btn.classList.add('bg-green-800');
-                    
-                    setTimeout(() => {
-                        btn.textContent = originalText;
-                        btn.classList.remove('bg-green-800');
-                        btn.classList.add('bg-green-600', 'hover:bg-green-700');
-                    }, 2000);
-                }).catch(() => {
-                    alert('Erro ao copiar. Tente selecionar o texto manualmente.');
-                });
+            navigator.clipboard.writeText(generatedMessage).then(() => {
+                const btn = document.getElementById('copyBtn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Copiado!';
+                btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                btn.classList.add('bg-green-800');
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('bg-green-800');
+                    btn.classList.add('bg-green-600', 'hover:bg-green-700');
+                }, 2000);
+            }).catch(() => {
+                alert('Erro ao copiar. Tente selecionar o texto manualmente.');
+            });
+        }
+
+        function shareWhatsApp() {
+            if (!generatedMessage) return;
+            
+            // Clean message for URL encoding
+            const cleanMessage = generatedMessage
+                .replace(/\n/g, '%0A') // Convert line breaks
+                .replace(/ /g, '%20')   // Convert spaces
+                .replace(/🔗/g, '🔗')   // Keep link emoji
+                .replace(/📱/g, '📱')   // Keep phone emoji
+                .replace(/💾/g, '💾')   // Keep disk emoji
+                .replace(/☁️/g, '☁️')   // Keep cloud emoji
+                .replace(/📸/g, '📸')   // Keep camera emoji
+                .replace(/✨/g, '✨');  // Keep sparkles emoji
+            
+            // Detect device type
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            // Create WhatsApp URL
+            let whatsappUrl;
+            
+            if (isMobile) {
+                // For mobile devices - try to open WhatsApp app directly
+                whatsappUrl = `whatsapp://send?text=${cleanMessage}`;
+                
+                // Create temporary link to attempt opening
+                const link = document.createElement('a');
+                link.href = whatsappUrl;
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Fallback after 500ms if WhatsApp app didn't open
+                setTimeout(() => {
+                    window.open(`https://wa.me/?text=${cleanMessage}`, '_blank');
+                }, 500);
+            } else {
+                // For desktop - open WhatsApp Web
+                whatsappUrl = `https://web.whatsapp.com/send?text=${cleanMessage}`;
+                
+                // Try to open in new tab
+                const newTab = window.open(whatsappUrl, '_blank');
+                
+                // If popup was blocked, offer alternative
+                if (!newTab || newTab.closed) {
+                    // Copy message to clipboard as fallback
+                    navigator.clipboard.writeText(generatedMessage).then(() => {
+                        alert('A mensagem foi copiada! Cole no WhatsApp Web: https://web.whatsapp.com');
+                    }).catch(() => {
+                        // Show message for manual copy
+                        prompt('Copie esta mensagem e cole no WhatsApp:', generatedMessage);
+                    });
+                }
             }
         }
 
@@ -161,5 +225,5 @@ Agradecemos pela sua confiança! 📸✨`;
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f56894c12ed833',t:'MTc1NTIyNjQ3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
