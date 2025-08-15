@@ -65,7 +65,7 @@
             </div>
 
             <!-- Editor and Preview -->
-            <div class="grid lg:grid-cols-2 gap-6">
+            <div class="space-y-8">
                 <!-- HTML Editor -->
                 <div class="space-y-4">
                     <h3 class="text-lg font-semibold text-gray-700 flex items-center gap-2">
@@ -76,24 +76,29 @@
                     </h3>
                     <textarea 
                         id="htmlEditor" 
-                        class="w-full h-96 p-4 border border-gray-300 rounded-lg code-editor text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="w-full h-64 md:h-96 p-4 border border-gray-300 rounded-lg code-editor text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="Cole ou digite seu código HTML aqui..."
                     ></textarea>
                 </div>
 
                 <!-- Preview -->
                 <div class="space-y-4">
-                    <h3 class="text-lg font-semibold text-gray-700 flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                        </svg>
-                        Visualização
-                    </h3>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-700 flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                            Visualização
+                        </h3>
+                        <button id="refreshPreview" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm transition-colors">
+                            Atualizar
+                        </button>
+                    </div>
                     <iframe 
                         id="preview" 
-                        class="w-full h-96 rounded-lg preview-frame"
-                        sandbox="allow-scripts allow-same-origin"
+                        class="w-full h-64 md:h-96 rounded-lg preview-frame"
+                        sandbox="allow-scripts allow-same-origin allow-forms"
                     ></iframe>
                 </div>
             </div>
@@ -127,6 +132,7 @@
         const copyBtn = document.getElementById('copyBtn');
         const downloadBtn = document.getElementById('downloadBtn');
         const clearBtn = document.getElementById('clearBtn');
+        const refreshBtn = document.getElementById('refreshPreview');
         const statusMessage = document.getElementById('statusMessage');
 
         // Exemplo inicial
@@ -162,9 +168,28 @@
 
         function updatePreview() {
             const htmlContent = htmlEditor.value;
-            const blob = new Blob([htmlContent], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            preview.src = url;
+            
+            // Método mais compatível para mobile
+            try {
+                // Limpa o iframe primeiro
+                preview.src = 'about:blank';
+                
+                // Aguarda um pouco e então carrega o conteúdo
+                setTimeout(() => {
+                    const doc = preview.contentDocument || preview.contentWindow.document;
+                    doc.open();
+                    doc.write(htmlContent);
+                    doc.close();
+                }, 100);
+            } catch (err) {
+                // Fallback usando blob URL
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                preview.src = url;
+                
+                // Limpa a URL após um tempo para evitar vazamentos de memória
+                setTimeout(() => URL.revokeObjectURL(url), 5000);
+            }
         }
 
         // Upload de arquivo
@@ -184,13 +209,41 @@
         // Copiar HTML
         copyBtn.addEventListener('click', async function() {
             try {
-                await navigator.clipboard.writeText(htmlEditor.value);
-                showStatus('HTML copiado para a área de transferência!', 'success');
+                // Primeiro tenta o método moderno
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(htmlEditor.value);
+                    showStatus('HTML copiado para a área de transferência!', 'success');
+                } else {
+                    // Fallback melhorado para mobile
+                    htmlEditor.select();
+                    htmlEditor.setSelectionRange(0, 99999); // Para mobile
+                    
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        showStatus('HTML copiado para a área de transferência!', 'success');
+                    } else {
+                        throw new Error('Falha ao copiar');
+                    }
+                }
             } catch (err) {
-                // Fallback para navegadores mais antigos
-                htmlEditor.select();
-                document.execCommand('copy');
-                showStatus('HTML copiado para a área de transferência!', 'success');
+                // Último recurso - criar elemento temporário
+                const textArea = document.createElement('textarea');
+                textArea.value = htmlEditor.value;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    showStatus('HTML copiado para a área de transferência!', 'success');
+                } catch (err2) {
+                    showStatus('Erro ao copiar. Selecione o texto manualmente.', 'error');
+                }
+                
+                document.body.removeChild(textArea);
             }
         });
 
@@ -218,6 +271,12 @@
             }
         });
 
+        // Atualizar preview manualmente
+        refreshBtn.addEventListener('click', function() {
+            updatePreview();
+            showStatus('Visualização atualizada!', 'info');
+        });
+
         // Mostrar mensagem de status
         function showStatus(message, type) {
             statusMessage.textContent = message;
@@ -238,5 +297,5 @@
             }
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f9058bf35e52d2',t:'MTc1NTI2NDM2NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f90d0fd24952d2',t:'MTc1NTI2NDY3My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
