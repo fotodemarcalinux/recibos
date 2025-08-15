@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Álbum de Figurinhas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .sticker-slot {
+            aspect-ratio: 1;
+            background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), 
+                        linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #f0f0f0 75%), 
+                        linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        .page-canvas {
+            width: 600px;
+            height: 600px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .sticker-image {
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-100 to-pink-100 min-h-screen p-4">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-purple-800 mb-2">📱 Meu Álbum de Figurinhas</h1>
+            <p class="text-gray-600">Crie seu álbum personalizado e baixe para o Instagram!</p>
+        </div>
+
+        <!-- Page Navigation -->
+        <div class="flex justify-center mb-6">
+            <div class="bg-white rounded-full p-2 shadow-lg">
+                <button onclick="showPage(1)" id="page-btn-1" class="px-4 py-2 rounded-full bg-purple-500 text-white font-semibold mx-1">Página 1</button>
+                <button onclick="showPage(2)" id="page-btn-2" class="px-4 py-2 rounded-full bg-gray-300 text-gray-700 font-semibold mx-1">Página 2</button>
+                <button onclick="showPage(3)" id="page-btn-3" class="px-4 py-2 rounded-full bg-gray-300 text-gray-700 font-semibold mx-1">Página 3</button>
+                <button onclick="showPage(4)" id="page-btn-4" class="px-4 py-2 rounded-full bg-gray-300 text-gray-700 font-semibold mx-1">Página 4</button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex flex-col lg:flex-row gap-8 items-start">
+            <!-- Album Page Display -->
+            <div class="flex-1 flex justify-center">
+                <div id="album-container" class="page-canvas rounded-2xl shadow-2xl p-8 relative">
+                    <!-- Page 1 -->
+                    <div id="page-1" class="page-content grid grid-cols-3 gap-4 h-full">
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(1, 1)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(1, 2)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(1, 3)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(1, 4)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(1, 5)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(1, 6)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(1, 7)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(1, 8)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(1, 9)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                    </div>
+
+                    <!-- Pages 2, 3, 4 (hidden initially) -->
+                    <div id="page-2" class="page-content grid grid-cols-3 gap-4 h-full hidden">
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(2, 1)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(2, 2)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(2, 3)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(2, 4)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(2, 5)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(2, 6)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(2, 7)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(2, 8)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(2, 9)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                    </div>
+
+                    <div id="page-3" class="page-content grid grid-cols-3 gap-4 h-full hidden">
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 1)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 2)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 3)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 4)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 5)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 6)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 7)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 8)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(3, 9)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                    </div>
+
+                    <div id="page-4" class="page-content grid grid-cols-3 gap-4 h-full hidden">
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 1)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 2)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 3)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 4)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 5)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 6)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 7)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 8)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                        <div class="sticker-slot rounded-lg border-2 border-dashed border-white/50 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all" onclick="selectSlot(4, 9)">
+                            <span class="text-white/70 text-sm">📷 Clique para adicionar</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls Panel -->
+            <div class="w-full lg:w-80">
+                <div class="bg-white rounded-2xl shadow-xl p-6 space-y-6">
+                    <h3 class="text-xl font-bold text-gray-800 text-center">🎨 Controles</h3>
+                    
+                    <!-- Upload Section -->
+                    <div class="space-y-3">
+                        <label class="block text-sm font-semibold text-gray-700">Adicionar Figurinha:</label>
+                        <input type="file" id="image-upload" accept="image/*" class="w-full p-3 border-2 border-dashed border-purple-300 rounded-lg text-sm hover:border-purple-500 transition-colors">
+                        <p class="text-xs text-gray-500">Clique em um espaço vazio no álbum e depois selecione uma imagem</p>
+                    </div>
+
+                    <!-- Download Section -->
+                    <div class="space-y-3">
+                        <label class="block text-sm font-semibold text-gray-700">Baixar Página:</label>
+                        <button onclick="downloadCurrentPage()" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 px-4 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all transform hover:scale-105 shadow-lg">
+                            📥 Baixar Página Atual
+                        </button>
+                        <p class="text-xs text-gray-500">Baixa a página atual como imagem quadrada 1080x1080 para Instagram</p>
+                    </div>
+
+                    <!-- Clear Section -->
+                    <div class="space-y-3">
+                        <label class="block text-sm font-semibold text-gray-700">Limpar:</label>
+                        <button onclick="clearCurrentPage()" class="w-full bg-red-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-red-600 transition-all shadow-lg">
+                            🗑️ Limpar Página Atual
+                        </button>
+                    </div>
+
+                    <!-- Instructions -->
+                    <div class="bg-purple-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-purple-800 mb-2">Como usar:</h4>
+                        <ol class="text-sm text-purple-700 space-y-1">
+                            <li>1. Clique em um espaço vazio</li>
+                            <li>2. Selecione uma imagem</li>
+                            <li>3. Navegue entre as páginas</li>
+                            <li>4. Baixe quando estiver pronto!</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden file input -->
+    <input type="file" id="hidden-file-input" accept="image/*" style="display: none;">
+
+    <script>
+        let currentPage = 1;
+        let selectedSlot = null;
+        let albumData = {
+            1: {},
+            2: {},
+            3: {},
+            4: {}
+        };
+
+        // Show specific page
+        function showPage(pageNum) {
+            // Hide all pages
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`page-${i}`).classList.add('hidden');
+                document.getElementById(`page-btn-${i}`).classList.remove('bg-purple-500', 'text-white');
+                document.getElementById(`page-btn-${i}`).classList.add('bg-gray-300', 'text-gray-700');
+            }
+            
+            // Show selected page
+            document.getElementById(`page-${pageNum}`).classList.remove('hidden');
+            document.getElementById(`page-btn-${pageNum}`).classList.remove('bg-gray-300', 'text-gray-700');
+            document.getElementById(`page-btn-${pageNum}`).classList.add('bg-purple-500', 'text-white');
+            
+            currentPage = pageNum;
+        }
+
+        // Select a slot for image upload
+        function selectSlot(page, slot) {
+            selectedSlot = { page, slot };
+            document.getElementById('hidden-file-input').click();
+        }
+
+        // Handle file upload
+        document.getElementById('hidden-file-input').addEventListener('change', function(e) {
+            if (!selectedSlot || !e.target.files[0]) return;
+            
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(event) {
+                const imageUrl = event.target.result;
+                const { page, slot } = selectedSlot;
+                
+                // Store image data
+                albumData[page][slot] = imageUrl;
+                
+                // Update the slot display
+                const slotElement = document.querySelector(`#page-${page} .sticker-slot:nth-child(${slot})`);
+                slotElement.innerHTML = `<img src="${imageUrl}" class="w-full h-full sticker-image" alt="Figurinha ${slot}">`;
+                slotElement.onclick = () => removeSticker(page, slot);
+                
+                selectedSlot = null;
+            };
+            
+            reader.readAsDataURL(file);
+        });
+
+        // Remove sticker
+        function removeSticker(page, slot) {
+            if (confirm('Remover esta figurinha?')) {
+                delete albumData[page][slot];
+                const slotElement = document.querySelector(`#page-${page} .sticker-slot:nth-child(${slot})`);
+                slotElement.innerHTML = '<span class="text-white/70 text-sm">📷 Clique para adicionar</span>';
+                slotElement.onclick = () => selectSlot(page, slot);
+            }
+        }
+
+        // Download current page as image
+        function downloadCurrentPage() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const size = 1080; // Instagram square size
+            
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Create gradient background
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Calculate grid layout
+            const padding = 80;
+            const gridSize = 3;
+            const cellSize = (size - padding * 2) / gridSize;
+            const gap = 40;
+            const stickerSize = cellSize - gap;
+            
+            let loadedImages = 0;
+            const totalImages = Object.keys(albumData[currentPage]).length;
+            
+            if (totalImages === 0) {
+                // No images, just download the background
+                downloadCanvas(canvas, `album-page-${currentPage}.jpg`);
+                return;
+            }
+            
+            // Load and draw each image
+            Object.entries(albumData[currentPage]).forEach(([slot, imageUrl]) => {
+                const img = new Image();
+                img.onload = function() {
+                    const slotIndex = parseInt(slot) - 1;
+                    const row = Math.floor(slotIndex / gridSize);
+                    const col = slotIndex % gridSize;
+                    
+                    const x = padding + col * cellSize + gap / 2;
+                    const y = padding + row * cellSize + gap / 2;
+                    
+                    // Draw rounded rectangle background
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.roundRect(x, y, stickerSize, stickerSize, 20);
+                    ctx.clip();
+                    
+                    // Draw image
+                    ctx.drawImage(img, x, y, stickerSize, stickerSize);
+                    ctx.restore();
+                    
+                    // Add shadow effect
+                    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+                    ctx.shadowBlur = 10;
+                    ctx.shadowOffsetX = 5;
+                    ctx.shadowOffsetY = 5;
+                    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.roundRect(x, y, stickerSize, stickerSize, 20);
+                    ctx.stroke();
+                    ctx.shadowColor = 'transparent';
+                    
+                    loadedImages++;
+                    if (loadedImages === totalImages) {
+                        downloadCanvas(canvas, `album-page-${currentPage}.jpg`);
+                    }
+                };
+                img.src = imageUrl;
+            });
+        }
+
+        // Helper function to download canvas as image
+        function downloadCanvas(canvas, filename) {
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 'image/jpeg', 0.9);
+        }
+
+        // Clear current page
+        function clearCurrentPage() {
+            if (confirm(`Limpar todas as figurinhas da Página ${currentPage}?`)) {
+                albumData[currentPage] = {};
+                const slots = document.querySelectorAll(`#page-${currentPage} .sticker-slot`);
+                slots.forEach((slot, index) => {
+                    slot.innerHTML = '<span class="text-white/70 text-sm">📷 Clique para adicionar</span>';
+                    slot.onclick = () => selectSlot(currentPage, index + 1);
+                });
+            }
+        }
+
+        // Add rounded rectangle support for older browsers
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
+                this.beginPath();
+                this.moveTo(x + radius, y);
+                this.lineTo(x + width - radius, y);
+                this.quadraticCurveTo(x + width, y, x + width, y + radius);
+                this.lineTo(x + width, y + height - radius);
+                this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                this.lineTo(x + radius, y + height);
+                this.quadraticCurveTo(x, y + height, x, y + height - radius);
+                this.lineTo(x, y + radius);
+                this.quadraticCurveTo(x, y, x + radius, y);
+                this.closePath();
+            };
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f5b1749510f183',t:'MTc1NTIyOTQ2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
