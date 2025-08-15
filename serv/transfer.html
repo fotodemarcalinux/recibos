@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Mensagens - JN2M3A Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Gerador de Mensagens</h1>
+            <p class="text-gray-600">Crie mensagens personalizadas para entrega de fotos</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Form Section -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6">Dados do Cliente</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nome do Cliente</label>
+                        <input type="text" id="clientName" placeholder="Digite o nome do cliente" 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Link para Download</label>
+                        <input type="url" id="downloadLink" placeholder="https://mega.nz/..." 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Data de Hoje</label>
+                        <input type="date" id="currentDate" 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                    </div>
+                </div>
+
+                <button onclick="generateMessage()" 
+                        class="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                    Gerar Mensagem
+                </button>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800">Mensagem Gerada</h2>
+                    <button onclick="copyMessage()" id="copyBtn" 
+                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors opacity-0">
+                        Copiar
+                    </button>
+                </div>
+                
+                <div id="messagePreview" class="bg-gray-50 rounded-lg p-4 min-h-96 border-2 border-dashed border-gray-300">
+                    <p class="text-gray-500 text-center mt-20">Preencha os dados acima para gerar a mensagem personalizada</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-16 bg-white rounded-xl shadow-lg p-8">
+            <div class="text-center mb-6">
+                <img src="https://i.ibb.co/prsT1vXN/JN2-M3-ADIGITAL-H-1-removebg-preview.png" 
+                     alt="JN2M3A Digital" class="h-12 mx-auto mb-4">
+                <p class="text-gray-600 font-medium">Uma marca do Grupo Foto de Marca</p>
+            </div>
+            
+            <div class="text-center mb-6">
+                <p class="text-gray-700 font-medium mb-2">WhatsApp (79) 99896-5081</p>
+                <p class="text-gray-600 text-sm">© 2025 JN2M3A DIGITAL. Desenvolvendo soluções que facilitam o seu dia a dia.</p>
+            </div>
+            
+            <div class="text-center space-x-4">
+                <a href="https://rec.sou.net.br/termo_de_uso.html" 
+                   class="text-blue-600 hover:text-blue-800 text-sm transition-colors">Termos de Uso</a>
+                <span class="text-gray-400">|</span>
+                <a href="https://rec.sou.net.br/faq" 
+                   class="text-blue-600 hover:text-blue-800 text-sm transition-colors">Perguntas Frequentes</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Set today's date by default
+        document.getElementById('currentDate').valueAsDate = new Date();
+
+        function generateMessage() {
+            const clientName = document.getElementById('clientName').value.trim();
+            const downloadLink = document.getElementById('downloadLink').value.trim();
+            const currentDate = document.getElementById('currentDate').value;
+            
+            if (!clientName || !downloadLink || !currentDate) {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+
+            // Format date to Brazilian format (fix timezone issue)
+            const dateParts = currentDate.split('-');
+            const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+            const formattedDate = date.toLocaleDateString('pt-BR', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+
+            const message = `Olá, ${clientName}!
+
+Agradecemos por utilizar nossos serviços. Suas fotos estão disponíveis para download e, embora possam ser acessadas por até 60 dias a partir de hoje, ${formattedDate}, recomendamos que você as baixe em até 30 dias para garantir fácil acesso.
+
+🔗 Link para download: ${downloadLink}
+
+Para armazenar suas fotos de forma segura, considere as seguintes opções:
+
+📱 Pendrives: Práticos para ter suas fotos à mão.
+💾 Discos rígidos externos (HDs): Ideais para grandes volumes de dados.
+☁️ Serviços de armazenamento em nuvem: Acesso fácil de qualquer lugar.
+
+Se precisar de ajuda, estamos à disposição!
+
+Agradecemos pela sua confiança! 📸✨`;
+
+            document.getElementById('messagePreview').innerHTML = `<pre class="whitespace-pre-wrap text-gray-800 font-normal leading-relaxed">${message}</pre>`;
+            document.getElementById('copyBtn').classList.remove('opacity-0');
+        }
+
+        function copyMessage() {
+            const messageText = document.getElementById('messagePreview').textContent;
+            
+            if (messageText && !messageText.includes('Preencha os dados')) {
+                navigator.clipboard.writeText(messageText).then(() => {
+                    const btn = document.getElementById('copyBtn');
+                    const originalText = btn.textContent;
+                    btn.textContent = 'Copiado!';
+                    btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    btn.classList.add('bg-green-800');
+                    
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.classList.remove('bg-green-800');
+                        btn.classList.add('bg-green-600', 'hover:bg-green-700');
+                    }, 2000);
+                }).catch(() => {
+                    alert('Erro ao copiar. Tente selecionar o texto manualmente.');
+                });
+            }
+        }
+
+        // Generate message when Enter is pressed in any input
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateMessage();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f56894c12ed833',t:'MTc1NTIyNjQ3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
