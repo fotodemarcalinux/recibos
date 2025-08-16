@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Fotos 3x4 - JN2M3A DIGITAL</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .logo {
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .editor-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .canvas-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 1;
+        }
+
+        .step.active:not(:last-child)::after {
+            background: #667eea;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 8px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .step.active .step-number {
+            background: #667eea;
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: #00b894;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 12px;
+            text-align: center;
+            color: #666;
+        }
+
+        .step.active .step-label {
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 25px;
+            background: #f8f9ff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #5a67d8;
+            background: #f0f2ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #00b894;
+            background: #f0fff4;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            font-size: 16px;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .crop-container {
+            max-width: 100%;
+            max-height: 400px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .crop-container img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .btn-success {
+            background: #00b894;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #00a085;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: #fdcb6e;
+            color: #2d3436;
+        }
+
+        .btn-warning:hover {
+            background: #e17055;
+            color: white;
+        }
+
+        .canvas-panel h3 {
+            color: #667eea;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .canvas-preview {
+            width: 100%;
+            max-width: 350px;
+            height: 500px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            background: white;
+            margin: 0 auto 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .canvas-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 8px;
+            padding: 15px;
+            height: 100%;
+        }
+
+        .photo-slot {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .photo-slot:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .photo-slot.filled {
+            border: 2px solid #00b894;
+            background: transparent;
+        }
+
+        .photo-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .photo-slot .slot-number {
+            color: #999;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .photo-slot.filled .slot-number {
+            display: none;
+        }
+
+        .remove-photo {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .photo-slot.filled:hover .remove-photo {
+            display: block;
+        }
+
+        .canvas-info {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .canvas-info h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .canvas-info p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .photo-counter {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: #667eea;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .footer-logo {
+            height: 50px;
+            margin-bottom: 15px;
+        }
+
+        .footer p {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .footer-links {
+            margin: 20px 0;
+        }
+
+        .footer-links a {
+            color: #74b9ff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 14px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .whatsapp {
+            color: #25d366;
+            font-weight: 500;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            border: 1px solid #28a745;
+            color: #155724;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            border: 1px solid #dc3545;
+            color: #721c24;
+        }
+
+        .alert.info {
+            background: #d1ecf1;
+            border: 1px solid #17a2b8;
+            color: #0c5460;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .canvas-panel {
+                position: static;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 250px;
+                justify-content: center;
+            }
+
+            .step-indicator {
+                padding: 0 10px;
+            }
+
+            .step-label {
+                font-size: 10px;
+            }
+
+            .canvas-preview {
+                max-width: 280px;
+                height: 400px;
+            }
+        }
+
+        .size-info {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .size-info h4 {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .size-info p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://sou.net.br/digital" target="_blank">
+            <img src="https://i.ibb.co/prsT1vXN/JN2-M3-ADIGITAL-H-1-removebg-preview.png" alt="JN2M3A DIGITAL" class="logo">
+        </a>
+        <h1>Gerador de Fotos 3x4</h1>
+        <p>Crie e organize suas fotos 3x4 em formato 10x15cm para impressão</p>
+    </header>
+
+    <div class="container">
+        <div class="step-indicator">
+            <div class="step active" id="step1">
+                <div class="step-number">1</div>
+                <div class="step-label">Upload da Foto</div>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-number">2</div>
+                <div class="step-label">Ajustar Recorte</div>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-number">3</div>
+                <div class="step-label">Organizar Canvas</div>
+            </div>
+            <div class="step" id="step4">
+                <div class="step-number">4</div>
+                <div class="step-label">Baixar para Impressão</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="editor-section">
+                <div class="size-info">
+                    <h4>📐 Formato: 3x4cm (Documento)</h4>
+                    <p>Ideal para documentos, carteiras de trabalho, passaportes e identificações</p>
+                </div>
+
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">Clique aqui ou arraste sua foto</div>
+                    <input type="file" id="fileInput" accept="image/*">
+                </div>
+
+                <div class="alert" id="alertBox">
+                    <span id="alertMessage"></span>
+                </div>
+
+                <div class="crop-container" id="cropContainer">
+                    <img id="cropImage" alt="Imagem para recorte">
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-secondary" id="zoomIn" style="display: none;">🔍+ Zoom</button>
+                    <button class="btn btn-secondary" id="zoomOut" style="display: none;">🔍- Zoom</button>
+                    <button class="btn btn-warning" id="resetCrop" style="display: none;">🔄 Resetar</button>
+                    <button class="btn btn-success" id="addToCanvas" style="display: none;">➕ Adicionar ao Canvas</button>
+                    <button class="btn btn-primary" id="newPhoto" style="display: none;">📷 Nova Foto</button>
+                </div>
+            </div>
+
+            <div class="canvas-panel">
+                <h3>🖼️ Canvas 10x15cm</h3>
+                
+                <div class="canvas-info">
+                    <h4>📋 Informações</h4>
+                    <p><strong>Tamanho:</strong> 10x15cm (padrão laboratório)<br>
+                    <strong>Capacidade:</strong> 9 fotos 3x4cm<br>
+                    <strong>Resolução:</strong> 300 DPI para impressão</p>
+                </div>
+
+                <div class="photo-counter">
+                    <span id="photoCount">0</span>/9 fotos adicionadas
+                </div>
+
+                <div class="canvas-preview">
+                    <div class="canvas-grid" id="canvasGrid">
+                        <div class="photo-slot" data-slot="1">
+                            <span class="slot-number">1</span>
+                            <button class="remove-photo" onclick="removePhoto(1)">×</button>
+                        </div>
+                        <div class="photo-slot" data-slot="2">
+                            <span class="slot-number">2</span>
+                            <button class="remove-photo" onclick="removePhoto(2)">×</button>
+                        </div>
+                        <div class="photo-slot" data-slot="3">
+                            <span class="slot-number">3</span>
+                            <button class="remove-photo" onclick="removePhoto(3)">×</button>
+                        </div>
+                        <div class="photo-slot" data-slot="4">
+                            <span class="slot-number">4</span>
+                            <button class="remove-photo" onclick="removePhoto(4)">×</button>
+                        </div>
+                        <div class="photo-slot" data-slot="5">
+                            <span class="slot-number">5</span>
+                            <button class="remove-photo" onclick="removePhoto(5)">×</button>
+                        </div>
+                        <div class="photo-slot" data-slot="6">
+                            <span class="slot-number">6</span>
+                            <button class="remove-photo" onclick="removePhoto(6)">×</button>
+                        </div>
+                        <div class="photo-slot" data-slot="7">
+                            <span class="slot-number">7</span>
+                            <button class="remove-photo" onclick="removePhoto(7)">×</button>
+                        </div>
+                        <div class="photo-slot" data-slot="8">
+                            <span class="slot-number">8</span>
+                            <button class="remove-photo" onclick="removePhoto(8)">×</button>
+                        </div>
+                        <div class="photo-slot" data-slot="9">
+                            <span class="slot-number">9</span>
+                            <button class="remove-photo" onclick="removePhoto(9)">×</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-warning" id="clearCanvas">🗑️ Limpar Tudo</button>
+                    <button class="btn btn-success" id="downloadCanvas">💾 Baixar 10x15cm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <img src="https://i.ibb.co/prsT1vXN/JN2-M3-ADIGITAL-H-1-removebg-preview.png" alt="JN2M3A DIGITAL" class="footer-logo">
+            <p><strong>Uma marca do Grupo Foto de Marca</strong></p>
+            <p class="whatsapp">📱 WhatsApp: (79) 99896-5081</p>
+            <p>© 2025 JN2M3A DIGITAL. Desenvolvendo soluções que facilitam o seu dia a dia.</p>
+            <div class="footer-links">
+                <a href="https://rec.sou.net.br/termo_de_uso.html" target="_blank">Termos de Uso</a>
+                <a href="https://rec.sou.net.br/faq" target="_blank">Perguntas Frequentes</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let cropper = null;
+        let currentStep = 1;
+        let photoCount = 0;
+        const maxPhotos = 9;
+
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.querySelector('.upload-area');
+        const cropContainer = document.getElementById('cropContainer');
+        const cropImage = document.getElementById('cropImage');
+        const alertBox = document.getElementById('alertBox');
+        const alertMessage = document.getElementById('alertMessage');
+        const photoCountElement = document.getElementById('photoCount');
+
+        // Control buttons
+        const zoomInBtn = document.getElementById('zoomIn');
+        const zoomOutBtn = document.getElementById('zoomOut');
+        const resetBtn = document.getElementById('resetCrop');
+        const addToCanvasBtn = document.getElementById('addToCanvas');
+        const newPhotoBtn = document.getElementById('newPhoto');
+        const clearCanvasBtn = document.getElementById('clearCanvas');
+        const downloadCanvasBtn = document.getElementById('downloadCanvas');
+
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showAlert('error', 'Por favor, selecione apenas arquivos de imagem.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                cropImage.src = e.target.result;
+                initializeCropper();
+                updateStep(2);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function initializeCropper() {
+            if (cropper) {
+                cropper.destroy();
+            }
+
+            cropContainer.style.display = 'block';
+            showCropControls(true);
+
+            // Proporção 3x4 (0.75)
+            cropper = new Cropper(cropImage, {
+                aspectRatio: 3 / 4,
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 0.8,
+                restore: false,
+                guides: true,
+                center: true,
+                highlight: false,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: false,
+                ready: function () {
+                    showAlert('success', 'Foto carregada! Ajuste o recorte no formato 3x4 e clique em "Adicionar ao Canvas".');
+                }
+            });
+        }
+
+        function showCropControls(show) {
+            const controls = [zoomInBtn, zoomOutBtn, resetBtn, addToCanvasBtn, newPhotoBtn];
+            controls.forEach(btn => {
+                btn.style.display = show ? 'inline-flex' : 'none';
+            });
+        }
+
+        function updateStep(step) {
+            // Remove active class from all steps
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            
+            // Add completed class to previous steps
+            for (let i = 1; i < step; i++) {
+                document.getElementById(`step${i}`).classList.add('completed');
+            }
+            
+            // Add active class to current step
+            document.getElementById(`step${step}`).classList.add('active');
+            
+            currentStep = step;
+        }
+
+        function showAlert(type, message) {
+            alertBox.className = `alert ${type}`;
+            alertMessage.textContent = message;
+            alertBox.style.display = 'block';
+            
+            if (type === 'success') {
+                setTimeout(() => {
+                    alertBox.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function updatePhotoCount() {
+            photoCountElement.textContent = photoCount;
+            
+            if (photoCount > 0) {
+                updateStep(3);
+            }
+            
+            if (photoCount >= maxPhotos) {
+                showAlert('info', 'Canvas completo! Você pode baixar a imagem para impressão.');
+                updateStep(4);
+            }
+        }
+
+        // Control button events
+        zoomInBtn.addEventListener('click', () => {
+            if (cropper) cropper.zoom(0.1);
+        });
+
+        zoomOutBtn.addEventListener('click', () => {
+            if (cropper) cropper.zoom(-0.1);
+        });
+
+        resetBtn.addEventListener('click', () => {
+            if (cropper) {
+                cropper.reset();
+                showAlert('success', 'Posição resetada.');
+            }
+        });
+
+        addToCanvasBtn.addEventListener('click', () => {
+            if (!cropper) {
+                showAlert('error', 'Nenhuma imagem para adicionar.');
+                return;
+            }
+
+            if (photoCount >= maxPhotos) {
+                showAlert('error', 'Canvas já está completo (9 fotos).');
+                return;
+            }
+
+            // Get cropped canvas with 3x4 dimensions (300 DPI for print)
+            const canvas = cropper.getCroppedCanvas({
+                width: 354, // 3cm at 300 DPI
+                height: 472, // 4cm at 300 DPI
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high'
+            });
+
+            // Find next empty slot
+            const emptySlot = document.querySelector('.photo-slot:not(.filled)');
+            if (emptySlot) {
+                const img = document.createElement('img');
+                img.src = canvas.toDataURL('image/jpeg', 0.9);
+                img.alt = `Foto ${photoCount + 1}`;
+                
+                emptySlot.innerHTML = '';
+                emptySlot.appendChild(img);
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-photo';
+                removeBtn.textContent = '×';
+                removeBtn.onclick = () => removePhoto(emptySlot.dataset.slot);
+                emptySlot.appendChild(removeBtn);
+                
+                emptySlot.classList.add('filled');
+                photoCount++;
+                updatePhotoCount();
+                
+                showAlert('success', `Foto adicionada ao canvas! (${photoCount}/${maxPhotos})`);
+            }
+        });
+
+        newPhotoBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        clearCanvasBtn.addEventListener('click', () => {
+            if (confirm('Tem certeza que deseja limpar todas as fotos do canvas?')) {
+                document.querySelectorAll('.photo-slot').forEach((slot, index) => {
+                    slot.innerHTML = `
+                        <span class="slot-number">${index + 1}</span>
+                        <button class="remove-photo" onclick="removePhoto(${index + 1})">×</button>
+                    `;
+                    slot.classList.remove('filled');
+                });
+                photoCount = 0;
+                updatePhotoCount();
+                updateStep(1);
+                showAlert('success', 'Canvas limpo! Você pode adicionar novas fotos.');
+            }
+        });
+
+        downloadCanvasBtn.addEventListener('click', () => {
+            if (photoCount === 0) {
+                showAlert('error', 'Adicione pelo menos uma foto antes de baixar.');
+                return;
+            }
+
+            generatePrintCanvas();
+        });
+
+        function removePhoto(slotNumber) {
+            const slot = document.querySelector(`[data-slot="${slotNumber}"]`);
+            if (slot && slot.classList.contains('filled')) {
+                slot.innerHTML = `
+                    <span class="slot-number">${slotNumber}</span>
+                    <button class="remove-photo" onclick="removePhoto(${slotNumber})">×</button>
+                `;
+                slot.classList.remove('filled');
+                photoCount--;
+                updatePhotoCount();
+                showAlert('success', 'Foto removida do canvas.');
+            }
+        }
+
+        function generatePrintCanvas() {
+            // Create a high-resolution canvas for printing (10x15cm at 300 DPI)
+            const printCanvas = document.createElement('canvas');
+            const ctx = printCanvas.getContext('2d');
+            
+            // 10x15cm at 300 DPI
+            printCanvas.width = 1181; // 10cm at 300 DPI
+            printCanvas.height = 1772; // 15cm at 300 DPI
+            
+            // White background
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, printCanvas.width, printCanvas.height);
+            
+            // Calculate photo dimensions and positions
+            const photoWidth = 354; // 3cm at 300 DPI
+            const photoHeight = 472; // 4cm at 300 DPI
+            const margin = 20;
+            const cols = 3;
+            const rows = 3;
+            
+            // Calculate spacing
+            const totalPhotoWidth = cols * photoWidth;
+            const totalPhotoHeight = rows * photoHeight;
+            const horizontalSpacing = (printCanvas.width - totalPhotoWidth - 2 * margin) / (cols - 1);
+            const verticalSpacing = (printCanvas.height - totalPhotoHeight - 2 * margin) / (rows - 1);
+            
+            let photoIndex = 0;
+            const filledSlots = document.querySelectorAll('.photo-slot.filled img');
+            
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    if (photoIndex < filledSlots.length) {
+                        const img = new Image();
+                        img.onload = function() {
+                            const x = margin + col * (photoWidth + horizontalSpacing);
+                            const y = margin + row * (photoHeight + verticalSpacing);
+                            ctx.drawImage(img, x, y, photoWidth, photoHeight);
+                            
+                            // Check if this is the last photo to draw
+                            if (photoIndex === filledSlots.length - 1) {
+                                downloadPrintCanvas(printCanvas);
+                            }
+                        };
+                        img.src = filledSlots[photoIndex].src;
+                        photoIndex++;
+                    }
+                }
+            }
+            
+            // If no photos with onload events, download immediately
+            if (filledSlots.length === 0) {
+                downloadPrintCanvas(printCanvas);
+            }
+        }
+
+        function downloadPrintCanvas(canvas) {
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `fotos_3x4_canvas_10x15cm_${new Date().getTime()}.jpg`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showAlert('success', 'Canvas baixado! Leve este arquivo para o laboratório para impressão em 10x15cm.');
+                updateStep(4);
+            }, 'image/jpeg', 0.95);
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9703868f27f2d884',t:'MTc1NTM3NDUwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
