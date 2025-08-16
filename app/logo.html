@@ -64,6 +64,8 @@
             height: fit-content;
             position: sticky;
             top: 20px;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .editor-section {
@@ -228,6 +230,20 @@
             font-size: 80px;
             margin-bottom: 20px;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon i {
+            width: 1em;
+            height: 1em;
+        }
+
+        .logo-icon img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
 
         .logo-text {
@@ -440,6 +456,72 @@
             border-radius: 4px;
             margin: 10px auto;
         }
+
+        .range-buttons {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            border: 1px solid #667eea;
+            border-radius: 6px;
+            background: white;
+            color: #667eea;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 35px;
+        }
+
+        .btn-small:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .control-section {
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 3px solid #667eea;
+        }
+
+        .control-section h5 {
+            color: #667eea;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .quick-btn {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            color: #333;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .quick-btn:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
     </style>
 </head>
 <body>
@@ -492,21 +574,32 @@
 
                 <div class="control-group">
                     <h4>🔸 Ícone</h4>
-                    <div class="form-group">
-                        <label>Categoria</label>
-                        <select class="form-control" id="iconCategory">
-                            <option value="business">Negócios</option>
-                            <option value="tech">Tecnologia</option>
-                            <option value="design">Design</option>
-                            <option value="social">Social</option>
-                            <option value="finance">Finanças</option>
-                            <option value="health">Saúde</option>
-                            <option value="education">Educação</option>
-                            <option value="transport">Transporte</option>
-                        </select>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="useIcon" checked>
+                        <label for="useIcon">Usar ícone no logo</label>
                     </div>
-                    <div class="icon-grid" id="iconGrid">
-                        <!-- Ícones serão carregados dinamicamente -->
+                    <div id="iconControls">
+                        <div class="form-group">
+                            <label>Upload de Ícone Personalizado (PNG)</label>
+                            <input type="file" class="form-control" id="customIconUpload" accept="image/png,image/jpg,image/jpeg">
+                            <small style="color: #666; font-size: 11px;">Recomendado: PNG com fundo transparente</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Categoria</label>
+                            <select class="form-control" id="iconCategory">
+                                <option value="business">Negócios</option>
+                                <option value="tech">Tecnologia</option>
+                                <option value="design">Design</option>
+                                <option value="social">Social</option>
+                                <option value="finance">Finanças</option>
+                                <option value="health">Saúde</option>
+                                <option value="education">Educação</option>
+                                <option value="transport">Transporte</option>
+                            </select>
+                        </div>
+                        <div class="icon-grid" id="iconGrid">
+                            <!-- Ícones serão carregados dinamicamente -->
+                        </div>
                     </div>
                 </div>
 
@@ -529,17 +622,60 @@
                         <label for="useGradient">Usar gradiente</label>
                     </div>
                     <div class="gradient-preview" id="gradientPreview"></div>
+                    
+                    <div class="quick-actions">
+                        <button class="quick-btn" onclick="applyColorScheme('blue')">Azul</button>
+                        <button class="quick-btn" onclick="applyColorScheme('green')">Verde</button>
+                        <button class="quick-btn" onclick="applyColorScheme('purple')">Roxo</button>
+                        <button class="quick-btn" onclick="applyColorScheme('orange')">Laranja</button>
+                    </div>
                 </div>
 
                 <div class="control-group">
                     <h4>📏 Tamanhos</h4>
                     <div class="form-group">
                         <label>Tamanho do Ícone: <span id="iconSizeValue">80px</span></label>
-                        <input type="range" class="range-input" id="iconSize" min="40" max="120" value="80">
+                        <input type="range" class="range-input" id="iconSize" min="40" max="200" value="80">
+                        <div class="range-buttons">
+                            <button class="btn-small" onclick="adjustIconSize(-5)">-</button>
+                            <button class="btn-small" onclick="adjustIconSize(5)">+</button>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Tamanho do Texto: <span id="textSizeValue">32px</span></label>
                         <input type="range" class="range-input" id="textSize" min="20" max="50" value="32">
+                        <div class="range-buttons">
+                            <button class="btn-small" onclick="adjustTextSize(-2)">-</button>
+                            <button class="btn-small" onclick="adjustTextSize(2)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h4>📍 Posicionamento</h4>
+                    <div class="form-group">
+                        <label>Posição Vertical do Texto: <span id="textPositionValue">0px</span></label>
+                        <input type="range" class="range-input" id="textPosition" min="-50" max="50" value="0">
+                        <div class="range-buttons">
+                            <button class="btn-small" onclick="adjustTextPosition(-5)">↑</button>
+                            <button class="btn-small" onclick="adjustTextPosition(5)">↓</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Posição Vertical do Slogan: <span id="sloganPositionValue">0px</span></label>
+                        <input type="range" class="range-input" id="sloganPosition" min="-30" max="30" value="0">
+                        <div class="range-buttons">
+                            <button class="btn-small" onclick="adjustSloganPosition(-3)">↑</button>
+                            <button class="btn-small" onclick="adjustSloganPosition(3)">↓</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Espaçamento entre Elementos: <span id="spacingValue">20px</span></label>
+                        <input type="range" class="range-input" id="elementSpacing" min="10" max="50" value="20">
+                        <div class="range-buttons">
+                            <button class="btn-small" onclick="adjustSpacing(-2)">-</button>
+                            <button class="btn-small" onclick="adjustSpacing(2)">+</button>
+                        </div>
                     </div>
                 </div>
 
@@ -638,6 +774,11 @@
         let currentIcon = 'building';
         let currentIconType = 'lucide';
         let selectedSize = 512;
+        let textVerticalPosition = 0;
+        let sloganVerticalPosition = 0;
+        let elementSpacing = 20;
+        let useIconEnabled = true;
+        let customIconUrl = null;
 
         // Icon categories with Lucide icons
         const iconCategories = {
@@ -667,6 +808,15 @@
         iconSizeInput.addEventListener('input', updateLogo);
         textSizeInput.addEventListener('input', updateLogo);
         addShadowCheckbox.addEventListener('change', updateLogo);
+        
+        // New positioning controls
+        document.getElementById('textPosition').addEventListener('input', updateLogo);
+        document.getElementById('sloganPosition').addEventListener('input', updateLogo);
+        document.getElementById('elementSpacing').addEventListener('input', updateLogo);
+        
+        // Icon controls
+        document.getElementById('useIcon').addEventListener('change', toggleIconControls);
+        document.getElementById('customIconUpload').addEventListener('change', handleCustomIconUpload);
 
         // Icon category change
         document.getElementById('iconCategory').addEventListener('change', (e) => {
@@ -711,16 +861,29 @@
             const textSize = textSizeInput.value;
             const addShadow = addShadowCheckbox.checked;
 
+            // Get positioning values
+            textVerticalPosition = document.getElementById('textPosition') ? document.getElementById('textPosition').value : 0;
+            sloganVerticalPosition = document.getElementById('sloganPosition') ? document.getElementById('sloganPosition').value : 0;
+            elementSpacing = document.getElementById('elementSpacing') ? document.getElementById('elementSpacing').value : 20;
+
             // Update text content
             logoText.textContent = companyName;
             logoSubtitle.textContent = companySlogan;
             
-            // Update icon
-            if (currentIconType === 'lucide') {
-                logoIcon.innerHTML = `<i data-lucide="${currentIcon}"></i>`;
-                lucide.createIcons();
+            // Update icon visibility and content
+            useIconEnabled = document.getElementById('useIcon').checked;
+            if (useIconEnabled) {
+                logoIcon.style.display = 'flex';
+                if (customIconUrl) {
+                    logoIcon.innerHTML = `<img src="${customIconUrl}" alt="Custom Icon">`;
+                } else if (currentIconType === 'lucide') {
+                    logoIcon.innerHTML = `<i data-lucide="${currentIcon}"></i>`;
+                    lucide.createIcons();
+                } else {
+                    logoIcon.textContent = currentIcon;
+                }
             } else {
-                logoIcon.textContent = currentIcon;
+                logoIcon.style.display = 'none';
             }
 
             // Update sizes
@@ -728,6 +891,22 @@
             logoText.style.fontSize = textSize + 'px';
             iconSizeValue.textContent = iconSize + 'px';
             textSizeValue.textContent = textSize + 'px';
+
+            // Update positioning values display
+            if (document.getElementById('textPositionValue')) {
+                document.getElementById('textPositionValue').textContent = textVerticalPosition + 'px';
+            }
+            if (document.getElementById('sloganPositionValue')) {
+                document.getElementById('sloganPositionValue').textContent = sloganVerticalPosition + 'px';
+            }
+            if (document.getElementById('spacingValue')) {
+                document.getElementById('spacingValue').textContent = elementSpacing + 'px';
+            }
+
+            // Apply positioning
+            logoIcon.style.marginBottom = elementSpacing + 'px';
+            logoText.style.transform = `translateY(${textVerticalPosition}px)`;
+            logoSubtitle.style.transform = `translateY(${parseInt(textVerticalPosition) + parseInt(sloganVerticalPosition)}px)`;
 
             // Update colors
             logoIcon.style.color = primaryColor;
@@ -1049,6 +1228,85 @@
                 default: return 'Arial, sans-serif';
             }
         }
+
+        // Quick adjustment functions
+        function adjustIconSize(change) {
+            const iconSizeInput = document.getElementById('iconSize');
+            const newValue = Math.max(40, Math.min(200, parseInt(iconSizeInput.value) + change));
+            iconSizeInput.value = newValue;
+            updateLogo();
+        }
+
+        function adjustTextSize(change) {
+            const textSizeInput = document.getElementById('textSize');
+            const newValue = Math.max(20, Math.min(50, parseInt(textSizeInput.value) + change));
+            textSizeInput.value = newValue;
+            updateLogo();
+        }
+
+        function adjustTextPosition(change) {
+            const textPositionInput = document.getElementById('textPosition');
+            const newValue = Math.max(-50, Math.min(50, parseInt(textPositionInput.value) + change));
+            textPositionInput.value = newValue;
+            updateLogo();
+        }
+
+        function adjustSloganPosition(change) {
+            const sloganPositionInput = document.getElementById('sloganPosition');
+            const newValue = Math.max(-30, Math.min(30, parseInt(sloganPositionInput.value) + change));
+            sloganPositionInput.value = newValue;
+            updateLogo();
+        }
+
+        function adjustSpacing(change) {
+            const spacingInput = document.getElementById('elementSpacing');
+            const newValue = Math.max(10, Math.min(50, parseInt(spacingInput.value) + change));
+            spacingInput.value = newValue;
+            updateLogo();
+        }
+
+        function applyColorScheme(scheme) {
+            const schemes = {
+                blue: { primary: '#667eea', text: '#333333', bg: '#ffffff' },
+                green: { primary: '#00b894', text: '#2d3436', bg: '#ffffff' },
+                purple: { primary: '#6c5ce7', text: '#2d3436', bg: '#ffffff' },
+                orange: { primary: '#fd79a8', text: '#2d3436', bg: '#ffffff' }
+            };
+            
+            const colors = schemes[scheme];
+            if (colors) {
+                document.getElementById('primaryColor').value = colors.primary;
+                document.getElementById('textColor').value = colors.text;
+                document.getElementById('backgroundColor').value = colors.bg;
+                updateLogo();
+            }
+        }
+
+        function toggleIconControls() {
+            const iconControls = document.getElementById('iconControls');
+            const useIcon = document.getElementById('useIcon').checked;
+            
+            if (useIcon) {
+                iconControls.style.display = 'block';
+            } else {
+                iconControls.style.display = 'none';
+            }
+            
+            updateLogo();
+        }
+
+        function handleCustomIconUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    customIconUrl = e.target.result;
+                    currentIconType = 'custom';
+                    updateLogo();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9703a4c6575a0d0b',t:'MTc1NTM3NTc0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9703c65a237bf194',t:'MTc1NTM3NzEyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
