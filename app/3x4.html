@@ -889,33 +889,35 @@
             const horizontalSpacing = (printCanvas.width - totalPhotoWidth - 2 * margin) / (cols - 1);
             const verticalSpacing = (printCanvas.height - totalPhotoHeight - 2 * margin) / (rows - 1);
             
-            let photoIndex = 0;
             const filledSlots = document.querySelectorAll('.photo-slot.filled img');
             
-            for (let row = 0; row < rows; row++) {
-                for (let col = 0; col < cols; col++) {
-                    if (photoIndex < filledSlots.length) {
-                        const img = new Image();
-                        img.onload = function() {
-                            const x = margin + col * (photoWidth + horizontalSpacing);
-                            const y = margin + row * (photoHeight + verticalSpacing);
-                            ctx.drawImage(img, x, y, photoWidth, photoHeight);
-                            
-                            // Check if this is the last photo to draw
-                            if (photoIndex === filledSlots.length - 1) {
-                                downloadPrintCanvas(printCanvas);
-                            }
-                        };
-                        img.src = filledSlots[photoIndex].src;
-                        photoIndex++;
-                    }
-                }
+            if (filledSlots.length === 0) {
+                showAlert('error', 'Nenhuma foto para baixar.');
+                return;
             }
             
-            // If no photos with onload events, download immediately
-            if (filledSlots.length === 0) {
-                downloadPrintCanvas(printCanvas);
-            }
+            let loadedImages = 0;
+            const totalImages = filledSlots.length;
+            
+            // Load all images first, then draw them
+            filledSlots.forEach((imgElement, index) => {
+                const img = new Image();
+                img.onload = function() {
+                    const row = Math.floor(index / cols);
+                    const col = index % cols;
+                    const x = margin + col * (photoWidth + horizontalSpacing);
+                    const y = margin + row * (photoHeight + verticalSpacing);
+                    
+                    ctx.drawImage(img, x, y, photoWidth, photoHeight);
+                    loadedImages++;
+                    
+                    // When all images are loaded and drawn, download
+                    if (loadedImages === totalImages) {
+                        downloadPrintCanvas(printCanvas);
+                    }
+                };
+                img.src = imgElement.src;
+            });
         }
 
         function downloadPrintCanvas(canvas) {
@@ -934,5 +936,5 @@
             }, 'image/jpeg', 0.95);
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9703868f27f2d884',t:'MTc1NTM3NDUwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97038f8dc63fd884',t:'MTc1NTM3NDg3Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
