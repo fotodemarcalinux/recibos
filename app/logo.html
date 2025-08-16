@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Logotipos - JN2M3A DIGITAL</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
         * {
             margin: 0;
@@ -491,25 +492,21 @@
 
                 <div class="control-group">
                     <h4>🔸 Ícone</h4>
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <select class="form-control" id="iconCategory">
+                            <option value="business">Negócios</option>
+                            <option value="tech">Tecnologia</option>
+                            <option value="design">Design</option>
+                            <option value="social">Social</option>
+                            <option value="finance">Finanças</option>
+                            <option value="health">Saúde</option>
+                            <option value="education">Educação</option>
+                            <option value="transport">Transporte</option>
+                        </select>
+                    </div>
                     <div class="icon-grid" id="iconGrid">
-                        <div class="icon-item selected" data-icon="🏢">🏢</div>
-                        <div class="icon-item" data-icon="⭐">⭐</div>
-                        <div class="icon-item" data-icon="💎">💎</div>
-                        <div class="icon-item" data-icon="🚀">🚀</div>
-                        <div class="icon-item" data-icon="🎯">🎯</div>
-                        <div class="icon-item" data-icon="💡">💡</div>
-                        <div class="icon-item" data-icon="🔥">🔥</div>
-                        <div class="icon-item" data-icon="⚡">⚡</div>
-                        <div class="icon-item" data-icon="🌟">🌟</div>
-                        <div class="icon-item" data-icon="🏆">🏆</div>
-                        <div class="icon-item" data-icon="💼">💼</div>
-                        <div class="icon-item" data-icon="🎨">🎨</div>
-                        <div class="icon-item" data-icon="🔧">🔧</div>
-                        <div class="icon-item" data-icon="📱">📱</div>
-                        <div class="icon-item" data-icon="💻">💻</div>
-                        <div class="icon-item" data-icon="🌐">🌐</div>
-                        <div class="icon-item" data-icon="📊">📊</div>
-                        <div class="icon-item" data-icon="🎪">🎪</div>
+                        <!-- Ícones serão carregados dinamicamente -->
                     </div>
                 </div>
 
@@ -638,10 +635,24 @@
         const shadowPreview = document.getElementById('shadowPreview');
 
         let currentTemplate = 'modern';
-        let currentIcon = '🏢';
+        let currentIcon = 'building';
+        let currentIconType = 'lucide';
         let selectedSize = 512;
 
+        // Icon categories with Lucide icons
+        const iconCategories = {
+            business: ['building', 'briefcase', 'target', 'trending-up', 'users', 'handshake', 'award', 'star', 'crown', 'shield'],
+            tech: ['smartphone', 'laptop', 'wifi', 'code', 'database', 'server', 'cpu', 'hard-drive', 'cloud', 'zap'],
+            design: ['palette', 'pen-tool', 'image', 'camera', 'eye', 'layers', 'grid', 'square', 'circle', 'triangle'],
+            social: ['heart', 'message-circle', 'share', 'thumbs-up', 'users', 'globe', 'mail', 'phone', 'map-pin', 'home'],
+            finance: ['dollar-sign', 'credit-card', 'piggy-bank', 'trending-up', 'bar-chart', 'pie-chart', 'calculator', 'coins', 'banknote', 'wallet'],
+            health: ['heart', 'activity', 'plus', 'shield', 'thermometer', 'pill', 'stethoscope', 'cross', 'leaf', 'sun'],
+            education: ['book', 'graduation-cap', 'pencil', 'lightbulb', 'brain', 'bookmark', 'library', 'school', 'award', 'certificate'],
+            transport: ['car', 'truck', 'plane', 'ship', 'bike', 'bus', 'train', 'rocket', 'map', 'navigation']
+        };
+
         // Initialize
+        loadIcons('business');
         updateLogo();
         updateGradientPreview();
         updateShadowPreview();
@@ -657,6 +668,11 @@
         textSizeInput.addEventListener('input', updateLogo);
         addShadowCheckbox.addEventListener('change', updateLogo);
 
+        // Icon category change
+        document.getElementById('iconCategory').addEventListener('change', (e) => {
+            loadIcons(e.target.value);
+        });
+
         // Template selection
         document.querySelectorAll('.template-item').forEach(item => {
             item.addEventListener('click', () => {
@@ -667,15 +683,7 @@
             });
         });
 
-        // Icon selection
-        document.querySelectorAll('.icon-item').forEach(item => {
-            item.addEventListener('click', () => {
-                document.querySelectorAll('.icon-item').forEach(i => i.classList.remove('selected'));
-                item.classList.add('selected');
-                currentIcon = item.dataset.icon;
-                updateLogo();
-            });
-        });
+        // Icon selection is now handled in loadIcons function
 
         // Size selection
         document.querySelectorAll('.size-option').forEach(option => {
@@ -706,7 +714,14 @@
             // Update text content
             logoText.textContent = companyName;
             logoSubtitle.textContent = companySlogan;
-            logoIcon.textContent = currentIcon;
+            
+            // Update icon
+            if (currentIconType === 'lucide') {
+                logoIcon.innerHTML = `<i data-lucide="${currentIcon}"></i>`;
+                lucide.createIcons();
+            } else {
+                logoIcon.textContent = currentIcon;
+            }
 
             // Update sizes
             logoIcon.style.fontSize = iconSize + 'px';
@@ -809,14 +824,49 @@
             return (usePound ? '#' : '') + (r << 16 | g << 8 | b).toString(16).padStart(6, '0');
         }
 
+        function loadIcons(category) {
+            const iconGrid = document.getElementById('iconGrid');
+            const icons = iconCategories[category] || iconCategories.business;
+            
+            iconGrid.innerHTML = '';
+            
+            icons.forEach((iconName, index) => {
+                const iconItem = document.createElement('div');
+                iconItem.className = 'icon-item';
+                if (index === 0) {
+                    iconItem.classList.add('selected');
+                    currentIcon = iconName;
+                    currentIconType = 'lucide';
+                }
+                iconItem.dataset.icon = iconName;
+                iconItem.innerHTML = `<i data-lucide="${iconName}"></i>`;
+                
+                iconItem.addEventListener('click', () => {
+                    document.querySelectorAll('.icon-item').forEach(i => i.classList.remove('selected'));
+                    iconItem.classList.add('selected');
+                    currentIcon = iconName;
+                    currentIconType = 'lucide';
+                    updateLogo();
+                });
+                
+                iconGrid.appendChild(iconItem);
+            });
+            
+            // Initialize Lucide icons
+            lucide.createIcons();
+            updateLogo();
+        }
+
         function randomizeLogo() {
-            const icons = ['🏢', '⭐', '💎', '🚀', '🎯', '💡', '🔥', '⚡', '🌟', '🏆', '💼', '🎨'];
+            const categories = Object.keys(iconCategories);
             const colors = ['#667eea', '#00b894', '#e17055', '#fdcb6e', '#6c5ce7', '#fd79a8', '#00cec9', '#a29bfe'];
             const templates = ['modern', 'creative', 'minimal', 'tech'];
             const names = ['INOVAÇÃO', 'CRIATIVO', 'DIGITAL', 'TECH CORP', 'DESIGN PLUS', 'FUTURE LAB'];
 
             // Random selections
-            const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+            const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+            const categoryIcons = iconCategories[randomCategory];
+            const randomIcon = categoryIcons[Math.floor(Math.random() * categoryIcons.length)];
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
             const randomTemplate = templates[Math.floor(Math.random() * templates.length)];
             const randomName = names[Math.floor(Math.random() * names.length)];
@@ -827,14 +877,24 @@
             useGradientCheckbox.checked = Math.random() > 0.5;
             addShadowCheckbox.checked = Math.random() > 0.5;
 
-            // Update selections
-            document.querySelectorAll('.icon-item').forEach(item => {
-                item.classList.remove('selected');
-                if (item.dataset.icon === randomIcon) {
-                    item.classList.add('selected');
-                }
-            });
+            // Update category and load icons
+            document.getElementById('iconCategory').value = randomCategory;
+            loadIcons(randomCategory);
 
+            // Select random icon after loading
+            setTimeout(() => {
+                document.querySelectorAll('.icon-item').forEach(item => {
+                    item.classList.remove('selected');
+                    if (item.dataset.icon === randomIcon) {
+                        item.classList.add('selected');
+                    }
+                });
+                currentIcon = randomIcon;
+                currentIconType = 'lucide';
+                updateLogo();
+            }, 100);
+
+            // Update template
             document.querySelectorAll('.template-item').forEach(item => {
                 item.classList.remove('active');
                 if (item.dataset.template === randomTemplate) {
@@ -842,9 +902,7 @@
                 }
             });
 
-            currentIcon = randomIcon;
             currentTemplate = randomTemplate;
-            updateLogo();
         }
 
         function downloadLogo() {
@@ -882,21 +940,53 @@
             let currentY = selectedSize / 2;
 
             // Draw icon
-            ctx.font = `${iconSize}px Arial`;
-            if (useGradientCheckbox.checked) {
-                ctx.fillStyle = 'white';
+            if (currentIconType === 'lucide') {
+                // For Lucide icons, we'll draw a simple geometric shape as placeholder
+                // since we can't easily render SVG icons to canvas
+                const iconRadius = iconSize / 3;
+                ctx.beginPath();
+                
+                if (useGradientCheckbox.checked) {
+                    ctx.fillStyle = 'white';
+                    ctx.strokeStyle = 'white';
+                } else {
+                    ctx.fillStyle = primaryColorInput.value;
+                    ctx.strokeStyle = primaryColorInput.value;
+                }
+                
+                if (addShadowCheckbox.checked) {
+                    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+                    ctx.shadowBlur = 4;
+                    ctx.shadowOffsetX = 2;
+                    ctx.shadowOffsetY = 2;
+                }
+                
+                // Draw a circle as icon placeholder
+                ctx.arc(centerX, currentY - textSize, iconRadius, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                // Draw icon name as text (fallback)
+                ctx.font = `${Math.floor(iconSize * 0.3)}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.fillText(currentIcon.toUpperCase(), centerX, currentY - textSize + 5);
             } else {
-                ctx.fillStyle = primaryColorInput.value;
+                // Original emoji rendering
+                ctx.font = `${iconSize}px Arial`;
+                if (useGradientCheckbox.checked) {
+                    ctx.fillStyle = 'white';
+                } else {
+                    ctx.fillStyle = primaryColorInput.value;
+                }
+                
+                if (addShadowCheckbox.checked) {
+                    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+                    ctx.shadowBlur = 4;
+                    ctx.shadowOffsetX = 2;
+                    ctx.shadowOffsetY = 2;
+                }
+                
+                ctx.fillText(currentIcon, centerX, currentY - textSize);
             }
-            
-            if (addShadowCheckbox.checked) {
-                ctx.shadowColor = 'rgba(0,0,0,0.3)';
-                ctx.shadowBlur = 4;
-                ctx.shadowOffsetX = 2;
-                ctx.shadowOffsetY = 2;
-            }
-            
-            ctx.fillText(currentIcon, centerX, currentY - textSize);
             
             // Reset shadow
             ctx.shadowColor = 'transparent';
@@ -960,5 +1050,5 @@
             }
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97039dad04e20d0b',t:'MTc1NTM3NTQ1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9703a4c6575a0d0b',t:'MTc1NTM3NTc0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
