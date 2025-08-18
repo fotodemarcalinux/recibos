@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Orçamento Personalizado</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .main-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 20px;
+            margin: -30px -30px 25px -30px;
+            border-radius: 15px 15px 0 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+
+        
+        .items-section {
+            margin-top: 30px;
+        }
+        
+        .item-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            padding: 8px 12px;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .total-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: right;
+        }
+        
+        .total-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .footer {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .footer-text {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .preview-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .preview-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row, .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .item-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1 style="color: #667eea; margin-bottom: 10px;">🏢 Gerador de Orçamento Personalizado</h1>
+            <p style="color: #666;">Configure sua empresa e gere orçamentos profissionais</p>
+        </div>
+
+        <!-- Company Info Form -->
+        <div class="main-form">
+            <div class="section-title">📋 Dados da Empresa</div>
+            
+
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="companyName">Nome da Empresa</label>
+                    <input type="text" id="companyName" placeholder="Sua Empresa LTDA" onchange="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label for="documentTitle">Título do Documento</label>
+                    <input type="text" id="documentTitle" value="ORÇAMENTO" onchange="updatePreview()">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="companyAddress">Endereço Completo</label>
+                <textarea id="companyAddress" rows="2" placeholder="Rua, número, bairro, cidade/estado" onchange="updatePreview()"></textarea>
+            </div>
+            
+            <div class="form-row-3">
+                <div class="form-group">
+                    <label for="companyWhatsapp">WhatsApp</label>
+                    <input type="tel" id="companyWhatsapp" placeholder="(11) 99999-9999" onchange="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label for="companyEmail">E-mail (opcional)</label>
+                    <input type="email" id="companyEmail" placeholder="contato@empresa.com" onchange="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label for="companyWebsite">Website (opcional)</label>
+                    <input type="url" id="companyWebsite" placeholder="www.empresa.com" onchange="updatePreview()">
+                </div>
+            </div>
+            
+
+            
+            <div class="preview-section">
+                <div class="preview-title">📄 Preview do Cabeçalho:</div>
+                <div id="headerPreview" style="text-align: center; padding: 15px; background: white; border-radius: 8px;">
+                    <div style="font-weight: bold; font-size: 18px; color: #333;">Nome da Empresa</div>
+                    <div style="font-size: 12px; color: #666; margin: 5px 0;">Endereço da empresa</div>
+                    <div style="font-size: 12px; color: #666;">WhatsApp • E-mail • Website</div>
+                    <div style="font-weight: bold; font-size: 16px; color: #667eea; margin-top: 10px;">ORÇAMENTO</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Client Info Form -->
+        <div class="main-form">
+            <div class="section-title">👤 Dados do Cliente</div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="clientName">Nome do Cliente</label>
+                    <input type="text" id="clientName" placeholder="Digite o nome do cliente">
+                </div>
+                <div class="form-group">
+                    <label for="clientEmail">E-mail do Cliente</label>
+                    <input type="email" id="clientEmail" placeholder="cliente@email.com">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="clientPhone">Telefone</label>
+                    <input type="tel" id="clientPhone" placeholder="(11) 99999-9999">
+                </div>
+                <div class="form-group">
+                    <label for="quotationDate">Data do Orçamento</label>
+                    <input type="date" id="quotationDate">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="projectDescription">Descrição do Projeto</label>
+                <textarea id="projectDescription" rows="3" placeholder="Descreva brevemente o projeto ou serviço"></textarea>
+            </div>
+        </div>
+
+        <!-- Items Form -->
+        <div class="main-form">
+            <div class="section-title">📦 Itens do Orçamento</div>
+            
+            <div class="items-section">
+                <div id="itemsContainer">
+                    <div class="item-row">
+                        <div class="form-group">
+                            <label>Descrição do Item</label>
+                            <input type="text" class="item-description" placeholder="Ex: Desenvolvimento de Website">
+                        </div>
+                        <div class="form-group">
+                            <label>Quantidade</label>
+                            <input type="number" class="item-quantity" value="1" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Valor Unitário (R$)</label>
+                            <input type="number" class="item-price" step="0.01" placeholder="0,00">
+                        </div>
+                        <div class="form-group">
+                            <label>Total (R$)</label>
+                            <input type="text" class="item-total" readonly style="background: #f8f9fa;">
+                        </div>
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <button type="button" class="btn btn-danger" onclick="removeItem(this)">×</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="button" class="btn btn-primary" onclick="addItem()" style="margin-bottom: 20px;">
+                    + Adicionar Item
+                </button>
+                
+                <div class="total-section">
+                    <div style="margin-bottom: 10px;">
+                        <strong>Subtotal: R$ <span id="subtotal">0,00</span></strong>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label for="discount" style="display: inline; margin-right: 10px;">Desconto (%):</label>
+                        <input type="number" id="discount" value="0" min="0" max="100" style="width: 80px; display: inline-block;" onchange="calculateTotal()">
+                    </div>
+                    <div class="total-value">
+                        Total Final: R$ <span id="totalFinal">0,00</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group" style="margin-top: 30px;">
+                <label for="observations">Observações</label>
+                <textarea id="observations" rows="3" placeholder="Condições de pagamento, prazo de entrega, etc."></textarea>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="button" class="btn btn-success" onclick="generatePDF()" style="font-size: 16px; padding: 15px 30px;">
+                    📄 Baixar Orçamento em PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-text">
+                <div style="margin-bottom: 20px;">
+                    <img src="https://i.ibb.co/prsT1vXN/JN2-M3-ADIGITAL-H-1-removebg-preview.png" alt="JN2M3A DIGITAL" style="height: 40px; margin-bottom: 10px;">
+                    <p style="margin: 5px 0; font-size: 12px; color: #888;">Uma marca do Grupo Foto de Marca</p>
+                </div>
+                <p style="margin: 5px 0;"><strong>WhatsApp:</strong> (79) 99896-5081</p>
+                <p style="margin: 10px 0;"><strong>© 2025 JN2M3A DIGITAL.</strong> Desenvolvendo soluções que facilitam o seu dia a dia.</p>
+                <div style="margin-top: 15px; font-size: 12px;">
+                    <a href="https://rec.sou.net.br/termo_de_uso.html" target="_blank" style="color: #667eea; text-decoration: none; margin-right: 15px;">Termos de Uso</a>
+                    <a href="https://rec.sou.net.br/faq" target="_blank" style="color: #667eea; text-decoration: none;">Perguntas Frequentes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set today's date as default
+        document.getElementById('quotationDate').valueAsDate = new Date();
+        
+
+        
+        function updatePreview() {
+            const companyName = document.getElementById('companyName').value || 'Nome da Empresa';
+            const documentTitle = document.getElementById('documentTitle').value || 'ORÇAMENTO';
+            const companyAddress = document.getElementById('companyAddress').value || 'Endereço da empresa';
+            const companyWhatsapp = document.getElementById('companyWhatsapp').value;
+            const companyEmail = document.getElementById('companyEmail').value;
+            const companyWebsite = document.getElementById('companyWebsite').value;
+            
+            let previewHtml = `<div style="text-align: left; padding: 15px; background: white; border-radius: 8px;">`;
+            previewHtml += `<div style="font-weight: bold; font-size: 18px; color: #333; margin-bottom: 5px;">${companyName}</div>`;
+            
+            if (companyAddress) {
+                previewHtml += `<div style="font-size: 12px; color: #666; margin-bottom: 3px;">${companyAddress}</div>`;
+            }
+            if (companyWhatsapp) {
+                previewHtml += `<div style="font-size: 12px; color: #666; margin-bottom: 3px;">WhatsApp: ${companyWhatsapp}</div>`;
+            }
+            if (companyEmail) {
+                previewHtml += `<div style="font-size: 12px; color: #666; margin-bottom: 3px;">E-mail: ${companyEmail}</div>`;
+            }
+            if (companyWebsite) {
+                previewHtml += `<div style="font-size: 12px; color: #666; margin-bottom: 3px;">Website: ${companyWebsite}</div>`;
+            }
+            
+            previewHtml += `<div style="font-weight: bold; font-size: 16px; color: #667eea; margin-top: 10px;">${documentTitle}</div>`;
+            previewHtml += `</div>`;
+            
+            document.getElementById('headerPreview').innerHTML = previewHtml;
+        }
+        
+        function addItem() {
+            const container = document.getElementById('itemsContainer');
+            const newItem = document.createElement('div');
+            newItem.className = 'item-row';
+            newItem.innerHTML = `
+                <div class="form-group">
+                    <label>Descrição do Item</label>
+                    <input type="text" class="item-description" placeholder="Ex: Desenvolvimento de Website">
+                </div>
+                <div class="form-group">
+                    <label>Quantidade</label>
+                    <input type="number" class="item-quantity" value="1" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Valor Unitário (R$)</label>
+                    <input type="number" class="item-price" step="0.01" placeholder="0,00">
+                </div>
+                <div class="form-group">
+                    <label>Total (R$)</label>
+                    <input type="text" class="item-total" readonly style="background: #f8f9fa;">
+                </div>
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button type="button" class="btn btn-danger" onclick="removeItem(this)">×</button>
+                </div>
+            `;
+            container.appendChild(newItem);
+            attachEventListeners(newItem);
+        }
+        
+        function removeItem(button) {
+            const itemRows = document.querySelectorAll('.item-row');
+            if (itemRows.length > 1) {
+                button.closest('.item-row').remove();
+                calculateTotal();
+            }
+        }
+        
+        function attachEventListeners(item) {
+            const quantity = item.querySelector('.item-quantity');
+            const price = item.querySelector('.item-price');
+            
+            quantity.addEventListener('input', updateItemTotal);
+            price.addEventListener('input', updateItemTotal);
+        }
+        
+        function updateItemTotal(event) {
+            const itemRow = event.target.closest('.item-row');
+            const quantity = parseFloat(itemRow.querySelector('.item-quantity').value) || 0;
+            const price = parseFloat(itemRow.querySelector('.item-price').value) || 0;
+            const total = quantity * price;
+            
+            itemRow.querySelector('.item-total').value = total.toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            
+            calculateTotal();
+        }
+        
+        function calculateTotal() {
+            let subtotal = 0;
+            const itemTotals = document.querySelectorAll('.item-total');
+            
+            itemTotals.forEach(item => {
+                // Remove formatação brasileira e converte para número
+                const cleanValue = item.value.replace(/\./g, '').replace(',', '.');
+                const value = parseFloat(cleanValue) || 0;
+                subtotal += value;
+            });
+            
+            const discount = parseFloat(document.getElementById('discount').value) || 0;
+            const discountAmount = subtotal * (discount / 100);
+            const totalFinal = subtotal - discountAmount;
+            
+            document.getElementById('subtotal').textContent = subtotal.toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            
+            document.getElementById('totalFinal').textContent = totalFinal.toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+        
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Get company data
+            const companyName = document.getElementById('companyName').value || 'Empresa não informada';
+            const documentTitle = document.getElementById('documentTitle').value || 'ORÇAMENTO';
+            const companyAddress = document.getElementById('companyAddress').value || 'Endereço não informado';
+            const companyWhatsapp = document.getElementById('companyWhatsapp').value;
+            const companyEmail = document.getElementById('companyEmail').value;
+            const companyWebsite = document.getElementById('companyWebsite').value;
+            const footerText = '© 2024 JN2M3A DIGITAL. Desenvolvendo soluções que facilitam o seu dia a dia.';
+            
+            // Get client data
+            const clientName = document.getElementById('clientName').value || 'Cliente não informado';
+            const clientEmail = document.getElementById('clientEmail').value || 'E-mail não informado';
+            const clientPhone = document.getElementById('clientPhone').value || 'Telefone não informado';
+            const quotationDate = document.getElementById('quotationDate').value || new Date().toISOString().split('T')[0];
+            const projectDescription = document.getElementById('projectDescription').value || 'Descrição não informada';
+            const observations = document.getElementById('observations').value || 'Nenhuma observação';
+            
+            // Format date
+            const formattedDate = new Date(quotationDate).toLocaleDateString('pt-BR');
+            
+            // Header with background
+            doc.setFillColor(64, 64, 64);
+            let headerHeight = 25; // Base height
+            
+            // Calculate header height based on content
+            const addressLines = doc.splitTextToSize(companyAddress, 180);
+            headerHeight += addressLines.length * 4;
+            if (companyWhatsapp) headerHeight += 4;
+            if (companyEmail) headerHeight += 4;
+            if (companyWebsite) headerHeight += 4;
+            headerHeight += 8; // Space for title
+            
+            doc.rect(0, 0, 210, headerHeight, 'F');
+            
+            // Company name
+            doc.setFontSize(18);
+            doc.setTextColor(255, 255, 255);
+            doc.setFont(undefined, 'bold');
+            doc.text(companyName, 20, 15);
+            
+            // Company info - each on separate line, left aligned
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'normal');
+            let yPos = 23;
+            
+            // Address lines
+            addressLines.forEach(line => {
+                doc.text(line, 20, yPos);
+                yPos += 4;
+            });
+            
+            // Contact info - each on separate line
+            if (companyWhatsapp) {
+                doc.text(`WhatsApp: ${companyWhatsapp}`, 20, yPos);
+                yPos += 4;
+            }
+            if (companyEmail) {
+                doc.text(`E-mail: ${companyEmail}`, 20, yPos);
+                yPos += 4;
+            }
+            if (companyWebsite) {
+                doc.text(`Website: ${companyWebsite}`, 20, yPos);
+                yPos += 4;
+            }
+            
+            // Document title
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text(documentTitle, 20, yPos + 4);
+            
+            // Reset colors
+            doc.setTextColor(0, 0, 0);
+            
+            // Client info section
+            yPos = headerHeight + 10;
+            doc.setFillColor(248, 249, 250);
+            doc.rect(15, yPos - 3, 180, 38, 'F');
+            doc.setDrawColor(64, 64, 64);
+            doc.setLineWidth(0.5);
+            doc.rect(15, yPos - 3, 180, 38);
+            
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.setTextColor(64, 64, 64);
+            doc.text('DADOS DO CLIENTE', 20, yPos + 4);
+            
+            doc.setDrawColor(64, 64, 64);
+            doc.setLineWidth(0.3);
+            doc.line(20, yPos + 6, 190, yPos + 6);
+            
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(0, 0, 0);
+            
+            // Client data
+            doc.text('Cliente:', 20, yPos + 14);
+            doc.setFont(undefined, 'bold');
+            doc.text(clientName, 40, yPos + 14);
+            
+            doc.setFont(undefined, 'normal');
+            doc.text('Data:', 120, yPos + 14);
+            doc.setFont(undefined, 'bold');
+            doc.text(formattedDate, 135, yPos + 14);
+            
+            doc.setFont(undefined, 'normal');
+            doc.text('E-mail:', 20, yPos + 22);
+            doc.setFont(undefined, 'bold');
+            doc.text(clientEmail, 40, yPos + 22);
+            
+            doc.setFont(undefined, 'normal');
+            doc.text('Telefone:', 20, yPos + 30);
+            doc.setFont(undefined, 'bold');
+            doc.text(clientPhone, 45, yPos + 30);
+            
+            // Project description
+            yPos = 100;
+            doc.setFillColor(248, 249, 250);
+            const descHeight = Math.max(20, Math.ceil(projectDescription.length / 90) * 6 + 12);
+            doc.rect(15, yPos - 3, 180, descHeight, 'F');
+            doc.setDrawColor(64, 64, 64);
+            doc.rect(15, yPos - 3, 180, descHeight);
+            
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.setTextColor(64, 64, 64);
+            doc.text('DESCRIÇÃO', 20, yPos + 4);
+            
+            doc.setDrawColor(64, 64, 64);
+            doc.line(20, yPos + 6, 190, yPos + 6);
+            
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(0, 0, 0);
+            const splitDescription = doc.splitTextToSize(projectDescription, 170);
+            doc.text(splitDescription, 20, yPos + 13);
+            
+            // Items table
+            yPos = 100 + descHeight + 8;
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.setTextColor(64, 64, 64);
+            doc.text('ITENS DO ORÇAMENTO', 20, yPos);
+            
+            // Table header
+            yPos += 6;
+            doc.setFillColor(64, 64, 64);
+            doc.rect(15, yPos - 2, 180, 10, 'F');
+            
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'bold');
+            doc.setTextColor(255, 255, 255);
+            doc.text('DESCRIÇÃO', 20, yPos + 4);
+            doc.text('QTD', 120, yPos + 4);
+            doc.text('VALOR UNIT.', 140, yPos + 4);
+            doc.text('TOTAL', 170, yPos + 4);
+            
+            yPos += 10;
+            
+            // Table items
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(0, 0, 0);
+            const itemRows = document.querySelectorAll('.item-row');
+            let subtotal = 0;
+            let itemIndex = 0;
+            
+            itemRows.forEach(row => {
+                const description = row.querySelector('.item-description').value || 'Item';
+                const quantity = row.querySelector('.item-quantity').value || '1';
+                const price = parseFloat(row.querySelector('.item-price').value) || 0;
+                // Remove formatação brasileira e converte para número
+                const cleanTotal = row.querySelector('.item-total').value.replace(/\./g, '').replace(',', '.');
+                const total = parseFloat(cleanTotal) || 0;
+                
+                subtotal += total;
+                
+                if (itemIndex % 2 === 0) {
+                    doc.setFillColor(250, 250, 250);
+                    doc.rect(15, yPos - 2, 180, 8, 'F');
+                }
+                
+                doc.setFontSize(9);
+                const shortDescription = description.length > 40 ? description.substring(0, 37) + '...' : description;
+                doc.text(shortDescription, 20, yPos + 2);
+                doc.text(quantity, 125, yPos + 2, { align: 'center' });
+                doc.text(`R$ ${price.toFixed(2).replace('.', ',')}`, 155, yPos + 2, { align: 'center' });
+                doc.text(`R$ ${total.toFixed(2).replace('.', ',')}`, 185, yPos + 2, { align: 'right' });
+                
+                yPos += 8;
+                itemIndex++;
+            });
+            
+            // Table border
+            doc.setDrawColor(64, 64, 64);
+            doc.setLineWidth(0.5);
+            doc.rect(15, yPos - (itemIndex * 8) - 10, 180, (itemIndex * 8) + 10);
+            
+            // Totals
+            yPos += 6;
+            const discount = parseFloat(document.getElementById('discount').value) || 0;
+            const discountAmount = subtotal * (discount / 100);
+            const totalFinal = subtotal - discountAmount;
+            
+            const totalsHeight = discount > 0 ? 28 : 20;
+            doc.setFillColor(248, 249, 250);
+            doc.rect(120, yPos - 3, 75, totalsHeight, 'F');
+            doc.setDrawColor(64, 64, 64);
+            doc.rect(120, yPos - 3, 75, totalsHeight);
+            
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Subtotal: R$ ${subtotal.toFixed(2).replace('.', ',')}`, 190, yPos + 4, { align: 'right' });
+            
+            if (discount > 0) {
+                yPos += 7;
+                doc.text(`Desconto (${discount}%): R$ ${discountAmount.toFixed(2).replace('.', ',')}`, 190, yPos + 4, { align: 'right' });
+            }
+            
+            yPos += 7;
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.setTextColor(64, 64, 64);
+            doc.text(`TOTAL: R$ ${totalFinal.toFixed(2).replace('.', ',')}`, 190, yPos + 4, { align: 'right' });
+            
+            // Observations
+            yPos += 15;
+            doc.setTextColor(0, 0, 0);
+            
+            const obsHeight = Math.max(18, Math.ceil(observations.length / 90) * 6 + 10);
+            if (yPos + obsHeight > 240) {
+                doc.addPage();
+                yPos = 30;
+            }
+            
+            doc.setFillColor(248, 249, 250);
+            doc.rect(15, yPos - 3, 180, obsHeight, 'F');
+            doc.setDrawColor(64, 64, 64);
+            doc.rect(15, yPos - 3, 180, obsHeight);
+            
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.setTextColor(64, 64, 64);
+            doc.text('OBSERVAÇÕES', 20, yPos + 4);
+            
+            doc.setDrawColor(64, 64, 64);
+            doc.line(20, yPos + 6, 190, yPos + 6);
+            
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(0, 0, 0);
+            const splitObservations = doc.splitTextToSize(observations, 170);
+            doc.text(splitObservations, 20, yPos + 12);
+            
+            // Footer
+            doc.setFillColor(64, 64, 64);
+            doc.rect(0, 280, 210, 17, 'F');
+            
+            doc.setFontSize(10);
+            doc.setTextColor(255, 255, 255);
+            doc.setFont(undefined, 'bold');
+            doc.text('ZAP ORÇAMENTO', 105, 287, { align: 'center' });
+            
+            doc.setFontSize(8);
+            doc.setFont(undefined, 'normal');
+            doc.text('Desenvolvido por © 2025 JN2M3A DIGITAL.', 105, 292, { align: 'center' });
+            
+            // Save PDF
+            const fileName = `Orcamento_${clientName.replace(/\s+/g, '_')}_${formattedDate.replace(/\//g, '-')}.pdf`;
+            doc.save(fileName);
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            const itemRows = document.querySelectorAll('.item-row');
+            itemRows.forEach(attachEventListeners);
+            
+            document.getElementById('discount').addEventListener('input', calculateTotal);
+            updatePreview();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97149ac05147f502',t:'MTc1NTU1MzU5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
