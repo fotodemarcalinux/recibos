@@ -34,7 +34,8 @@
         <!-- Header -->
         <div class="text-center mb-8 no-print">
             <h1 class="text-4xl font-bold text-white mb-2">Gerador de Cartão de Boas-Vindas</h1>
-            <p class="text-white/80 text-lg">Foto de Marca</p>
+            <p class="text-white/80 text-lg">Foto de Marca - Estúdio de Fotografia de Formatura</p>
+            <p class="text-white/60 text-sm">Aracaju/SE</p>
         </div>
 
         <!-- Input Section -->
@@ -48,6 +49,16 @@
                         placeholder="Digite o nome do cliente aqui..."
                         class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition-colors text-lg"
                     >
+                </div>
+                <div class="flex-shrink-0">
+                    <label class="block text-gray-700 font-semibold mb-2">Gênero:</label>
+                    <select 
+                        id="clientGender" 
+                        class="px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition-colors text-lg bg-white"
+                    >
+                        <option value="masculino">Masculino</option>
+                        <option value="feminino">Feminino</option>
+                    </select>
                 </div>
                 <button 
                     onclick="generateCard()" 
@@ -63,71 +74,98 @@
             <div class="text-center">
                 <!-- Logo/Brand Area -->
                 <div class="mb-6">
-                    <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full mb-4">
-                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
+                    <div class="inline-flex items-center justify-center w-24 h-24 bg-white rounded-full mb-4 shadow-lg">
+                        <img src="logo.png" alt="Foto de Marca" class="w-20 h-20 object-contain rounded-full">
                     </div>
-                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Bem-vindo(a)!</h2>
+                    <h2 id="welcomeTitle" class="text-3xl font-bold text-gray-800 mb-2">Bem-vindo(a) ao Grupo Foto de Marca!</h2>
+                    <p class="text-lg text-purple-600 font-semibold">Foto de Marca - Estúdio de Fotografia</p>
                 </div>
 
                 <!-- Welcome Message -->
                 <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-6 mb-6">
                     <p class="text-xl text-gray-700 mb-4">
-                        Olá, <span id="displayName" class="font-bold text-purple-600">Cliente</span>! 🎉
+                        Olá, <span id="displayName" class="font-bold text-purple-600">Cliente</span>! 🎓✨
                     </p>
-                    <p class="text-lg text-gray-600 leading-relaxed">
-                        É com grande alegria que damos as boas-vindas ao grupo <strong class="text-purple-600">Foto de Marca</strong>! 
-                        Aqui você encontrará conteúdo exclusivo, dicas valiosas e uma comunidade incrível de fotógrafos apaixonados.
+                    <p class="text-lg text-gray-600 leading-relaxed mb-4">
+                        <strong class="text-purple-600">Parabéns pela excelente escolha!</strong> Você agora faz parte do grupo de clientes da <strong class="text-purple-600">Foto de Marca</strong>, referência em fotografia no estado de Sergipe.
+                    </p>
+                    <p class="text-base text-gray-600 leading-relaxed mb-3">
+                        Somos <strong>Top 5 no Google</strong> com mais de <strong>150 comentários</strong> e em breve contaremos com o seu comentário de 5 estrelas eternizando esse momento que será um sucesso!
+                    </p>
+                    <p class="text-base text-gray-600 leading-relaxed">
+                        Temos compromisso com a <strong class="text-purple-600">pontualidade</strong> e contamos com o seu também! Nosso processo de escolha de fotos é <strong>100% online</strong>.
                     </p>
                 </div>
 
                 <!-- Features -->
                 <div class="grid md:grid-cols-3 gap-4 mb-6">
                     <div class="bg-purple-50 rounded-xl p-4">
-                        <div class="text-2xl mb-2">📸</div>
-                        <h3 class="font-semibold text-gray-800 mb-1">Conteúdo Exclusivo</h3>
-                        <p class="text-sm text-gray-600">Tutoriais e dicas profissionais</p>
+                        <div class="text-2xl mb-2">⏰</div>
+                        <h3 class="font-semibold text-gray-800 mb-1">Compromisso com Pontualidade</h3>
+                        <p class="text-sm text-gray-600">Respeitamos seu tempo e contamos com o seu também</p>
                     </div>
                     <div class="bg-blue-50 rounded-xl p-4">
-                        <div class="text-2xl mb-2">👥</div>
-                        <h3 class="font-semibold text-gray-800 mb-1">Comunidade</h3>
-                        <p class="text-sm text-gray-600">Conecte-se com outros fotógrafos</p>
+                        <div class="text-2xl mb-2">💻</div>
+                        <h3 class="font-semibold text-gray-800 mb-1">Processo 100% Online</h3>
+                        <p class="text-sm text-gray-600">Escolha suas fotos de forma prática e digital</p>
                     </div>
                     <div class="bg-indigo-50 rounded-xl p-4">
-                        <div class="text-2xl mb-2">🎯</div>
-                        <h3 class="font-semibold text-gray-800 mb-1">Suporte</h3>
-                        <p class="text-sm text-gray-600">Ajuda especializada sempre</p>
+                        <div class="text-2xl mb-2">📷</div>
+                        <h3 class="font-semibold text-gray-800 mb-1">Digitais e Reveladas</h3>
+                        <p class="text-sm text-gray-600">Trabalhamos com fotos digitais e impressas</p>
                     </div>
                 </div>
 
                 <!-- Call to Action -->
                 <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-6 text-white">
-                    <h3 class="text-xl font-bold mb-2">Vamos começar essa jornada juntos!</h3>
-                    <p class="mb-4">Explore o grupo, participe das discussões e não hesite em fazer perguntas.</p>
-                    <div class="flex justify-center items-center space-x-2">
-                        <span class="sparkle text-2xl">✨</span>
-                        <span class="text-lg font-semibold">Foto de Marca</span>
-                        <span class="sparkle text-2xl">✨</span>
+                    <h3 class="text-xl font-bold mb-3">🎓 Foto de Marca - Estúdio de Fotografia de Formatura</h3>
+                    <p class="mb-4 text-sm leading-relaxed">
+                        Somos especializados em registrar momentos inesquecíveis de formatura em Aracaju/SE. Nosso objetivo é capturar a essência, a emoção e o estilo de cada formando, destacando o valor do curso, da turma e da instituição de ensino.
+                    </p>
+                    <p class="mb-4 text-sm leading-relaxed">
+                        Oferecemos pacotes personalizados de fotos digitais e cobertura fotográfica completa de solenidades, incluindo cultos, missas de ação de graças e colações de grau. Cada imagem é tratada com qualidade profissional.
+                    </p>
+                    <div class="flex flex-col items-center space-y-2">
+                        <div class="flex justify-center items-center space-x-2">
+                            <span class="sparkle text-2xl">✨</span>
+                            <span class="text-lg font-semibold">Foto de Marca</span>
+                            <span class="sparkle text-2xl">✨</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm">
+                            <span>📱</span>
+                            <span class="font-semibold">(79) 99896-5081</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm">
+                            <span>🌐</span>
+                            <span class="font-semibold">fotodemarca.com.br</span>
+                        </div>
+                        <div class="text-sm opacity-90">Aracaju/SE</div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <!-- Download Button -->
-                <div class="mt-6 no-print">
-                    <button 
-                        onclick="printCard()" 
-                        class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors shadow-lg mr-4"
-                    >
-                        🖨️ Imprimir Cartão
-                    </button>
-                    <button 
-                        onclick="resetForm()" 
-                        class="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors shadow-lg"
-                    >
-                        🔄 Novo Cartão
-                    </button>
-                </div>
+        <!-- Action Buttons - Outside the card -->
+        <div id="actionButtons" class="mt-6 no-print hidden">
+            <div class="flex flex-wrap justify-center gap-3">
+                <button 
+                    onclick="downloadAsJPG()" 
+                    class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg"
+                >
+                    📥 Baixar JPG
+                </button>
+                <button 
+                    onclick="copyToWhatsApp()" 
+                    class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors shadow-lg"
+                >
+                    📱 Copiar para WhatsApp
+                </button>
+                <button 
+                    onclick="resetForm()" 
+                    class="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors shadow-lg"
+                >
+                    🔄 Novo Cartão
+                </button>
             </div>
         </div>
     </div>
@@ -135,6 +173,7 @@
     <script>
         function generateCard() {
             const clientName = document.getElementById('clientName').value.trim();
+            const clientGender = document.getElementById('clientGender').value;
             
             if (!clientName) {
                 alert('Por favor, digite o nome do cliente!');
@@ -145,9 +184,19 @@
             // Update the display name
             document.getElementById('displayName').textContent = clientName;
             
-            // Show the card
+            // Update welcome title based on gender
+            const welcomeTitle = document.getElementById('welcomeTitle');
+            if (clientGender === 'feminino') {
+                welcomeTitle.textContent = `Bem-vinda ${clientName} ao Grupo Foto de Marca!`;
+            } else {
+                welcomeTitle.textContent = `Bem-vindo ${clientName} ao Grupo Foto de Marca!`;
+            }
+            
+            // Show the card and buttons
             const card = document.getElementById('welcomeCard');
+            const buttons = document.getElementById('actionButtons');
             card.classList.remove('hidden');
+            buttons.classList.remove('hidden');
             
             // Smooth scroll to card
             setTimeout(() => {
@@ -158,13 +207,108 @@
             }, 100);
         }
 
-        function printCard() {
-            window.print();
+        function downloadAsJPG() {
+            const card = document.getElementById('welcomeCard');
+            const clientName = document.getElementById('displayName').textContent;
+            
+            // Use html2canvas library to convert HTML to canvas, then to JPG
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            script.onload = function() {
+                html2canvas(card, {
+                    backgroundColor: '#ffffff',
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true
+                }).then(canvas => {
+                    // Convert canvas to JPG and download
+                    const link = document.createElement('a');
+                    link.download = `cartao-boas-vindas-${clientName.replace(/\s+/g, '-')}.jpg`;
+                    link.href = canvas.toDataURL('image/jpeg', 0.9);
+                    link.click();
+                });
+            };
+            document.head.appendChild(script);
+        }
+
+        function copyToWhatsApp() {
+            const clientName = document.getElementById('displayName').textContent;
+            const clientGender = document.getElementById('clientGender').value;
+            
+            const welcomeText = clientGender === 'feminino' ? 
+                `🏆⭐ *Bem-vinda ${clientName} ao Grupo Foto de Marca!* ⭐🏆` : 
+                `🏆⭐ *Bem-vindo ${clientName} ao Grupo Foto de Marca!* ⭐🏆`;
+            
+            const message = `${welcomeText}
+
+Olá, *${clientName}*! 
+
+*Parabéns pela excelente escolha!* 🎉 Você agora faz parte do grupo de clientes da *Foto de Marca*, referência em fotografia no estado de Sergipe!
+
+🏆 *Somos Top 5 no Google* com mais de *150 comentários*
+⭐ Em breve contaremos com o seu comentário de 5 estrelas eternizando esse momento que será um sucesso!
+
+*Nossos Diferenciais:*
+⏰ Compromisso com a *pontualidade* (contamos com o seu também!)
+💻 Processo de escolha de fotos *100% online*
+📷 Trabalhamos com fotos *digitais e reveladas*
+
+🎓 *Pacote Mix:* 14 fotos digitais, sessão de 1h com aluguel de beca incluso!
+
+*Contato:*
+📱 *(79) 99896-5081*
+🌐 *fotodemarca.com.br*
+📍 *Aracaju/SE*
+
+*Foto de Marca* - Registrando momentos inesquecíveis! 🌟`;
+
+            // Get the button that was clicked
+            const button = document.querySelector('[onclick="copyToWhatsApp()"]');
+            const originalText = button.innerHTML;
+
+            // Create a temporary textarea element (most reliable method)
+            const textArea = document.createElement('textarea');
+            textArea.value = message;
+            textArea.style.position = 'absolute';
+            textArea.style.left = '-9999px';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            
+            // Select and copy
+            textArea.select();
+            textArea.setSelectionRange(0, 99999); // For mobile devices
+            
+            let success = false;
+            try {
+                success = document.execCommand('copy');
+            } catch (err) {
+                success = false;
+            }
+            
+            // Remove the textarea
+            document.body.removeChild(textArea);
+            
+            if (success) {
+                // Show success feedback
+                button.innerHTML = '✅ Copiado!';
+                button.classList.remove('bg-green-600', 'hover:bg-green-700');
+                button.classList.add('bg-green-800');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('bg-green-800');
+                    button.classList.add('bg-green-600', 'hover:bg-green-700');
+                }, 2000);
+            } else {
+                // Show the message in a prompt for manual copy
+                prompt('Copie esta mensagem para o WhatsApp:', message);
+            }
         }
 
         function resetForm() {
             document.getElementById('clientName').value = '';
             document.getElementById('welcomeCard').classList.add('hidden');
+            document.getElementById('actionButtons').classList.add('hidden');
             document.getElementById('clientName').focus();
         }
 
@@ -180,6 +324,5 @@
             document.getElementById('clientName').focus();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9716d0aae71be1ab',t:'MTc1NTU3Njc3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'971a2f215070f18b',t:'MTc1NTYxMjA5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-          
