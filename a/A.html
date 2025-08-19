@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Cartão de Boas-Vindas - Foto de Marca</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .sparkle {
+            animation: sparkle 2s infinite;
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+        }
+        @media print {
+            body { background: white !important; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8 no-print">
+            <h1 class="text-4xl font-bold text-white mb-2">Gerador de Cartão de Boas-Vindas</h1>
+            <p class="text-white/80 text-lg">Foto de Marca</p>
+        </div>
+
+        <!-- Input Section -->
+        <div class="bg-white rounded-2xl p-6 mb-8 card-shadow no-print">
+            <div class="flex flex-col sm:flex-row gap-4 items-end">
+                <div class="flex-1">
+                    <label for="clientName" class="block text-gray-700 font-semibold mb-2">Nome do Cliente:</label>
+                    <input 
+                        type="text" 
+                        id="clientName" 
+                        placeholder="Digite o nome do cliente aqui..."
+                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition-colors text-lg"
+                    >
+                </div>
+                <button 
+                    onclick="generateCard()" 
+                    class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg"
+                >
+                    Gerar Cartão
+                </button>
+            </div>
+        </div>
+
+        <!-- Welcome Card -->
+        <div id="welcomeCard" class="bg-white rounded-3xl p-8 card-shadow hidden">
+            <div class="text-center">
+                <!-- Logo/Brand Area -->
+                <div class="mb-6">
+                    <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full mb-4">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Bem-vindo(a)!</h2>
+                </div>
+
+                <!-- Welcome Message -->
+                <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-6 mb-6">
+                    <p class="text-xl text-gray-700 mb-4">
+                        Olá, <span id="displayName" class="font-bold text-purple-600">Cliente</span>! 🎉
+                    </p>
+                    <p class="text-lg text-gray-600 leading-relaxed">
+                        É com grande alegria que damos as boas-vindas ao grupo <strong class="text-purple-600">Foto de Marca</strong>! 
+                        Aqui você encontrará conteúdo exclusivo, dicas valiosas e uma comunidade incrível de fotógrafos apaixonados.
+                    </p>
+                </div>
+
+                <!-- Features -->
+                <div class="grid md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-purple-50 rounded-xl p-4">
+                        <div class="text-2xl mb-2">📸</div>
+                        <h3 class="font-semibold text-gray-800 mb-1">Conteúdo Exclusivo</h3>
+                        <p class="text-sm text-gray-600">Tutoriais e dicas profissionais</p>
+                    </div>
+                    <div class="bg-blue-50 rounded-xl p-4">
+                        <div class="text-2xl mb-2">👥</div>
+                        <h3 class="font-semibold text-gray-800 mb-1">Comunidade</h3>
+                        <p class="text-sm text-gray-600">Conecte-se com outros fotógrafos</p>
+                    </div>
+                    <div class="bg-indigo-50 rounded-xl p-4">
+                        <div class="text-2xl mb-2">🎯</div>
+                        <h3 class="font-semibold text-gray-800 mb-1">Suporte</h3>
+                        <p class="text-sm text-gray-600">Ajuda especializada sempre</p>
+                    </div>
+                </div>
+
+                <!-- Call to Action -->
+                <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-6 text-white">
+                    <h3 class="text-xl font-bold mb-2">Vamos começar essa jornada juntos!</h3>
+                    <p class="mb-4">Explore o grupo, participe das discussões e não hesite em fazer perguntas.</p>
+                    <div class="flex justify-center items-center space-x-2">
+                        <span class="sparkle text-2xl">✨</span>
+                        <span class="text-lg font-semibold">Foto de Marca</span>
+                        <span class="sparkle text-2xl">✨</span>
+                    </div>
+                </div>
+
+                <!-- Download Button -->
+                <div class="mt-6 no-print">
+                    <button 
+                        onclick="printCard()" 
+                        class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors shadow-lg mr-4"
+                    >
+                        🖨️ Imprimir Cartão
+                    </button>
+                    <button 
+                        onclick="resetForm()" 
+                        class="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors shadow-lg"
+                    >
+                        🔄 Novo Cartão
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateCard() {
+            const clientName = document.getElementById('clientName').value.trim();
+            
+            if (!clientName) {
+                alert('Por favor, digite o nome do cliente!');
+                document.getElementById('clientName').focus();
+                return;
+            }
+            
+            // Update the display name
+            document.getElementById('displayName').textContent = clientName;
+            
+            // Show the card
+            const card = document.getElementById('welcomeCard');
+            card.classList.remove('hidden');
+            
+            // Smooth scroll to card
+            setTimeout(() => {
+                card.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }, 100);
+        }
+
+        function printCard() {
+            window.print();
+        }
+
+        function resetForm() {
+            document.getElementById('clientName').value = '';
+            document.getElementById('welcomeCard').classList.add('hidden');
+            document.getElementById('clientName').focus();
+        }
+
+        // Allow Enter key to generate card
+        document.getElementById('clientName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateCard();
+            }
+        });
+
+        // Focus on input when page loads
+        window.addEventListener('load', function() {
+            document.getElementById('clientName').focus();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9716d0aae71be1ab',t:'MTc1NTU3Njc3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+          
