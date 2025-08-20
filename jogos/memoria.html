@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Memória - Quebra-Gelo para Equipes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .game-area {
+            padding: 40px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 120px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .card {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            transition: opacity 0.3s ease;
+        }
+
+        .card.flipped::before {
+            opacity: 0;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card.flipped .card-content {
+            opacity: 1;
+        }
+
+        .card.matched {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            transform: scale(0.95);
+        }
+
+        .card.matched::before {
+            opacity: 0;
+        }
+
+        .card.matched .card-content {
+            opacity: 1;
+        }
+
+        .controls {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            margin: 0 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .questions-section {
+            background: linear-gradient(135deg, #fab1a0, #e17055);
+            margin: 40px -40px -40px;
+            padding: 40px;
+            color: white;
+        }
+
+        .questions-section h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .question-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .question-card:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(10px);
+        }
+
+        .question-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .question-card p {
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: none;
+        }
+
+        .celebration h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .celebration p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .card {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                gap: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .memory-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .game-area {
+                padding: 20px;
+            }
+        }
+
+        .logo-section {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .main-logo {
+            max-height: 80px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .main-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #2d3436, #636e72);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 0;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .footer-logo {
+            text-align: center;
+        }
+
+        .footer-logo-img {
+            max-height: 60px;
+            width: auto;
+            margin-bottom: 10px;
+            filter: brightness(0) invert(1);
+        }
+
+        .footer-brand {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .footer-contact {
+            text-align: center;
+        }
+
+        .whatsapp {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 0;
+            color: #25d366;
+        }
+
+        .footer-info {
+            text-align: center;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            margin: 0 0 15px 0;
+            opacity: 0.9;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #74b9ff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #0984e3;
+            text-decoration: underline;
+        }
+
+        .footer-links span {
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .main-logo {
+                max-height: 60px;
+            }
+            
+            .logo-section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-section">
+            <a href="https://sou.net.br/digital" target="_blank">
+                <img src="https://i.ibb.co/prsT1vXN/JN2-M3-ADIGITAL-H-1-removebg-preview.png" alt="JN2M3A DIGITAL" class="main-logo" onerror="this.style.display='none';">
+            </a>
+        </div>
+        
+        <div class="header">
+            <h1>🧠 Jogo de Memória - Quebra-Gelo</h1>
+            <p>Encontre os pares e inicie conversas incríveis com sua equipe!</p>
+        </div>
+
+        <div class="game-area">
+            <div class="stats">
+                <div class="stat-card">
+                    <h3 id="moves">0</h3>
+                    <p>Jogadas</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="matches">0</h3>
+                    <p>Pares Encontrados</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="timer">00:00</h3>
+                    <p>Tempo</p>
+                </div>
+            </div>
+
+            <div class="memory-grid" id="gameGrid">
+                <!-- Cards serão gerados pelo JavaScript -->
+            </div>
+
+            <div class="controls">
+                <button class="btn" onclick="startNewGame()">🎮 Novo Jogo</button>
+                <button class="btn" onclick="showRandomQuestion()">💬 Pergunta Aleatória</button>
+            </div>
+        </div>
+
+        <div class="questions-section">
+            <h2>💭 Perguntas para Quebrar o Gelo</h2>
+            <div id="questionsContainer">
+                <div class="question-card">
+                    <h4>🌅 Qual emoji melhor descreve sua manhã?</h4>
+                    <p>Compartilhe como você começou o dia e o que te motiva pela manhã.</p>
+                </div>
+                <div class="question-card">
+                    <h4>🎯 Qual é uma habilidade de trabalho que você se orgulha de ter desenvolvido?</h4>
+                    <p>Conte sobre uma competência que você conquistou e como ela te ajuda no dia a dia.</p>
+                </div>
+                <div class="question-card">
+                    <h4>🎵 Se sua personalidade fosse uma música, qual seria?</h4>
+                    <p>Escolha uma música que representa quem você é e explique o porquê.</p>
+                </div>
+                <div class="question-card">
+                    <h4>🌟 Qual foi o melhor feedback que você já recebeu?</h4>
+                    <p>Compartilhe um elogio ou conselho que marcou sua trajetória profissional.</p>
+                </div>
+                <div class="question-card">
+                    <h4>🎨 Qual hobby ou interesse pessoal te energiza?</h4>
+                    <p>Fale sobre uma atividade que você ama fazer fora do trabalho.</p>
+                </div>
+                <div class="question-card">
+                    <h4>🚀 Se pudesse aprender qualquer habilidade instantaneamente, qual seria?</h4>
+                    <p>Sonhe alto! Que super poder profissional ou pessoal você gostaria de ter?</p>
+                </div>
+                <div class="question-card">
+                    <h4>🏆 Qual conquista recente (pequena ou grande) te deixou orgulhoso?</h4>
+                    <p>Celebre uma vitória pessoal ou profissional que aconteceu ultimamente.</p>
+                </div>
+                <div class="question-card">
+                    <h4>🌍 Se pudesse trabalhar de qualquer lugar do mundo, onde seria?</h4>
+                    <p>Descreva seu local de trabalho dos sonhos e o que te atrai nesse lugar.</p>
+                </div>
+                <div class="question-card">
+                    <h4>🤝 Qual qualidade você mais valoriza em um colega de equipe?</h4>
+                    <p>Reflita sobre as características que tornam alguém um ótimo parceiro de trabalho.</p>
+                </div>
+                <div class="question-card">
+                    <h4>💡 Qual foi a ideia mais criativa que você teve recentemente?</h4>
+                    <p>Compartilhe um momento de inspiração ou uma solução inovadora que você pensou.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="https://i.ibb.co/zhSz3B6y/JN2-M3-ADIGITAL-H-2-removebg-preview.png" alt="JN2M3A DIGITAL" class="footer-logo-img" onerror="this.style.display='none';">
+                    <p class="footer-brand">Uma marca do Grupo Foto de Marca</p>
+                </div>
+                
+                <div class="footer-contact">
+                    <p class="whatsapp">📱 WhatsApp: (79) 99896-5081</p>
+                </div>
+                
+                <div class="footer-info">
+                    <p class="copyright">© 2025 JN2M3A DIGITAL. Desenvolvendo soluções que facilitam o seu dia a dia.</p>
+                    <div class="footer-links">
+                        <a href="https://rec.sou.net.br/termo_de_uso.html" target="_blank">Termos de Uso</a>
+                        <span>|</span>
+                        <a href="https://rec.sou.net.br/faq" target="_blank">Perguntas Frequentes</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="celebration" id="celebration">
+        <h2>🎉 Parabéns!</h2>
+        <p>Você completou o jogo de memória!</p>
+        <p>Agora é hora de usar as perguntas para conhecer melhor sua equipe!</p>
+        <button class="btn" onclick="hideCelebration()">Continuar</button>
+    </div>
+
+    <script>
+        const emojis = ['🎯', '🚀', '💡', '🌟', '🎨', '🎵'];
+        let cards = [];
+        let flippedCards = [];
+        let moves = 0;
+        let matches = 0;
+        let gameStarted = false;
+        let startTime;
+        let timerInterval;
+
+        const questions = [
+            "🌅 Qual emoji melhor descreve sua manhã?",
+            "🎯 Qual é uma habilidade de trabalho que você se orgulha de ter desenvolvido?",
+            "🎵 Se sua personalidade fosse uma música, qual seria?",
+            "🌟 Qual foi o melhor feedback que você já recebeu?",
+            "🎨 Qual hobby ou interesse pessoal te energiza?",
+            "🚀 Se pudesse aprender qualquer habilidade instantaneamente, qual seria?",
+            "🏆 Qual conquista recente (pequena ou grande) te deixou orgulhoso?",
+            "🌍 Se pudesse trabalhar de qualquer lugar do mundo, onde seria?",
+            "🤝 Qual qualidade você mais valoriza em um colega de equipe?",
+            "💡 Qual foi a ideia mais criativa que você teve recentemente?"
+        ];
+
+        function initializeGame() {
+            // Criar pares de emojis
+            cards = [...emojis, ...emojis];
+            
+            // Embaralhar
+            for (let i = cards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cards[i], cards[j]] = [cards[j], cards[i]];
+            }
+
+            // Criar elementos HTML
+            const grid = document.getElementById('gameGrid');
+            grid.innerHTML = '';
+            
+            cards.forEach((emoji, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.dataset.index = index;
+                card.dataset.emoji = emoji;
+                card.innerHTML = `<div class="card-content">${emoji}</div>`;
+                card.addEventListener('click', flipCard);
+                grid.appendChild(card);
+            });
+
+            // Reset stats
+            moves = 0;
+            matches = 0;
+            flippedCards = [];
+            gameStarted = false;
+            
+            updateStats();
+            clearInterval(timerInterval);
+            document.getElementById('timer').textContent = '00:00';
+        }
+
+        function flipCard(event) {
+            const card = event.currentTarget;
+            
+            if (card.classList.contains('flipped') || card.classList.contains('matched') || flippedCards.length >= 2) {
+                return;
+            }
+
+            if (!gameStarted) {
+                startGame();
+            }
+
+            card.classList.add('flipped');
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                moves++;
+                updateStats();
+                
+                setTimeout(() => {
+                    checkMatch();
+                }, 1000);
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            
+            if (card1.dataset.emoji === card2.dataset.emoji) {
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                matches++;
+                
+                if (matches === emojis.length) {
+                    setTimeout(() => {
+                        showCelebration();
+                    }, 500);
+                }
+            } else {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+            }
+            
+            flippedCards = [];
+            updateStats();
+        }
+
+        function startGame() {
+            gameStarted = true;
+            startTime = Date.now();
+            
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                const seconds = (elapsed % 60).toString().padStart(2, '0');
+                document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+            }, 1000);
+        }
+
+        function updateStats() {
+            document.getElementById('moves').textContent = moves;
+            document.getElementById('matches').textContent = matches;
+        }
+
+        function startNewGame() {
+            clearInterval(timerInterval);
+            initializeGame();
+        }
+
+        function showRandomQuestion() {
+            const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+            alert(`💭 Pergunta para a equipe:\n\n${randomQuestion}\n\nCompartilhem suas respostas!`);
+        }
+
+        function showCelebration() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('celebration').style.display = 'block';
+            clearInterval(timerInterval);
+        }
+
+        function hideCelebration() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('celebration').style.display = 'none';
+        }
+
+        // Inicializar o jogo quando a página carregar
+        window.addEventListener('load', initializeGame);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'971e91c17166ad09',t:'MTc1NTY1ODA4MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
