@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Redação ENEM - Nota 1000</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .essay-paper { 
+            background: linear-gradient(to right, #f8f9fa 0%, #ffffff 100%);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .typing-animation {
+            border-right: 2px solid #667eea;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 50% { border-color: #667eea; }
+            51%, 100% { border-color: transparent; }
+        }
+        .line-paper {
+            background-image: repeating-linear-gradient(
+                transparent,
+                transparent 24px,
+                #e5e7eb 24px,
+                #e5e7eb 26px
+            );
+            line-height: 26px;
+            padding-top: 13px;
+        }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-white mb-2">🎓 Gerador de Redação ENEM</h1>
+            <p class="text-xl text-white/90">Nota 1000 Garantida</p>
+        </div>
+
+        <!-- Input Section -->
+        <div class="max-w-4xl mx-auto mb-8">
+            <div class="bg-white rounded-2xl p-6 shadow-xl">
+                <label for="tema" class="block text-lg font-semibold text-gray-700 mb-3">
+                    📝 Digite o tema da redação:
+                </label>
+                <div class="flex gap-3">
+                    <input 
+                        type="text" 
+                        id="tema" 
+                        placeholder="Ex: A importância da educação digital no Brasil"
+                        class="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none text-lg"
+                    >
+                    <button 
+                        onclick="gerarRedacao()" 
+                        class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    >
+                        ✨ Gerar Redação
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="loading" class="hidden text-center mb-8">
+            <div class="bg-white rounded-2xl p-6 shadow-xl max-w-md mx-auto">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-3"></div>
+                <p class="text-gray-600">Gerando sua redação nota 1000...</p>
+            </div>
+        </div>
+
+        <!-- Essay Output -->
+        <div id="redacaoContainer" class="hidden max-w-4xl mx-auto">
+            <div class="essay-paper rounded-2xl p-8 mb-6">
+                <!-- Header da redação -->
+                <div class="border-b-2 border-gray-200 pb-4 mb-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <p class="text-sm text-gray-600">Nome: ________________________________</p>
+                            <p class="text-sm text-gray-600 mt-1">Número: _______ Turma: _______</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="bg-green-100 border-2 border-green-500 rounded-lg px-3 py-1">
+                                <span class="text-green-700 font-bold text-lg">NOTA: 1000</span>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 id="temaRedacao" class="text-xl font-bold text-center text-gray-800 mt-4"></h2>
+                </div>
+
+                <!-- Conteúdo da redação -->
+                <div id="conteudoRedacao" class="line-paper min-h-96 text-gray-800 leading-relaxed"></div>
+            </div>
+
+            <!-- Botões de ação -->
+            <div class="flex gap-4 justify-center">
+                <button 
+                    onclick="copiarRedacao()" 
+                    class="bg-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-green-700 transition-all duration-300 shadow-lg"
+                >
+                    📋 Copiar Redação
+                </button>
+                <button 
+                    onclick="novaRedacao()" 
+                    class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300 shadow-lg"
+                >
+                    🔄 Nova Redação
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function gerarRedacao() {
+            const tema = document.getElementById('tema').value.trim();
+            
+            if (!tema) {
+                alert('Por favor, digite um tema para a redação!');
+                return;
+            }
+
+            // Mostrar loading
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('redacaoContainer').classList.add('hidden');
+
+            // Simular tempo de geração
+            setTimeout(() => {
+                criarRedacao(tema);
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('redacaoContainer').classList.remove('hidden');
+                
+                // Scroll suave para a redação
+                document.getElementById('redacaoContainer').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            }, 2000);
+        }
+
+        function criarRedacao(tema) {
+            document.getElementById('temaRedacao').textContent = tema;
+            
+            const introducao = gerarIntroducao(tema);
+            const desenvolvimento1 = gerarDesenvolvimento1(tema);
+            const desenvolvimento2 = gerarDesenvolvimento2(tema);
+            const conclusao = gerarConclusao(tema);
+
+            const redacaoCompleta = `
+                <p class="mb-6 text-justify indent-8">${introducao}</p>
+                <p class="mb-6 text-justify indent-8">${desenvolvimento1}</p>
+                <p class="mb-6 text-justify indent-8">${desenvolvimento2}</p>
+                <p class="mb-6 text-justify indent-8">${conclusao}</p>
+            `;
+
+            // Efeito de digitação
+            typeWriter(redacaoCompleta, 'conteudoRedacao', 30);
+        }
+
+        function gerarIntroducao(tema) {
+            const introducoes = [
+                `A sociedade brasileira contemporânea enfrenta desafios significativos relacionados a ${tema.toLowerCase()}. Nesse contexto, torna-se fundamental analisar as múltiplas dimensões dessa questão, considerando tanto os aspectos históricos quanto as demandas atuais. Dessa forma, é necessário compreender as causas estruturais do problema e buscar soluções efetivas que promovam transformações sociais duradouras.`,
+                
+                `O Brasil, país de dimensões continentais e rica diversidade cultural, apresenta complexidades particulares no que se refere a ${tema.toLowerCase()}. Essa realidade exige uma reflexão aprofundada sobre os fatores que contribuem para a perpetuação de desigualdades e a necessidade de políticas públicas eficazes. Portanto, é imprescindível examinar as raízes históricas dessa problemática e propor alternativas viáveis para sua superação.`,
+                
+                `Na conjuntura social brasileira atual, ${tema.toLowerCase()} representa um dos principais desafios a serem enfrentados pela sociedade e pelo poder público. Essa questão, que possui raízes históricas profundas, demanda uma abordagem multidisciplinar e o envolvimento de diversos setores sociais. Assim, faz-se necessário analisar criticamente os fatores que perpetuam essa situação e desenvolver estratégias integradas de enfrentamento.`
+            ];
+            
+            return introducoes[Math.floor(Math.random() * introducoes.length)];
+        }
+
+        function gerarDesenvolvimento1(tema) {
+            const desenvolvimentos = [
+                `Em primeiro lugar, é fundamental reconhecer que as raízes históricas do problema estão intrinsecamente ligadas ao processo de formação da sociedade brasileira. A herança colonial, marcada por estruturas excludentes e desiguais, criou um cenário propício para a perpetuação de injustiças sociais. Nesse sentido, a falta de investimentos adequados em políticas públicas universais contribuiu para o agravamento da situação. Ademais, a ausência de mecanismos efetivos de participação popular nas decisões governamentais limitou as possibilidades de transformação social, evidenciando a necessidade de reformas estruturais profundas.`,
+                
+                `Primordialmente, deve-se considerar que os fatores socioeconômicos exercem influência determinante na configuração atual do problema. A concentração de renda e a desigualdade de oportunidades criam barreiras significativas para o desenvolvimento humano pleno. Além disso, a precariedade dos serviços públicos essenciais, como educação e saúde, perpetua ciclos de exclusão social. Por conseguinte, a falta de articulação entre as diferentes esferas governamentais compromete a efetividade das ações implementadas, demonstrando a urgência de uma abordagem mais integrada e sistemática.`,
+                
+                `Inicialmente, cabe destacar que os aspectos culturais e educacionais desempenham papel crucial na manutenção do status quo. A reprodução de práticas discriminatórias e a naturalização de desigualdades impedem o avanço de uma sociedade mais justa e inclusiva. Paralelamente, a insuficiência de programas educativos que promovam a conscientização cidadã limita as possibilidades de mudança comportamental. Consequentemente, a perpetuação de estereótipos e preconceitos dificulta a construção de um ambiente social mais harmonioso e respeitoso às diferenças.`
+            ];
+            
+            return desenvolvimentos[Math.floor(Math.random() * desenvolvimentos.length)];
+        }
+
+        function gerarDesenvolvimento2(tema) {
+            const desenvolvimentos = [
+                `Outrossim, a dimensão institucional do problema revela a necessidade de reformas estruturais no aparato estatal brasileiro. A burocracia excessiva e a falta de transparência nos processos decisórios comprometem a eficiência das políticas públicas. Concomitantemente, a corrupção e o clientelismo político desviam recursos que poderiam ser direcionados para a solução de questões sociais prioritárias. Dessa maneira, a fragilidade das instituições democráticas impede a consolidação de um Estado verdadeiramente comprometido com o bem-estar coletivo e a justiça social.`,
+                
+                `Ademais, os desafios contemporâneos exigem uma abordagem inovadora que considere as transformações tecnológicas e sociais em curso. A era digital trouxe novas possibilidades de participação cidadã e acesso à informação, mas também criou novos tipos de exclusão e desigualdade. Nesse contexto, a capacitação tecnológica da população torna-se fundamental para garantir a inclusão social plena. Portanto, é necessário desenvolver políticas que aproveitem o potencial das novas tecnologias para promover a democratização do conhecimento e das oportunidades.`,
+                
+                `Sob outra perspectiva, a questão ambiental emerge como fator indissociável da problemática social brasileira. A degradação do meio ambiente afeta desproporcionalmente as populações mais vulneráveis, criando um ciclo vicioso de pobreza e exclusão. Simultaneamente, a falta de políticas ambientais efetivas compromete a sustentabilidade do desenvolvimento nacional. Logo, a integração entre políticas sociais e ambientais apresenta-se como estratégia fundamental para a construção de um futuro mais equitativo e sustentável para todos os brasileiros.`
+            ];
+            
+            return desenvolvimentos[Math.floor(Math.random() * desenvolvimentos.length)];
+        }
+
+        function gerarConclusao(tema) {
+            const conclusoes = [
+                `Portanto, fica evidente que a superação dos desafios relacionados a ${tema.toLowerCase()} demanda ações coordenadas e multissetoriais. Nesse sentido, propõe-se que o Governo Federal, em parceria com estados e municípios, implemente políticas públicas integradas que abordem as causas estruturais do problema. Tal iniciativa deve incluir investimentos em educação de qualidade, fortalecimento das instituições democráticas e promoção da participação cidadã. Ademais, é fundamental que a sociedade civil organize-se em movimentos de conscientização e cobrança por transparência governamental. Somente através dessa articulação entre poder público e sociedade será possível construir um Brasil mais justo, igualitário e próspero para as futuras gerações.`,
+                
+                `Em síntese, a resolução da problemática exige um compromisso coletivo com a transformação social. Para tanto, sugere-se que o Ministério da Educação desenvolva programas de formação cidadã que promovam valores democráticos e de respeito à diversidade. Paralelamente, os órgãos de controle devem intensificar a fiscalização da aplicação de recursos públicos, garantindo maior eficiência e transparência. Além disso, é imprescindível que os meios de comunicação assumam seu papel educativo, veiculando conteúdos que contribuam para a conscientização social. Dessa forma, através da união de esforços entre diferentes atores sociais, será possível superar os obstáculos e construir uma sociedade verdadeiramente inclusiva e democrática.`,
+                
+                `Diante do exposto, conclui-se que a transformação da realidade brasileira passa necessariamente pelo enfrentamento sistemático das desigualdades estruturais. Assim, recomenda-se que o Congresso Nacional aprove legislação específica que garanta recursos adequados para políticas de inclusão social e desenvolvimento sustentável. Concomitantemente, as universidades públicas devem ampliar programas de extensão que levem conhecimento e tecnologia às comunidades mais necessitadas. Por fim, é essencial que cada cidadão assuma sua responsabilidade social, participando ativamente dos processos democráticos e promovendo mudanças em seu ambiente de convivência. Apenas através dessa mobilização coletiva será possível materializar o sonho de um país mais justo e próspero para todos.`
+            ];
+            
+            return conclusoes[Math.floor(Math.random() * conclusoes.length)];
+        }
+
+        function typeWriter(text, elementId, speed) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = '';
+            element.classList.add('typing-animation');
+            
+            // Remove tags HTML para digitação caractere por caractere
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = text;
+            const plainText = tempDiv.textContent || tempDiv.innerText || '';
+            
+            let i = 0;
+            function type() {
+                if (i < plainText.length) {
+                    element.innerHTML = plainText.substring(0, i + 1).replace(/\n/g, '<br>');
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    element.classList.remove('typing-animation');
+                    // Aplicar formatação final
+                    element.innerHTML = text;
+                }
+            }
+            type();
+        }
+
+        function copiarRedacao() {
+            const conteudo = document.getElementById('conteudoRedacao').innerText;
+            const tema = document.getElementById('temaRedacao').innerText;
+            const textoCompleto = `${tema}\n\n${conteudo}`;
+            
+            navigator.clipboard.writeText(textoCompleto).then(() => {
+                alert('✅ Redação copiada para a área de transferência!');
+            });
+        }
+
+        function novaRedacao() {
+            document.getElementById('tema').value = '';
+            document.getElementById('redacaoContainer').classList.add('hidden');
+            document.getElementById('tema').focus();
+        }
+
+        // Enter para gerar redação
+        document.getElementById('tema').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                gerarRedacao();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9723173db26ff195',t:'MTc1NTcwNTQ5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
