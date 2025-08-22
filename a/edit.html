@@ -384,38 +384,34 @@
                     <div class="form-group">
                         <label>Filtros</label>
                         <div class="filters-grid">
-                            <div class="filter-btn" data-filter="normal">Normal</div>
+                            <div class="filter-btn active" data-filter="normal">Normal</div>
                             <div class="filter-btn" data-filter="grayscale">Preto e Branco</div>
                             <div class="filter-btn" data-filter="sepia">Sépia</div>
                             <div class="filter-btn" data-filter="vintage">Vintage</div>
                             <div class="filter-btn" data-filter="invert">Inverter</div>
-                            <div class="filter-btn" data-filter="blur">Desfoque</div>
-                            <div class="filter-btn" data-filter="sharpen">Nitidez</div>
-                            <div class="filter-btn" data-filter="emboss">Relevo</div>
-                            <div class="filter-btn" data-filter="clarendon">Clarendon</div>
-                            <div class="filter-btn" data-filter="moon">Lua</div>
-                            <div class="filter-btn" data-filter="lark">Lark</div>
-                            <div class="filter-btn" data-filter="reyes">Reyes</div>
+                            <div class="filter-btn" data-filter="brightness">Brilho</div>
+                            <div class="filter-btn" data-filter="contrast">Contraste</div>
+                            <div class="filter-btn" data-filter="saturate">Saturação</div>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="brightness">Brilho</label>
+                        <label for="brightness">Brilho: <span id="brightness-value">0</span></label>
                         <input type="range" id="brightness" class="adjustment-slider" min="-100" max="100" value="0">
                     </div>
                     
                     <div class="form-group">
-                        <label for="contrast">Contraste</label>
+                        <label for="contrast">Contraste: <span id="contrast-value">0</span></label>
                         <input type="range" id="contrast" class="adjustment-slider" min="-100" max="100" value="0">
                     </div>
                     
                     <div class="form-group">
-                        <label for="saturation">Saturação</label>
+                        <label for="saturation">Saturação: <span id="saturation-value">0</span></label>
                         <input type="range" id="saturation" class="adjustment-slider" min="-100" max="100" value="0">
                     </div>
                     
                     <div class="form-group">
-                        <label for="hue">Matiz</label>
+                        <label for="hue">Matiz: <span id="hue-value">0</span></label>
                         <input type="range" id="hue" class="adjustment-slider" min="-180" max="180" value="0">
                     </div>
                     
@@ -433,7 +429,7 @@
                     <h3 class="panel-title">Visualização</h3>
                     
                     <div class="image-preview-container">
-                        <img id="image-preview" alt="Preview">
+                        <canvas id="image-canvas"></canvas>
                         <div class="placeholder-text" id="placeholder">
                             <i class="fas fa-image fa-3x"></i>
                             <p>Selecione uma imagem para começar a editar</p>
@@ -491,7 +487,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Elementos da interface
             const imageUpload = document.getElementById('image-upload');
-            const imagePreview = document.getElementById('image-preview');
+            const canvas = document.getElementById('image-canvas');
+            const ctx = canvas.getContext('2d');
             const placeholder = document.getElementById('placeholder');
             const resetBtn = document.getElementById('reset-btn');
             const downloadBtn = document.getElementById('download-btn');
@@ -500,17 +497,15 @@
             const contrastSlider = document.getElementById('contrast');
             const saturationSlider = document.getElementById('saturation');
             const hueSlider = document.getElementById('hue');
+            const brightnessValue = document.getElementById('brightness-value');
+            const contrastValue = document.getElementById('contrast-value');
+            const saturationValue = document.getElementById('saturation-value');
+            const hueValue = document.getElementById('hue-value');
             
             // Variáveis para armazenar o estado
-            let originalImageData = null;
-            let currentImageData = null;
+            let originalImage = null;
+            let currentImage = null;
             let selectedFilter = 'normal';
-            let adjustments = {
-                brightness: 0,
-                contrast: 0,
-                saturation: 0,
-                hue: 0
-            };
             
             // Carregar imagem
             imageUpload.addEventListener('change', function(e) {
@@ -524,37 +519,29 @@
                 
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    imagePreview.onload = function() {
-                        // Mostrar a imagem e esconder o placeholder
-                        imagePreview.style.display = 'block';
+                    const img = new Image();
+                    img.onload = function() {
+                        // Configurar o canvas com as dimensões da imagem
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        
+                        // Desenhar a imagem no canvas
+                        ctx.drawImage(img, 0, 0);
+                        
+                        // Salvar a imagem original
+                        originalImage = img;
+                        currentImage = img;
+                        
+                        // Esconder o placeholder e mostrar a imagem
                         placeholder.style.display = 'none';
                         
-                        // Preparar o canvas para processamento
-                        prepareCanvas();
+                        // Aplicar o filtro selecionado
+                        applyFilter(selectedFilter);
                     };
-                    imagePreview.src = e.target.result;
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             });
-            
-            // Preparar canvas para processamento de imagem
-            function prepareCanvas() {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                
-                canvas.width = imagePreview.width;
-                canvas.height = imagePreview.height;
-                
-                // Desenhar a imagem original no canvas
-                ctx.drawImage(imagePreview, 0, 0);
-                
-                // Salvar os dados originais da imagem
-                originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                currentImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                
-                // Aplicar o filtro selecionado
-                applyFilter(selectedFilter);
-            }
             
             // Aplicar filtro
             function applyFilter(filterName) {
@@ -569,19 +556,13 @@
                     }
                 });
                 
-                // Copiar os dados originais
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = originalImageData.width;
-                canvas.height = originalImageData.height;
+                // Redesenhar a imagem original
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(originalImage, 0, 0);
                 
-                const imageData = new ImageData(
-                    new Uint8ClampedArray(originalImageData.data),
-                    originalImageData.width,
-                    originalImageData.height
-                );
-                
-                const data = imageData.data;
+                // Obter os dados da imagem
+                let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                let data = imageData.data;
                 
                 // Aplicar o filtro selecionado
                 switch(filterName) {
@@ -597,7 +578,196 @@
                     case 'invert':
                         applyInvert(data);
                         break;
-                    case 'blur':
-                        applyBlur(imageData);
+                    case 'brightness':
+                        applyBrightness(data, parseInt(brightnessSlider.value));
                         break;
-                    case 'sharpen
+                    case 'contrast':
+                        applyContrast(data, parseInt(contrastSlider.value));
+                        break;
+                    case 'saturate':
+                        applySaturation(data, parseInt(saturationSlider.value));
+                        break;
+                    default:
+                        // Normal - não aplicar nenhum filtro
+                        break;
+                }
+                
+                // Aplicar ajustes manuais
+                applyManualAdjustments(data);
+                
+                // Colocar os dados modificados de volta no canvas
+                ctx.putImageData(imageData, 0, 0);
+            }
+            
+            // Aplicar ajustes manuais
+            function applyManualAdjustments(data) {
+                // Aplicar brilho
+                if (parseInt(brightnessSlider.value) !== 0) {
+                    applyBrightness(data, parseInt(brightnessSlider.value));
+                }
+                
+                // Aplicar contraste
+                if (parseInt(contrastSlider.value) !== 0) {
+                    applyContrast(data, parseInt(contrastSlider.value));
+                }
+                
+                // Aplicar saturação
+                if (parseInt(saturationSlider.value) !== 0) {
+                    applySaturation(data, parseInt(saturationSlider.value));
+                }
+                
+                // Aplicar matiz
+                if (parseInt(hueSlider.value) !== 0) {
+                    applyHue(data, parseInt(hueSlider.value));
+                }
+            }
+            
+            // Algoritmos de filtros
+            function applyGrayscale(data) {
+                for (let i = 0; i < data.length; i += 4) {
+                    const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+                    data[i] = avg;
+                    data[i + 1] = avg;
+                    data[i + 2] = avg;
+                }
+            }
+            
+            function applySepia(data) {
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+                    
+                    data[i] = Math.min(255, (r * 0.393) + (g * 0.769) + (b * 0.189));
+                    data[i + 1] = Math.min(255, (r * 0.349) + (g * 0.686) + (b * 0.168));
+                    data[i + 2] = Math.min(255, (r * 0.272) + (g * 0.534) + (b * 0.131));
+                }
+            }
+            
+            function applyVintage(data) {
+                for (let i = 0; i < data.length; i += 4) {
+                    data[i] = Math.min(255, data[i] + 20);
+                    data[i + 1] = Math.max(0, data[i + 1] - 10);
+                    data[i + 2] = Math.max(0, data[i + 2] - 30);
+                }
+            }
+            
+            function applyInvert(data) {
+                for (let i = 0; i < data.length; i += 4) {
+                    data[i] = 255 - data[i];
+                    data[i + 1] = 255 - data[i + 1];
+                    data[i + 2] = 255 - data[i + 2];
+                }
+            }
+            
+            function applyBrightness(data, value) {
+                for (let i = 0; i < data.length; i += 4) {
+                    data[i] = Math.max(0, Math.min(255, data[i] + value));
+                    data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + value));
+                    data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + value));
+                }
+            }
+            
+            function applyContrast(data, value) {
+                const factor = (259 * (value + 255)) / (255 * (259 - value));
+                
+                for (let i = 0; i < data.length; i += 4) {
+                    data[i] = Math.max(0, Math.min(255, factor * (data[i] - 128) + 128));
+                    data[i + 1] = Math.max(0, Math.min(255, factor * (data[i + 1] - 128) + 128));
+                    data[i + 2] = Math.max(0, Math.min(255, factor * (data[i + 2] - 128) + 128));
+                }
+            }
+            
+            function applySaturation(data, value) {
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+                    const gray = 0.2989 * r + 0.5870 * g + 0.1140 * b;
+                    const factor = 1 + value / 100;
+                    
+                    data[i] = Math.max(0, Math.min(255, gray + (r - gray) * factor));
+                    data[i + 1] = Math.max(0, Math.min(255, gray + (g - gray) * factor));
+                    data[i + 2] = Math.max(0, Math.min(255, gray + (b - gray) * factor));
+                }
+            }
+            
+            function applyHue(data, value) {
+                // Conversão simplificada de matiz
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+                    
+                    // Ajuste básico de matiz
+                    data[i] = Math.max(0, Math.min(255, r + value * 0.5));
+                    data[i + 1] = Math.max(0, Math.min(255, g + value * 0.3));
+                    data[i + 2] = Math.max(0, Math.min(255, b - value * 0.5));
+                }
+            }
+            
+            // Event listeners para os filtros
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    applyFilter(this.dataset.filter);
+                });
+            });
+            
+            // Event listeners para os ajustes
+            brightnessSlider.addEventListener('input', function() {
+                brightnessValue.textContent = this.value;
+                applyFilter(selectedFilter);
+            });
+            
+            contrastSlider.addEventListener('input', function() {
+                contrastValue.textContent = this.value;
+                applyFilter(selectedFilter);
+            });
+            
+            saturationSlider.addEventListener('input', function() {
+                saturationValue.textContent = this.value;
+                applyFilter(selectedFilter);
+            });
+            
+            hueSlider.addEventListener('input', function() {
+                hueValue.textContent = this.value;
+                applyFilter(selectedFilter);
+            });
+            
+            // Redefinir imagem
+            resetBtn.addEventListener('click', function() {
+                if (!originalImage) return;
+                
+                // Restaurar ajustes
+                brightnessSlider.value = 0;
+                contrastSlider.value = 0;
+                saturationSlider.value = 0;
+                hueSlider.value = 0;
+                
+                brightnessValue.textContent = '0';
+                contrastValue.textContent = '0';
+                saturationValue.textContent = '0';
+                hueValue.textContent = '0';
+                
+                // Aplicar filtro normal
+                applyFilter('normal');
+            });
+            
+            // Baixar imagem
+            downloadBtn.addEventListener('click', function() {
+                if (!originalImage) {
+                    alert('Nenhuma imagem para baixar.');
+                    return;
+                }
+                
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = 'foto-editada.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        });
+    </script>
+</body>
+</html>
