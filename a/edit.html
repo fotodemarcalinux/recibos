@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Fotos - Foto de Marca</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #e74c3c;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            font-size: 28px;
+            margin-right: 15px;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        /* Conteúdo Principal */
+        .main-content {
+            flex: 1;
+            padding: 40px 0;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .app-title {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .app-description {
+            text-align: center;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        
+        .editor-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .tools-panel, .preview-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .tools-panel {
+            flex: 1;
+            min-width: 300px;
+            max-width: 400px;
+        }
+        
+        .preview-panel {
+            flex: 2;
+            min-width: 300px;
+            max-width: 700px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .panel-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+            font-size: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        
+        .btn-danger {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .image-preview-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            min-height: 300px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            background-color: #f9f9f9;
+        }
+        
+        #image-preview {
+            max-width: 100%;
+            max-height: 400px;
+            display: none;
+        }
+        
+        .placeholder-text {
+            color: #999;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-btn {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #f9f9f9;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .filter-btn:hover {
+            background: #eee;
+            border-color: #ccc;
+        }
+        
+        .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        
+        .adjustment-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .tool-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-section h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-section h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+        
+        .footer-section p, .footer-section a {
+            color: #bbb;
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            margin-right: 15px;
+            font-size: 18px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #4a6572;
+            color: #bbb;
+            font-size: 14px;
+        }
+        
+        .dev-info {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #ecf0f1;
+        }
+        
+        .dev-info a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .dev-info a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .editor-container {
+                flex-direction: column;
+            }
+            
+            .tools-panel, .preview-panel {
+                max-width: 100%;
+            }
+            
+            .filters-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container logo-container">
+            <div class="logo">
+                <i class="fas fa-camera-retro"></i>
+                <h1>Editor de Fotos - Foto de Marca</h1>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="container main-content">
+        <div class="app-container">
+            <h2 class="app-title">Editor de Fotos Completo</h2>
+            <p class="app-description">Edite suas fotos com diversos filtros e ajustes. Fácil, rápido e gratuito!</p>
+            
+            <div class="editor-container">
+                <div class="tools-panel">
+                    <h3 class="panel-title">Ferramentas</h3>
+                    
+                    <div class="form-group">
+                        <label for="image-upload">Carregar Imagem</label>
+                        <input type="file" id="image-upload" class="form-control" accept="image/*">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Filtros</label>
+                        <div class="filters-grid">
+                            <div class="filter-btn" data-filter="normal">Normal</div>
+                            <div class="filter-btn" data-filter="grayscale">Preto e Branco</div>
+                            <div class="filter-btn" data-filter="sepia">Sépia</div>
+                            <div class="filter-btn" data-filter="vintage">Vintage</div>
+                            <div class="filter-btn" data-filter="invert">Inverter</div>
+                            <div class="filter-btn" data-filter="blur">Desfoque</div>
+                            <div class="filter-btn" data-filter="sharpen">Nitidez</div>
+                            <div class="filter-btn" data-filter="emboss">Relevo</div>
+                            <div class="filter-btn" data-filter="clarendon">Clarendon</div>
+                            <div class="filter-btn" data-filter="moon">Lua</div>
+                            <div class="filter-btn" data-filter="lark">Lark</div>
+                            <div class="filter-btn" data-filter="reyes">Reyes</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="brightness">Brilho</label>
+                        <input type="range" id="brightness" class="adjustment-slider" min="-100" max="100" value="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contrast">Contraste</label>
+                        <input type="range" id="contrast" class="adjustment-slider" min="-100" max="100" value="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="saturation">Saturação</label>
+                        <input type="range" id="saturation" class="adjustment-slider" min="-100" max="100" value="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="hue">Matiz</label>
+                        <input type="range" id="hue" class="adjustment-slider" min="-180" max="180" value="0">
+                    </div>
+                    
+                    <div class="tool-buttons">
+                        <button id="reset-btn" class="btn btn-danger">
+                            <i class="fas fa-redo"></i> Redefinir
+                        </button>
+                        <button id="download-btn" class="btn btn-success">
+                            <i class="fas fa-download"></i> Baixar
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="preview-panel">
+                    <h3 class="panel-title">Visualização</h3>
+                    
+                    <div class="image-preview-container">
+                        <img id="image-preview" alt="Preview">
+                        <div class="placeholder-text" id="placeholder">
+                            <i class="fas fa-image fa-3x"></i>
+                            <p>Selecione uma imagem para começar a editar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Sobre o Foto de Marca</h3>
+                    <p>Estúdio de fotografia em Aracaju/SE, especializado em fotografia de formatura, com o objetivo de registrar os momentos e a emoção de cada formando.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contato</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Aracaju, Sergipe</p>
+                    <p><i class="fas fa-phone"></i> (79) 99896-5081</p>
+                    <p><i class="fas fa-envelope"></i> fotos@fotodemarca.com.br</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Serviços</h3>
+                    <a href="#">Fotografia de Formatura</a>
+                    <a href="#">Cobertura de Eventos</a>
+                    <a href="#">Fotos Digitais</a>
+                    <a href="#">Pacotes Personalizados</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Redes Sociais</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i> Facebook</a>
+                        <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+                        <a href="#"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Grupo Foto de Marca. Todos os direitos reservados.</p>
+                <div class="dev-info">
+                    Desenvolvido por <a href="#">Foto de Marca</a> - Estúdio de Fotografia de Formatura
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos da interface
+            const imageUpload = document.getElementById('image-upload');
+            const imagePreview = document.getElementById('image-preview');
+            const placeholder = document.getElementById('placeholder');
+            const resetBtn = document.getElementById('reset-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const brightnessSlider = document.getElementById('brightness');
+            const contrastSlider = document.getElementById('contrast');
+            const saturationSlider = document.getElementById('saturation');
+            const hueSlider = document.getElementById('hue');
+            
+            // Variáveis para armazenar o estado
+            let originalImageData = null;
+            let currentImageData = null;
+            let selectedFilter = 'normal';
+            let adjustments = {
+                brightness: 0,
+                contrast: 0,
+                saturation: 0,
+                hue: 0
+            };
+            
+            // Carregar imagem
+            imageUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                if (!file.type.match('image.*')) {
+                    alert('Por favor, selecione uma imagem.');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.onload = function() {
+                        // Mostrar a imagem e esconder o placeholder
+                        imagePreview.style.display = 'block';
+                        placeholder.style.display = 'none';
+                        
+                        // Preparar o canvas para processamento
+                        prepareCanvas();
+                    };
+                    imagePreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            // Preparar canvas para processamento de imagem
+            function prepareCanvas() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                canvas.width = imagePreview.width;
+                canvas.height = imagePreview.height;
+                
+                // Desenhar a imagem original no canvas
+                ctx.drawImage(imagePreview, 0, 0);
+                
+                // Salvar os dados originais da imagem
+                originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                currentImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                
+                // Aplicar o filtro selecionado
+                applyFilter(selectedFilter);
+            }
+            
+            // Aplicar filtro
+            function applyFilter(filterName) {
+                selectedFilter = filterName;
+                
+                // Ativar o botão do filtro selecionado
+                filterButtons.forEach(btn => {
+                    if (btn.dataset.filter === filterName) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                
+                // Copiar os dados originais
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = originalImageData.width;
+                canvas.height = originalImageData.height;
+                
+                const imageData = new ImageData(
+                    new Uint8ClampedArray(originalImageData.data),
+                    originalImageData.width,
+                    originalImageData.height
+                );
+                
+                const data = imageData.data;
+                
+                // Aplicar o filtro selecionado
+                switch(filterName) {
+                    case 'grayscale':
+                        applyGrayscale(data);
+                        break;
+                    case 'sepia':
+                        applySepia(data);
+                        break;
+                    case 'vintage':
+                        applyVintage(data);
+                        break;
+                    case 'invert':
+                        applyInvert(data);
+                        break;
+                    case 'blur':
+                        applyBlur(imageData);
+                        break;
+                    case 'sharpen
