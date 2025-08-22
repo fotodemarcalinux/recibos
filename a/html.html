@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor HTML Online - Foto de Marca</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #e74c3c;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            font-size: 28px;
+            margin-right: 15px;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        /* Editor Layout */
+        .editor-container {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            padding: 20px 0;
+            gap: 20px;
+        }
+        
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .editor-panel {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .editor-panel {
+                flex-direction: column;
+            }
+        }
+        
+        .code-editor, .preview {
+            flex: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .editor-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 15px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 400px;
+            padding: 15px;
+            border: none;
+            resize: none;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .preview {
+            background-color: white;
+            border: 1px solid #ddd;
+        }
+        
+        .preview-content {
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+        }
+        
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-section h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-section h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+        
+        .footer-section p, .footer-section a {
+            color: #bbb;
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            margin-right: 15px;
+            font-size: 18px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #4a6572;
+            color: #bbb;
+            font-size: 14px;
+        }
+        
+        .dev-info {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #ecf0f1;
+        }
+        
+        .dev-info a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .dev-info a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container logo-container">
+            <div class="logo">
+                <i class="fas fa-code"></i>
+                <h1>Editor HTML Online - Foto de Marca</h1>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="container">
+        <div class="editor-container">
+            <div class="toolbar">
+                <button class="btn btn-primary" onclick="runCode()">
+                    <i class="fas fa-play"></i> Executar
+                </button>
+                <button class="btn btn-success" onclick="saveCode()">
+                    <i class="fas fa-save"></i> Salvar
+                </button>
+                <button class="btn" onclick="clearCode()">
+                    <i class="fas fa-trash"></i> Limpar
+                </button>
+            </div>
+            
+            <div class="editor-panel">
+                <div class="code-editor">
+                    <div class="editor-header">
+                        <h3>Código HTML</h3>
+                    </div>
+                    <textarea id="html-code" placeholder="Digite seu código HTML aqui..."><!DOCTYPE html>
+<html>
+<head>
+    <title>Página de Exemplo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 10px;
+        }
+        .btn {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bem-vindo ao Editor HTML</h1>
+        <p>Este é um exemplo de página HTML que você pode editar ao lado.</p>
+        <p>Modifique o código e clique em "Executar" para ver as alterações.</p>
+        <a href="#" class="btn">Saiba Mais</a>
+    </div>
+</body>
+</html></textarea>
+                </div>
+                
+                <div class="preview">
+                    <div class="editor-header">
+                        <h3>Visualização</h3>
+                    </div>
+                    <div class="preview-content" id="preview">
+                        <!-- O conteúdo será renderizado aqui pelo JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Sobre o Foto de Marca</h3>
+                    <p>Estúdio de fotografia em Aracaju/SE, especializado em fotografia de formatura, com o objetivo de registrar os momentos e a emoção de cada formando.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contato</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Aracaju, Sergipe</p>
+                    <p><i class="fas fa-phone"></i> (79) 99896-5081</p>
+                    <p><i class="fas fa-envelope"></i> fotos@fotodemarca.com.br</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Serviços</h3>
+                    <a href="#">Fotografia de Formatura</a>
+                    <a href="#">Cobertura de Eventos</a>
+                    <a href="#">Fotos Digitais</a>
+                    <a href="#">Pacotes Personalizados</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Redes Sociais</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i> Facebook</a>
+                        <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+                        <a href="#"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Grupo Foto de Marca. Todos os direitos reservados.</p>
+                <div class="dev-info">
+                    Desenvolvido por <a href="#">Foto de Marca</a> - Estúdio de Fotografia de Formatura
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Executar o código quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            runCode();
+        });
+        
+        // Função para executar o código HTML
+        function runCode() {
+            const htmlCode = document.getElementById('html-code').value;
+            const preview = document.getElementById('preview');
+            
+            // Limpar o conteúdo anterior
+            preview.innerHTML = '';
+            
+            // Criar um iframe para renderizar o código de forma segura
+            const iframe = document.createElement('iframe');
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            
+            preview.appendChild(iframe);
+            
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            
+            // Escrever o código HTML no iframe
+            iframeDoc.open();
+            iframeDoc.write(htmlCode);
+            iframeDoc.close();
+        }
+        
+        // Função para salvar o código (localStorage)
+        function saveCode() {
+            const htmlCode = document.getElementById('html-code').value;
+            localStorage.setItem('savedHtmlCode', htmlCode);
+            alert('Código salvo com sucesso!');
+        }
+        
+        // Função para carregar o código salvo
+        function loadCode() {
+            const savedCode = localStorage.getItem('savedHtmlCode');
+            if (savedCode) {
+                document.getElementById('html-code').value = savedCode;
+                runCode();
+            }
+        }
+        
+        // Função para limpar o código
+        function clearCode() {
+            if (confirm('Tem certeza que deseja limpar o código?')) {
+                document.getElementById('html-code').value = '';
+                const preview = document.getElementById('preview');
+                preview.innerHTML = '<p class="text-center">O código foi limpo. Digite novo código e clique em "Executar".</p>';
+            }
+        }
+        
+        // Verificar se há código salvo ao carregar a página
+        window.onload = function() {
+            loadCode();
+        };
+    </script>
+</body>
+</html>
