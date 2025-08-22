@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de QR Code - Foto de Marca</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #e74c3c;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            font-size: 28px;
+            margin-right: 15px;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        /* Conteúdo Principal */
+        .main-content {
+            flex: 1;
+            padding: 40px 0;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .app-title {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .app-description {
+            text-align: center;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        
+        .generator-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .input-panel, .output-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+        }
+        
+        .panel-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+            font-size: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .qr-code-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 280px;
+            min-width: 280px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: white;
+        }
+        
+        #qrcode canvas {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .download-btn {
+            display: none;
+            margin-top: 15px;
+        }
+        
+        .color-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .color-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .color-preview {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-section h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-section h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+        
+        .footer-section p, .footer-section a {
+            color: #bbb;
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            margin-right: 15px;
+            font-size: 18px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #4a6572;
+            color: #bbb;
+            font-size: 14px;
+        }
+        
+        .dev-info {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #ecf0f1;
+        }
+        
+        .dev-info a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .dev-info a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .generator-container {
+                flex-direction: column;
+            }
+            
+            .input-panel, .output-panel {
+                max-width: 100%;
+            }
+            
+            #qrcode {
+                min-height: 250px;
+                min-width: 250px;
+            }
+        }
+        
+        .size-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .size-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container logo-container">
+            <div class="logo">
+                <i class="fas fa-qrcode"></i>
+                <h1>Gerador de QR Code - Foto de Marca</h1>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="container main-content">
+        <div class="app-container">
+            <h2 class="app-title">Gerador de QR Code</h2>
+            <p class="app-description">Crie QR Codes personalizados para seus links, contatos ou qualquer texto. Fácil, rápido e gratuito!</p>
+            
+            <div class="generator-container">
+                <div class="input-panel">
+                    <h3 class="panel-title">Configurações</h3>
+                    
+                    <div class="form-group">
+                        <label for="qr-text">Texto ou URL</label>
+                        <input type="text" id="qr-text" class="form-control" placeholder="Digite o texto ou URL aqui" value="https://fotodemarca.alboompro.com/">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="qr-size">Tamanho do QR Code</label>
+                        <div class="size-options">
+                            <div class="size-option">
+                                <input type="radio" id="size-small" name="qr-size" value="200">
+                                <label for="size-small">Pequeno</label>
+                            </div>
+                            <div class="size-option">
+                                <input type="radio" id="size-medium" name="qr-size" value="250" checked>
+                                <label for="size-medium">Médio</label>
+                            </div>
+                            <div class="size-option">
+                                <input type="radio" id="size-large" name="qr-size" value="300">
+                                <label for="size-large">Grande</label>
+                            </div>
+                            <div class="size-option">
+                                <input type="radio" id="size-xlarge" name="qr-size" value="350">
+                                <label for="size-xlarge">Extra Grande</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Cores do QR Code</label>
+                        <div class="color-options">
+                            <div class="color-option">
+                                <div class="color-preview" id="color-preview-fg" style="background-color: #000000"></div>
+                                <input type="color" id="qr-color-fg" value="#000000" class="form-control" style="padding: 0; height: 30px;">
+                                <span>Cor</span>
+                            </div>
+                            <div class="color-option">
+                                <div class="color-preview" id="color-preview-bg" style="background-color: #ffffff"></div>
+                                <input type="color" id="qr-color-bg" value="#ffffff" class="form-control" style="padding: 0; height: 30px;">
+                                <span>Fundo</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="generate-btn" class="btn btn-primary btn-block">
+                        <i class="fas fa-qrcode"></i> Gerar QR Code
+                    </button>
+                </div>
+                
+                <div class="output-panel">
+                    <h3 class="panel-title">Seu QR Code</h3>
+                    
+                    <div class="qr-code-container">
+                        <div id="qrcode">
+                            <p>Seu QR Code aparecerá aqui</p>
+                        </div>
+                        
+                        <button id="download-btn" class="btn btn-success download-btn">
+                            <i class="fas fa-download"></i> Baixar QR Code
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Sobre o Foto de Marca</h3>
+                    <p>Estúdio de fotografia em Aracaju/SE, especializado em fotografia de formatura, com o objetivo de registrar os momentos e a emoção de cada formando.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contato</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Aracaju, Sergipe</p>
+                    <p><i class="fas fa-phone"></i> (79) 99896-5081</p>
+                    <p><i class="fas fa-envelope"></i> fotos@fotodemarca.com.br</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Serviços</h3>
+                    <a href="#">Fotografia de Formatura</a>
+                    <a href="#">Cobertura de Eventos</a>
+                    <a href="#">Fotos Digitais</a>
+                    <a href="#">Pacotes Personalizados</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Redes Sociais</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i> Facebook</a>
+                        <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+                        <a href="#"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Grupo Foto de Marca. Todos os direitos reservados.</p>
+                <div class="dev-info">
+                    Desenvolvido por <a href="#">Foto de Marca</a> - Estúdio de Fotografia de Formatura
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar o tipo de QR Code
+            qrcode = qrcode || function(){};
+            qrcode.stringToBytes = qrcode.stringToBytes || function(s) {
+                var bytes = new Array();
+                for (var i = 0; i < s.length; i += 1) {
+                    var c = s.charCodeAt(i);
+                    bytes.push(c & 0xFF);
+                }
+                return bytes;
+            };
+            
+            // Elementos da interface
+            const generateBtn = document.getElementById('generate-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const qrText = document.getElementById('qr-text');
+            const qrSizeOptions = document.querySelectorAll('input[name="qr-size"]');
+            const qrColorFg = document.getElementById('qr-color-fg');
+            const qrColorBg = document.getElementById('qr-color-bg');
+            const qrContainer = document.getElementById('qrcode');
+            const colorPreviewFg = document.getElementById('color-preview-fg');
+            const colorPreviewBg = document.getElementById('color-preview-bg');
+            
+            // Atualizar visualizadores de cor
+            qrColorFg.addEventListener('input', function() {
+                colorPreviewFg.style.backgroundColor = this.value;
+            });
+            
+            qrColorBg.addEventListener('input', function() {
+                colorPreviewBg.style.backgroundColor = this.value;
+            });
+            
+            // Gerar QR Code
+            generateBtn.addEventListener('click', generateQRCode);
+            
+            // Baixar QR Code
+            downloadBtn.addEventListener('click', downloadQRCode);
+            
+            // Gerar QR Code automaticamente ao carregar a página
+            generateQRCode();
+            
+            function getSelectedSize() {
+                for (const option of qrSizeOptions) {
+                    if (option.checked) {
+                        return parseInt(option.value);
+                    }
+                }
+                return 250; // valor padrão
+            }
+            
+            function generateQRCode() {
+                const text = qrText.value.trim();
+                const size = getSelectedSize();
+                const fgColor = qrColorFg.value;
+                const bgColor = qrColorBg.value;
+                
+                if (!text) {
+                    alert('Por favor, digite um texto ou URL para gerar o QR Code.');
+                    return;
+                }
+                
+                // Limpar o container
+                qrContainer.innerHTML = '';
+                
+                try {
+                    // Gerar o QR Code
+                    const typeNumber = 0; // auto
+                    const errorCorrectionLevel = 'H'; // Alta correção de erro
+                    const qr = qrcode(typeNumber, errorCorrectionLevel);
+                    qr.addData(text);
+                    qr.make();
+                    
+                    // Criar elemento canvas para melhor qualidade
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Definir tamanho do canvas (um pouco maior para a borda)
+                    const canvasSize = size + 40;
+                    canvas.width = canvasSize;
+                    canvas.height = canvasSize;
+                    
+                    // Preencher o fundo
+                    ctx.fillStyle = bgColor;
+                    ctx.fillRect(0, 0, canvasSize, canvasSize);
+                    
+                    // Calcular o tamanho de cada módulo do QR Code
+                    const moduleCount = qr.getModuleCount();
+                    const moduleSize = size / moduleCount;
+                    
+                    // Desenhar o QR Code no canvas
+                    ctx.fillStyle = fgColor;
+                    for (let row = 0; row < moduleCount; row++) {
+                        for (let col = 0; col < moduleCount; col++) {
+                            if (qr.isDark(row, col)) {
+                                ctx.fillRect(
+                                    col * moduleSize + 20, 
+                                    row * moduleSize + 20, 
+                                    moduleSize, 
+                                    moduleSize
+                                );
+                            }
+                        }
+                    }
+                    
+                    // Adicionar o canvas ao container
+                    qrContainer.appendChild(canvas);
+                    
+                    // Mostrar o botão de download
+                    downloadBtn.style.display = 'block';
+                } catch (error) {
+                    console.error('Erro ao gerar QR Code:', error);
+                    qrContainer.innerHTML = '<p>Erro ao gerar QR Code. Tente um texto menor.</p>';
+                    downloadBtn.style.display = 'none';
+                }
+            }
+            
+            function downloadQRCode() {
+                const canvas = qrContainer.querySelector('canvas');
+                if (!canvas) {
+                    alert('Gere um QR Code primeiro antes de baixar.');
+                    return;
+                }
+                
+                // Criar um link 
