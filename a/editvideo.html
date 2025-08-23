@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criador de Slideshow - Grupo Foto de Marca</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        header {
+            background: linear-gradient(to right, #2c3e50, #4ca1af);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+        }
+        
+        .upload-section {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .preview-section {
+            flex: 2;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            border-bottom: 2px solid #4ca1af;
+            padding-bottom: 10px;
+        }
+        
+        .upload-area {
+            border: 2px dashed #4ca1af;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-area:hover {
+            background: rgba(76, 161, 175, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: #4ca1af;
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            background: #4ca1af;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background: #3d8a96;
+            transform: translateY(-2px);
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .btn-success {
+            background: #28a745;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .controls {
+            margin: 20px 0;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input[type="range"], select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .thumbnail-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 2px solid transparent;
+            cursor: move;
+        }
+        
+        .thumbnail.active {
+            border-color: #4ca1af;
+        }
+        
+        .video-preview {
+            background: #000;
+            border-radius: 10px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 20px;
+            min-height: 300px;
+        }
+        
+        .video-placeholder {
+            color: #666;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .video-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #4ca1af;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress {
+            height: 100%;
+            background: #4ca1af;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .status-message {
+            text-align: center;
+            margin: 10px 0;
+            font-weight: 500;
+            min-height: 24px;
+        }
+        
+        .success {
+            color: #28a745;
+        }
+        
+        .error {
+            color: #dc3545;
+        }
+        
+        .preview-video {
+            width: 100%;
+            max-height: 100%;
+            display: none;
+        }
+        
+        .canvas-container {
+            display: none;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-camera-retro fa-2x"></i>
+                <h1>Grupo Foto de Marca</h1>
+            </div>
+            <p class="subtitle">Criador de Slideshow com Fotos e Música</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="upload-section">
+                <h2 class="section-title">Adicione suas fotos</h2>
+                
+                <div class="upload-area" id="dropZone">
+                    <i class="upload-icon fas fa-cloud-upload-alt"></i>
+                    <p>Arraste suas fotos aqui ou clique para selecionar</p>
+                    <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+                </div>
+                
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="transition">Transição:</label>
+                        <select id="transition">
+                            <option value="fade">Fade</option>
+                            <option value="slide">Slide</option>
+                            <option value="zoom">Zoom</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="duration">Duração por foto (segundos):</label>
+                        <input type="range" id="duration" min="1" max="10" value="3">
+                        <span id="durationValue">3s</span>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="music">Música de fundo:</label>
+                        <input type="file" id="music" accept="audio/*" style="display: none;">
+                        <button class="btn" id="musicBtn"><i class="fas fa-music"></i> Selecionar Música</button>
+                        <span id="musicName">Nenhum arquivo selecionado</span>
+                    </div>
+                </div>
+                
+                <div class="thumbnail-container" id="thumbnailContainer">
+                    <!-- As miniaturas das imagens serão adicionadas aqui -->
+                </div>
+
+                <div class="status-message" id="statusMessage"></div>
+            </div>
+            
+            <div class="preview-section">
+                <h2 class="section-title">Pré-visualização do Slideshow</h2>
+                
+                <div class="video-preview">
+                    <div class="video-placeholder" id="videoPlaceholder">
+                        <i class="fas fa-film"></i>
+                        <p>Seu slideshow aparecerá aqui</p>
+                    </div>
+                    <video class="preview-video" id="previewVideo" controls></video>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress" id="progressBar"></div>
+                </div>
+
+                <div class="status-message" id="generateStatus"></div>
+                
+                <div class="actions">
+                    <button class="btn btn-secondary" id="previewBtn"><i class="fas fa-play"></i> Visualizar</button>
+                    <button class="btn" id="generateBtn"><i class="fas fa-cog"></i> Gerar Vídeo</button>
+                    <button class="btn btn-success" id="downloadBtn" disabled><i class="fas fa-download"></i> Baixar Vídeo</button>
+                    <button class="btn btn-danger" id="resetBtn"><i class="fas fa-redo"></i> Limpar Tudo</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Elementos ocultos para processamento -->
+        <canvas id="previewCanvas" class="canvas-container"></canvas>
+        <audio id="audioElement" class="canvas-container"></audio>
+        
+        <footer>
+            <p>© 2023 Grupo Foto de Marca - Transformando suas memórias em arte</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+            const musicInput = document.getElementById('music');
+            const musicBtn = document.getElementById('musicBtn');
+            const musicName = document.getElementById('musicName');
+            const durationSlider = document.getElementById('duration');
+            const durationValue = document.getElementById('durationValue');
+            const thumbnailContainer = document.getElementById('thumbnailContainer');
+            const previewBtn = document.getElementById('previewBtn');
+            const generateBtn = document.getElementById('generateBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const progressBar = document.getElementById('progressBar');
+            const statusMessage = document.getElementById('statusMessage');
+            const generateStatus = document.getElementById('generateStatus');
+            const videoPlaceholder = document.getElementById('videoPlaceholder');
+            const previewVideo = document.getElementById('previewVideo');
+            const previewCanvas = document.getElementById('previewCanvas');
+            const audioElement = document.getElementById('audioElement');
+            
+            let selectedFiles = [];
+            let musicFile = null;
+            let generatedVideoUrl = null;
+            let imageObjects = [];
+            let mediaRecorder = null;
+            let recordedChunks = [];
+            let audioContext = null;
+            let audioStream = null;
+            
+            // Configurar canvas
+            const canvas = previewCanvas;
+            const ctx = canvas.getContext('2d');
+            canvas.width = 1280; // Full HD width
+            canvas.height = 720; // Full HD height
+            
+            // Atualizar valor do slider de duração
+            durationSlider.addEventListener('input', function() {
+                durationValue.textContent = this.value + 's';
+            });
+            
+            // Upload de imagens ao clicar na área
+            dropZone.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // Upload de imagens ao soltar arquivos
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.background = 'rgba(76, 161, 175, 0.2)';
+            });
+            
+            dropZone.addEventListener('dragleave', function() {
+                this.style.background = '';
+            });
+            
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.background = '';
+                
+                if (e.dataTransfer.files.length > 0) {
+                    handleFiles(e.dataTransfer.files);
+                }
+            });
+            
+            // Upload de imagens através do input de arquivo
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+                this.value = ''; // Reset para permitir selecionar os mesmos arquivos novamente
+            });
+            
+            // Upload de música
+            musicBtn.addEventListener('click', function() {
+                musicInput.click();
+            });
+            
+            musicInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    musicFile = this.files[0];
+                    musicName.textContent = musicFile.name;
+                    musicName.classList.add('success');
+                    
+                    // Carregar áudio para prévia
+                    const audioURL = URL.createObjectURL(musicFile);
+                    audioElement.src = audioURL;
+                }
+            });
+            
+            // Função para processar os arquivos de imagem
+            function handleFiles(files) {
+                let validFiles = 0;
+                imageObjects = [];
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    
+                    if (file.type.startsWith('image/')) {
+                        validFiles++;
+                        selectedFiles.push(file);
+                        
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const img = new Image();
+                            img.src = e.target.result;
+                            img.onload = function() {
+                                imageObjects.push(img);
+                            };
+                            
+                            const thumbnail = document.createElement('img');
+                            thumbnail.src = e.target.result;
+                            thumbnail.className = 'thumbnail';
+                            thumbnail.dataset.index = selectedFiles.length - 1;
+                            thumbnail.draggable = true;
+                            
+                            // Adicionar eventos de arrastar para reordenar
+                            thumbnail.addEventListener('dragstart', handleDragStart);
+                            thumbnail.addEventListener('dragover', handleDragOver);
+                            thumbnail.addEventListener('drop', handleDrop);
+                            thumbnail.addEventListener('dragend', handleDragEnd);
+                            
+                            thumbnailContainer.appendChild(thumbnail);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+                
+                if (validFiles > 0) {
+                    statusMessage.textContent = validFiles + ' imagem(ns) adicionada(s) com sucesso!';
+                    statusMessage.className = 'status-message success';
+                } else {
+                    statusMessage.textContent = 'Nenhuma imagem válida foi selecionada.';
+                    statusMessage.className = 'status-message error';
+                }
+                
+                // Ocultar mensagem após 3 segundos
+                setTimeout(() => {
+                    statusMessage.textContent = '';
+                    statusMessage.className = 'status-message';
+                }, 3000);
+            }
+            
+            // Visualizar slideshow
+            previewBtn.addEventListener('click', function() {
+                if (selectedFiles.length === 0) {
+                    showMessage('Por favor, adicione pelo menos uma imagem.', 'error');
+                    return;
+                }
+                
+                showMessage('Preparando pré-visualização...', '');
+                
+                // Criar pré-visualização do slideshow
+                createPreview();
+            });
+            
+            // Gerar vídeo
+            generateBtn.addEventListener('click', async function() {
+                if (selectedFiles.length === 0) {
+                    showMessage('Por favor, adicione pelo menos uma imagem.', 'error', generateStatus);
+                    return;
+                }
+                
+                showMessage('Processando seu vídeo...', '', generateStatus);
+                generateBtn.disabled = true;
+                
+                // Gerar o vídeo
+                await generateVideo();
+            });
+            
+            // Download do vídeo
+            downloadBtn.addEventListener('click', function() {
+                if (generatedVideoUrl) {
+                    const a = document.createElement('a');
+                    a.href = generatedVideoUrl;
+                    a.download = 'slideshow-grupo-foto-de-marca.mp4';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    
+                    showMessage('Download iniciado!', 'success', generateStatus);
+                }
+            });
+            
+            // Resetar tudo
+            resetBtn.addEventListener('click', function() {
+                selectedFiles = [];
+                musicFile = null;
+                imageObjects = [];
+                thumbnailContainer.innerHTML = '';
+                musicName.textContent = 'Nenhum arquivo selecionado';
+                musicName.className = '';
+                previewVideo.style.display = 'none';
+                videoPlaceholder.style.display = 'flex';
+                downloadBtn.disabled = true;
+                generateBtn.disabled = false;
+                progressBar.style.width = '0%';
+                generateStatus.textContent = '';
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                }
+                
+                if (audioContext) {
+                    audioContext.close();
+                    audioContext = null;
+                }
+                
+                if (generatedVideoUrl) {
+                    URL.revokeObjectURL(generatedVideoUrl);
+                    generatedVideoUrl = null;
+                }
+                
+                showMessage('Todos os dados foram resetados. Você pode começar um novo projeto.', 'success');
+            });
+            
+            // Funções para arrastar e reordenar miniaturas
+            let dragSrcIndex = null;
+            
+            function handleDragStart(e) {
+                this.style.opacity = '0.4';
+                dragSrcIndex = parseInt(this.dataset.index);
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', this.dataset.index);
+            }
+            
+            function handleDragOver(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                return false;
+            }
+            
+            function handleDrop(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const dragDstIndex = parseInt(this.dataset.index);
+                if (dragSrcIndex === dragDstIndex) return false;
+                
+                // Reordenar array de arquivos
+                const movedFile = selectedFiles[dragSrcIndex];
+                const movedImage = imageObjects[dragSrcIndex];
+                
+                selectedFiles.splice(dragSrcIndex, 1);
+                selectedFiles.splice(dragDstIndex, 0, movedFile);
+                
+                imageObjects.splice(dragSrcIndex, 1);
+                imageObjects.splice(dragDstIndex, 0, movedImage);
+                
+                // Reordenar miniaturas
+                const thumbnails = Array.from(thumbnailContainer.querySelectorAll('.thumbnail'));
+                const movedThumb = thumbnails.find(t => parseInt(t.dataset.index) === dragSrcIndex);
+                
+                thumbnails.forEach((thumb, idx) => {
+                    thumb.dataset.index = idx;
+                });
+                
+                thumbnailContainer.innerHTML = '';
+                thumbnails.forEach(thumb => thumbnailContainer.appendChild(thumb));
+                
+                return false;
+            }
+            
+            function handleDragEnd(e) {
+                this.style.opacity = '1';
+            }
+            
+            // Criar pré-visualização do slideshow
+            function createPreview() {
+                if (imageObjects.length === 0) {
+                    showMessage('Erro ao carregar imagens. Tente novamente.', 'error');
+                    return;
+                }
+                
+                videoPlaceholder.style.display = 'none';
+                previewVideo.style.display = 'block';
+                
+                // Criar um vídeo simples a partir do canvas
+                const duration = parseInt(durationSlider.value) * 1000;
+                let currentImageIndex = 0;
+                
+                // Função para desenhar uma imagem no canvas
+                function drawImage() {
+                    if (currentImageIndex >= imageObjects.length) {
+                        currentImageIndex = 0;
+                    }
+                    
+                    const img = imageObjects[currentImageIndex];
+                    
+                    // Limpar canvas
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Calcular dimensionamento para manter a proporção
+                    const ratio = Math.min(canvas.width / img.width, canvas.height / img.height);
+                    const width = img.width * ratio;
+                    const height = img.height * ratio;
+                    const x = (canvas.width - width) / 2;
+                    const y = (canvas.height - height) / 2;
+                    
+                    // Desenhar imagem com suavização
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    ctx.drawImage(img, x, y, width, height);
+                    
+                    // Adicionar marca d'água
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                    ctx.font = '20px Arial';
+                    ctx.textAlign = 'right';
+                    ctx.fillText('Grupo Foto de Marca', canvas.width - 20, canvas.height - 20);
+                    
+                    currentImageIndex++;
+                }
+                
+                // Iniciar o slideshow
+                drawImage();
+                const interval = setInterval(drawImage, duration);
+                
+                // Parar após 10 segundos para a prévia
+                setTimeout(() => {
+                    clearInterval(interval);
+                    showMessage('Pré-visualização pronta!', 'success');
+                }, 10000);
+            }
+            
+            // Gerar vídeo completo
+            async function generateVideo() {
+                if (imageObjects.length === 0) {
+                    showMessage('Erro ao carregar imagens. Tente novamente.', 'error', generateStatus);
+                    generateBtn.disabled = false;
+                    return;
+                }
+                
+                const durationPerImage = parseInt(durationSlider.value) * 1000;
+                const totalDuration = durationPerImage * imageObjects.length;
+                
+                try {
+                    // Configurar canvas para gravação
+                    const canvasStream = canvas.captureStream(30);
+                    
+                    // Preparar áudio se disponível
+                    let audioTrack = null;
+                    if (musicFile) {
+                        try {
+                            // Criar contexto de áudio
+                            audioContext = new AudioContext();
+                            
+                            // Criar elemento de áudio
+                            const audio = new Audio();
+                            audio.src = URL.createObjectURL(musicFile);
+                            audio.crossOrigin = "anonymous";
+                            
+                            // Conectar áudio ao contexto
+                            const source = audioContext.createMediaElementSource(audio);
+                            const destination = audioContext.createMediaStreamDestination();
+                            source.connect(destination);
+                            source.connect(audioContext.destination);
+                            
+                            // Obter a trilha de áudio
+                            audioTrack = destination.stream.getAudioTracks()[0];
+                            
+                            // Iniciar áudio
+                            await audio.play();
+                        } catch (error) {
+                            console.error('Erro ao processar áudio:', error);
+                            showMessage('Aviso: Áudio não pôde ser adicionado ao vídeo.', 'error', generateStatus);
+                        }
+                    }
+                    
+                    // Combinar streams de vídeo e áudio
+                    const combinedStream = new MediaStream([
+                        ...canvasStream.getVideoTracks(),
+                        ...(audioTrack ? [audioTrack] : [])
+                    ]);
+                    
+                    mediaRecorder = new MediaRecorder(combinedStream, { 
+                        mimeType: 'video/webm; codecs=vp9',
+                        videoBitsPerSecond: 5000000 // 5 Mbps
+                    });
+                    
+                    recordedChunks = [];
+                    
+                    mediaRecorder.ondataavailable = function(e) {
+                        if (e.data.size > 0) {
+                            recordedChunks.push(e.data);
+                        }
+                    };
+                    
+                    mediaRecorder.onstop = function() {
+                        const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                        generatedVideoUrl = URL.createObjectURL(blob);
+                        previewVideo.src = generatedVideoUrl;
+                        
+                        downloadBtn.disabled = false;
+                        generateBtn.disabled = false;
+                        progressBar.style.width = '100%';
+                        
+                        showMessage('Vídeo gerado com sucesso! Clique em "Baixar Vídeo".', 'success', generateStatus);
+                    };
+                    
+                    // Iniciar gravação
+                    mediaRecorder.start(1000); // Coletar dados a cada 1 segundo
+                    
+                    // Animar o slideshow
+                    let currentImageIndex = 0;
+                    const startTime = Date.now();
+                    
+                    function drawFrame() {
+                        if (currentImageIndex >= imageObjects.length) {
+                            // Todas as imagens foram exibidas, parar a gravação
+                            mediaRecorder.stop();
+                            if (audioContext) {
+                                audioContext.close();
+                            }
+                            return;
+                        }
+                        
+                        const img = imageObjects[currentImageIndex];
+                        
+                        // Limpar canvas
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        
+                        // Calcular dimensionamento para manter a proporção
+                        const ratio = Math.min(canvas.width / img.width, canvas.height / img.height);
+                        const width = img.width * ratio;
+                        const height = img.height * ratio;
+                        const x = (canvas.width - width) / 2;
+                        const y = (canvas.height - height) / 2;
+                        
+                        // Desenhar imagem com suavização
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(img, x, y, width, height);
+                        
+                        // Adicionar marca d'água
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                        ctx.font = '20px Arial';
+                        ctx.textAlign = 'right';
+                        ctx.fillText('Grupo Foto de Marca', canvas.width - 20, canvas.height - 20);
+                        
+                        // Atualizar barra de progresso
+                        const elapsed = Date.now() - startTime;
+                        const progress = Math.min((elapsed / totalDuration) * 100, 100);
+                        progressBar.style.width = progress + '%';
+                        
+                        // Avançar para a próxima imagem após o tempo configurado
+                        setTimeout(() => {
+                            currentImageIndex++;
+                            requestAnimationFrame(drawFrame);
+                        }, durationPerImage);
+                    }
+                    
+                    drawFrame();
+                } catch (error) {
+                    console.error('Erro ao gerar vídeo:', error);
+                    showMessage('Erro ao gerar o vídeo. Tente novamente.', 'error', generateStatus);
+                    generateBtn.disabled = false;
+                }
+            }
+            
+            // Função auxiliar para mostrar mensagens
+            function showMessage(message, type, element = statusMessage) {
+                element.textContent = message;
+                element.className = 'status-message ' + type;
+                
+                // Ocultar mensagem após 5 segundos se não for erro
+                if (type !== 'error') {
+                    setTimeout(() => {
+                        element.textContent = '';
+                        element.className = 'status-message';
+                    }, 5000);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
