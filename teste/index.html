@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfólio Fotográfico</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --text-color: #333;
+            --light-bg: #f9f9f9;
+            --dark-bg: #1a1a1a;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: var(--light-bg);
+        }
+        
+        .dark-mode {
+            background-color: var(--dark-bg);
+            color: #fff;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-left: 1.5rem;
+        }
+        
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-top: 60px;
+        }
+        
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero-content p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 1rem;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+        
+        .btn:hover {
+            background: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .dark-mode .section-title {
+            color: #fff;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--secondary-color);
+        }
+        
+        .filters {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            background: none;
+            border: 1px solid var(--primary-color);
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem 0.5rem 0;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        .dark-mode .filter-btn {
+            border-color: #fff;
+            color: #fff;
+        }
+        
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .dark-mode .filter-btn.active, 
+        .dark-mode .filter-btn:hover {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            height: 250px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 1rem;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        
+        .gallery-item:hover .overlay {
+            transform: translateY(0);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+        }
+        
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+        
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .about-image img {
+            width: 100%;
+            display: block;
+        }
+        
+        .about-text {
+            flex: 2;
+            min-width: 300px;
+        }
+        
+        .about-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .dark-mode .about-text h3 {
+            color: #fff;
+        }
+        
+        .about-text p {
+            margin-bottom: 1rem;
+        }
+        
+        .specialties {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .specialty {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .contact-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .contact-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .dark-mode .contact-info h3 {
+            color: #fff;
+        }
+        
+        .contact-details {
+            margin-bottom: 2rem;
+        }
+        
+        .contact-details p {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .contact-details i {
+            margin-right: 10px;
+            color: var(--secondary-color);
+            width: 20px;
+        }
+        
+        .contact-form {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .dark-mode .form-group input,
+        .dark-mode .form-group textarea {
+            background-color: #333;
+            border-color: #555;
+            color: #fff;
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        footer {
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .social-links {
+            margin-bottom: 1rem;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 0.5rem;
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            color: var(--secondary-color);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-content p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fas fa-camera"></i>
+                <span>Fotógrafo João Silva</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#inicio">Início</a></li>
+                <li><a href="#portfolio">Portfólio</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+            <button class="theme-toggle" id="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </nav>
+    </header>
+
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <h1>Capturando Momentos Inesquecíveis</h1>
+            <p>Fotografia profissional para todos os momentos especiais da sua vida</p>
+            <a href="#contato" class="btn">Agendar Sessão</a>
+        </div>
+    </section>
+
+    <section class="container" id="portfolio">
+        <h2 class="section-title">Meu Portfólio</h2>
+        
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="casamentos">Casamentos</button>
+            <button class="filter-btn" data-filter="retratos">Retratos</button>
+            <button class="filter-btn" data-filter="paisagens">Paisagens</button>
+            <button class="filter-btn" data-filter="eventos">Eventos</button>
+        </div>
+        
+        <div class="gallery" id="gallery-container">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Carregando portfólio...
+            </div>
+        </div>
+    </section>
+
+    <section class="container" id="sobre">
+        <h2 class="section-title">Sobre Mim</h2>
+        <div id="about-content">
+            <!-- Conteúdo carregado do JSON -->
+        </div>
+    </section>
+
+    <section class="container" id="contato">
+        <h2 class="section-title">Entre em Contato</h2>
+        <div id="contact-content">
+            <!-- Informações de contato carregadas do JSON -->
+        </div>
+    </section>
+
+    <footer>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-whatsapp"></i></a>
+            <a href="#"><i class="fab fa-pinterest"></i></a>
+        </div>
+        <p>&copy; 2023 Fotógrafo João Silva. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // URL do arquivo JSON (mesmo diretório)
+        const JSON_URL = 'data.json';
+        
+        // Elementos do DOM
+        const galleryContainer = document.getElementById('gallery-container');
+        const aboutContent = document.getElementById('about-content');
+        const contactContent = document.getElementById('contact-content');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        
+        // Variáveis globais
+        let portfolioData = [];
+        let activeFilter = 'all';
+        
+        // Função para buscar dados do JSON
+        async function fetchData() {
+            try {
+                const response = await fetch(JSON_URL);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                galleryContainer.innerHTML = '<p class="loading">Erro ao carregar o portfólio. Tente novamente mais tarde.</p>';
+            }
+        }
+        
+        // Função para renderizar as imagens na galeria
+        function renderGallery(filter = 'all') {
+            let filteredItems = portfolioData;
+            
+            if (filter !== 'all') {
+                filteredItems = portfolioData.filter(item => item.category === filter);
+            }
+            
+            if (filteredItems.length === 0) {
+                galleryContainer.innerHTML = '<p class="loading">Nenhum item encontrado nesta categoria.</p>';
+                return;
+            }
+            
+            galleryContainer.innerHTML = '';
+            
+            filteredItems.forEach(item => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                galleryItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.title}">
+                    <div class="overlay">
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                    </div>
+                `;
+                galleryContainer.appendChild(galleryItem);
+            });
+        }
+        
+        // Função para renderizar a seção "Sobre"
+        function renderAboutSection(aboutData) {
+            aboutContent.innerHTML = `
+                <div class="about-content">
+                    <div class="about-image">
+                        <img src="${aboutData.photo}" alt="${aboutData.name}">
+                    </div>
+                    <div class="about-text">
+                        <h3>${aboutData.name}</h3>
+                        <p>${aboutData.bio}</p>
+                        <p>${aboutData.bio2}</p>
+                        <div class="specialties">
+                            ${aboutData.specialties.map(spec => `<span class="specialty">${spec}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Função para renderizar a seção "Contato"
+        function renderContactSection(contactData) {
+            contactContent.innerHTML = `
+                <div class="contact-container">
+                    <div class="contact-info">
+                        <h3>Informações de Contato</h3>
+                        <div class="contact-details">
+                            <p><i class="fas fa-envelope"></i> ${contactData.email}</p>
+                            <p><i class="fas fa-phone"></i> ${contactData.phone}</p>
+                            <p><i class="fas fa-map-marker-alt"></i> ${contactData.address}</p>
+                        </div>
+                        
+                        <h4>Horário de Atendimento:</h4>
+                        <p><i class="fas fa-clock"></i> ${contactData.businessHours}</p>
+                    </div>
+                    <div class="contact-form">
+                        <h3>Envie uma Mensagem</h3>
+                        <form id="contact-form">
+                            <div class="form-group">
+                                <label for="name">Nome</label>
+                                <input type="text" id="name" placeholder="Seu nome" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" placeholder="Seu email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Mensagem</label>
+                                <textarea id="message" placeholder="Sua mensagem" required></textarea>
+                            </div>
+                            <button type="submit" class="btn">Enviar Mensagem</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            // Adicionar evento ao formulário
+            document.getElementById('contact-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Mensagem enviada com sucesso! Entraremos em contato em breve.');
+                this.reset();
+            });
+        }
+        
+        // Alternar tema claro/escuro
+        themeToggle.addEventListener('click', function() {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        });
+        
+        // Inicializar a aplicação
+        async function init() {
+            const data = await fetchData();
+            
+            if (data) {
+                portfolioData = data.portfolio;
+                
+                // Renderizar galeria
+                renderGallery();
+                
+                // Renderizar seção "Sobre"
+                renderAboutSection(data.about);
+                
+                // Renderizar seção "Contato"
+                renderContactSection(data.contact);
+                
+                // Adicionar eventos aos botões de filtro
+                filterButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        // Remover classe active de todos os botões
+                        filterButtons.forEach(btn => btn.classList.remove('active'));
+                        
+                        // Adicionar classe active ao botão clicado
+                        this.classList.add('active');
+                        
+                        // Filtrar galeria
+                        activeFilter = this.getAttribute('data-filter');
+                        renderGallery(activeFilter);
+                    });
+                });
+            }
+        }
+        
+        // Iniciar a aplicação quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
