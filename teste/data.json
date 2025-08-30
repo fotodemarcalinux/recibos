@@ -1,0 +1,65 @@
+{
+  "portfolio": [
+    {
+      "title": "Casamento na Praia",
+      "description": "Cerimônia ao pôr do sol com paisagem deslumbrante",
+      "image": "https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      "category": "casamentos"
+    },
+    {
+      "title": "Retrato em Preto e Branco",
+      "description": "Sessão de estúdio com iluminação dramática",
+      "image": "https://images.unsplash.com/photo-1552058544-f2b08422138a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      "category": "retratos"
+    },
+    {
+      "title": "Montanhas ao Amanhecer",
+      "description": "Paisagem natural com as primeiras luzes do dia",
+      "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      "category": "paisagens"
+    },
+    {
+      "title": "Festa de Aniversário",
+      "description": "Celebração com familiares e amigos",
+      "image": "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      "category": "eventos"
+    },
+    {
+      "title": "Casamento Tradicional",
+      "description": "Cerimônia em igreja histórica",
+      "image": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      "category": "casamentos"
+    },
+    {
+      "title": "Retrato de Estúdio",
+      "description": "Sessão profissional para currículo",
+      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      "category": "retratos"
+    },
+    {
+      "title": "Cachoeira Tropical",
+      "description": "Natureza exuberante em dia ensolarado",
+      "image": "https://images.unsplash.com/photo-1433086966358-54859d0ed716?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      "category": "paisagens"
+    },
+    {
+      "title": "Conferência Corporativa",
+      "description": "Evento empresarial com palestrantes",
+      "image": "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      "category": "eventos"
+    }
+  ],
+  "about": {
+    "name": "João Silva",
+    "photo": "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    "bio": "Sou um fotógrafo profissional com mais de 10 anos de experiência, especializado em capturar momentos especiais e transformá-los em memórias eternas. Minha paixão pela fotografia começou ainda na adolescência e desde então tenho me dedicado a aperfeiçoar minha técnica e visão artística.",
+    "bio2": "Formado em Fotografia pela Universidade Federal, já trabalhei com revistas importantes e participei de exposições nacionais e internacionais. Acredito que cada clique conta uma história única e meu objetivo é revelar a beleza autêntica de cada momento.",
+    "specialties": ["Casamentos", "Retratos", "Paisagens", "Eventos", "Fotografia Corporativa", "Books Pessoais"]
+  },
+  "contact": {
+    "email": "contato@joaosilva-fotografia.com",
+    "phone": "(11) 99999-9999",
+    "address": "Rua das Flores, 123 - São Paulo, SP",
+    "businessHours": "Segunda a Sexta, das 9h às 18h | Sábados, das 9h às 13h"
+  }
+}
