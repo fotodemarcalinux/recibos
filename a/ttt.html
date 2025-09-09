@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livro Caixa - JN2M3A DIGITAL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-shadow { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .btn-primary:hover { background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%); }
+        .animate-fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <img src="https://sou.net.br/digital" alt="JN2M3A DIGITAL" class="h-12 w-auto" onerror="this.style.display='none'">
+                    <div>
+                        <h1 class="text-2xl font-bold">Livro Caixa</h1>
+                        <p class="text-blue-100">Controle financeiro completo</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="text-lg font-semibold" id="saldoAtual">Saldo: R$ 0,00</p>
+                    <p class="text-sm text-blue-100">Atualizado em tempo real</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Resumo Financeiro -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-green-500 text-white p-6 rounded-xl card-shadow">
+                <h3 class="text-lg font-semibold mb-2">💰 Total Entradas</h3>
+                <p class="text-2xl font-bold" id="totalEntradas">R$ 0,00</p>
+            </div>
+            <div class="bg-red-500 text-white p-6 rounded-xl card-shadow">
+                <h3 class="text-lg font-semibold mb-2">💸 Total Saídas</h3>
+                <p class="text-2xl font-bold" id="totalSaidas">R$ 0,00</p>
+            </div>
+            <div class="bg-blue-500 text-white p-6 rounded-xl card-shadow">
+                <h3 class="text-lg font-semibold mb-2">📊 Saldo Final</h3>
+                <p class="text-2xl font-bold" id="saldoFinal">R$ 0,00</p>
+            </div>
+        </div>
+
+        <!-- Formulário de Lançamento -->
+        <div class="bg-white rounded-xl card-shadow p-6 mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-6">📝 Novo Lançamento</h2>
+            <form id="lancamentoForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Data</label>
+                    <input type="date" id="data" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tipo</label>
+                    <select id="tipo" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                        <option value="">Selecione</option>
+                        <option value="entrada">💰 Entrada</option>
+                        <option value="saida">💸 Saída</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Valor (R$)</label>
+                    <input type="number" id="valor" step="0.01" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0,00" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Categoria</label>
+                    <select id="categoria" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                        <option value="">Selecione</option>
+                        <option value="vendas">Vendas</option>
+                        <option value="servicos">Serviços</option>
+                        <option value="fornecedores">Fornecedores</option>
+                        <option value="funcionarios">Funcionários</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="equipamentos">Equipamentos</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2 lg:col-span-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
+                    <input type="text" id="descricao" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Descreva o lançamento..." required>
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="w-full btn-primary text-white py-2 px-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200">
+                        ➕ Adicionar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Filtros -->
+        <div class="bg-white rounded-xl card-shadow p-6 mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">🔍 Filtros</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Data Inicial</label>
+                    <input type="date" id="dataInicial" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Data Final</label>
+                    <input type="date" id="dataFinal" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tipo</label>
+                    <select id="filtroTipo" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Todos</option>
+                        <option value="entrada">Entradas</option>
+                        <option value="saida">Saídas</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Categoria</label>
+                    <select id="filtroCategoria" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Todas</option>
+                        <option value="vendas">Vendas</option>
+                        <option value="servicos">Serviços</option>
+                        <option value="fornecedores">Fornecedores</option>
+                        <option value="funcionarios">Funcionários</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="equipamentos">Equipamentos</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex gap-4 mt-4">
+                <button onclick="aplicarFiltros()" class="btn-primary text-white py-2 px-6 rounded-lg font-semibold hover:shadow-lg transition-all duration-200">
+                    🔍 Filtrar
+                </button>
+                <button onclick="limparFiltros()" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded-lg font-semibold transition-all duration-200">
+                    🗑️ Limpar
+                </button>
+                <button onclick="exportarDados()" class="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-lg font-semibold transition-all duration-200">
+                    📥 Exportar JSON
+                </button>
+                <button onclick="gerarRelatorioPDF()" class="bg-red-500 hover:bg-red-600 text-white py-2 px-6 rounded-lg font-semibold transition-all duration-200">
+                    📄 Relatório PDF
+                </button>
+                <label for="uploadJson" class="bg-purple-500 hover:bg-purple-600 text-white py-2 px-6 rounded-lg font-semibold transition-all duration-200 cursor-pointer">
+                    📤 Importar JSON
+                </label>
+                <input type="file" id="uploadJson" accept=".json" class="hidden" onchange="importarDados(event)">
+            </div>
+        </div>
+
+        <!-- Lista de Lançamentos -->
+        <div class="bg-white rounded-xl card-shadow p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800">📋 Histórico de Lançamentos</h2>
+                <span class="text-sm text-gray-500" id="totalRegistros">0 registros</span>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b-2 border-gray-200">
+                            <th class="text-left py-3 px-2 font-semibold text-gray-700">Data</th>
+                            <th class="text-left py-3 px-2 font-semibold text-gray-700">Tipo</th>
+                            <th class="text-left py-3 px-2 font-semibold text-gray-700">Categoria</th>
+                            <th class="text-left py-3 px-2 font-semibold text-gray-700">Descrição</th>
+                            <th class="text-right py-3 px-2 font-semibold text-gray-700">Valor</th>
+                            <th class="text-center py-3 px-2 font-semibold text-gray-700">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaLancamentos">
+                        <tr>
+                            <td colspan="6" class="text-center py-8 text-gray-500">
+                                📝 Nenhum lançamento encontrado. Adicione o primeiro!
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                    <img src="https://i.ibb.co/zhSz3B6y/JN2-M3-ADIGITAL-H-2-removebg-preview.png" alt="JN2M3A DIGITAL" class="h-10 w-auto" onerror="this.style.display='none'">
+                    <div>
+                        <p class="font-semibold">Uma marca do Grupo Foto de Marca</p>
+                        <p class="text-sm text-gray-300">WhatsApp (79) 99896-5081</p>
+                    </div>
+                </div>
+                <div class="text-center md:text-right">
+                    <p class="text-sm text-gray-300 mb-2">© 2025 JN2M3A DIGITAL. Desenvolvendo soluções que facilitam o seu dia a dia.</p>
+                    <div class="flex space-x-4 justify-center md:justify-end">
+                        <a href="https://rec.sou.net.br/termo_de_uso.html" class="text-blue-400 hover:text-blue-300 text-sm">Termos de Uso</a>
+                        <a href="https://rec.sou.net.br/faq" class="text-blue-400 hover:text-blue-300 text-sm">Perguntas Frequentes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Dados do livro caixa
+        let lancamentos = JSON.parse(localStorage.getItem('livroCaixa')) || [];
+        let lancamentosFiltrados = [...lancamentos];
+
+        // Inicializar data atual
+        document.getElementById('data').valueAsDate = new Date();
+
+        // Função para salvar dados no localStorage
+        function salvarDados() {
+            localStorage.setItem('livroCaixa', JSON.stringify(lancamentos));
+        }
+
+        // Função para gerar ID único
+        function gerarId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        // Função para formatar valor em moeda
+        function formatarMoeda(valor) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(valor);
+        }
+
+        // Função para formatar data
+        function formatarData(data) {
+            return new Date(data + 'T00:00:00').toLocaleDateString('pt-BR');
+        }
+
+        // Função para adicionar lançamento
+        document.getElementById('lancamentoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const novoLancamento = {
+                id: gerarId(),
+                data: document.getElementById('data').value,
+                tipo: document.getElementById('tipo').value,
+                categoria: document.getElementById('categoria').value,
+                descricao: document.getElementById('descricao').value,
+                valor: parseFloat(document.getElementById('valor').value),
+                timestamp: new Date().toISOString()
+            };
+
+            lancamentos.unshift(novoLancamento);
+            salvarDados();
+            
+            // Limpar formulário
+            this.reset();
+            document.getElementById('data').valueAsDate = new Date();
+            
+            // Atualizar exibição
+            aplicarFiltros();
+            atualizarResumo();
+            
+            // Animação de sucesso
+            const btn = document.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '✅ Adicionado!';
+            btn.classList.add('bg-green-500');
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove('bg-green-500');
+            }, 2000);
+        });
+
+        // Função para excluir lançamento
+        function excluirLancamento(id) {
+            if (confirm('Tem certeza que deseja excluir este lançamento?')) {
+                lancamentos = lancamentos.filter(l => l.id !== id);
+                salvarDados();
+                aplicarFiltros();
+                atualizarResumo();
+            }
+        }
+
+        // Função para aplicar filtros
+        function aplicarFiltros() {
+            const dataInicial = document.getElementById('dataInicial').value;
+            const dataFinal = document.getElementById('dataFinal').value;
+            const filtroTipo = document.getElementById('filtroTipo').value;
+            const filtroCategoria = document.getElementById('filtroCategoria').value;
+
+            lancamentosFiltrados = lancamentos.filter(lancamento => {
+                let passa = true;
+
+                if (dataInicial && lancamento.data < dataInicial) passa = false;
+                if (dataFinal && lancamento.data > dataFinal) passa = false;
+                if (filtroTipo && lancamento.tipo !== filtroTipo) passa = false;
+                if (filtroCategoria && lancamento.categoria !== filtroCategoria) passa = false;
+
+                return passa;
+            });
+
+            renderizarLancamentos();
+            atualizarResumoFiltrado();
+        }
+
+        // Função para limpar filtros
+        function limparFiltros() {
+            document.getElementById('dataInicial').value = '';
+            document.getElementById('dataFinal').value = '';
+            document.getElementById('filtroTipo').value = '';
+            document.getElementById('filtroCategoria').value = '';
+            aplicarFiltros();
+        }
+
+        // Função para renderizar lançamentos
+        function renderizarLancamentos() {
+            const tbody = document.getElementById('listaLancamentos');
+            const totalRegistros = document.getElementById('totalRegistros');
+            
+            totalRegistros.textContent = `${lancamentosFiltrados.length} registros`;
+
+            if (lancamentosFiltrados.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-8 text-gray-500">
+                            📝 Nenhum lançamento encontrado.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = lancamentosFiltrados.map(lancamento => `
+                <tr class="border-b border-gray-100 hover:bg-gray-50 animate-fade-in">
+                    <td class="py-3 px-2">${formatarData(lancamento.data)}</td>
+                    <td class="py-3 px-2">
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            lancamento.tipo === 'entrada' 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-red-100 text-red-800'
+                        }">
+                            ${lancamento.tipo === 'entrada' ? '💰 Entrada' : '💸 Saída'}
+                        </span>
+                    </td>
+                    <td class="py-3 px-2 capitalize">${lancamento.categoria}</td>
+                    <td class="py-3 px-2">${lancamento.descricao}</td>
+                    <td class="py-3 px-2 text-right font-semibold ${
+                        lancamento.tipo === 'entrada' ? 'text-green-600' : 'text-red-600'
+                    }">
+                        ${lancamento.tipo === 'entrada' ? '+' : '-'} ${formatarMoeda(lancamento.valor)}
+                    </td>
+                    <td class="py-3 px-2 text-center">
+                        <button onclick="excluirLancamento('${lancamento.id}')" 
+                                class="text-red-500 hover:text-red-700 font-medium text-sm">
+                            🗑️ Excluir
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Função para atualizar resumo geral
+        function atualizarResumo() {
+            const totalEntradas = lancamentos
+                .filter(l => l.tipo === 'entrada')
+                .reduce((sum, l) => sum + l.valor, 0);
+            
+            const totalSaidas = lancamentos
+                .filter(l => l.tipo === 'saida')
+                .reduce((sum, l) => sum + l.valor, 0);
+            
+            const saldoFinal = totalEntradas - totalSaidas;
+
+            document.getElementById('totalEntradas').textContent = formatarMoeda(totalEntradas);
+            document.getElementById('totalSaidas').textContent = formatarMoeda(totalSaidas);
+            document.getElementById('saldoFinal').textContent = formatarMoeda(saldoFinal);
+            document.getElementById('saldoAtual').textContent = `Saldo: ${formatarMoeda(saldoFinal)}`;
+        }
+
+        // Função para atualizar resumo filtrado
+        function atualizarResumoFiltrado() {
+            const totalEntradas = lancamentosFiltrados
+                .filter(l => l.tipo === 'entrada')
+                .reduce((sum, l) => sum + l.valor, 0);
+            
+            const totalSaidas = lancamentosFiltrados
+                .filter(l => l.tipo === 'saida')
+                .reduce((sum, l) => sum + l.valor, 0);
+
+            const saldoFiltrado = totalEntradas - totalSaidas;
+
+            // Atualizar apenas se houver filtros ativos
+            const temFiltros = document.getElementById('dataInicial').value || 
+                              document.getElementById('dataFinal').value || 
+                              document.getElementById('filtroTipo').value || 
+                              document.getElementById('filtroCategoria').value;
+
+            if (temFiltros) {
+                document.getElementById('totalEntradas').textContent = formatarMoeda(totalEntradas) + ' (filtrado)';
+                document.getElementById('totalSaidas').textContent = formatarMoeda(totalSaidas) + ' (filtrado)';
+                document.getElementById('saldoFinal').textContent = formatarMoeda(saldoFiltrado) + ' (filtrado)';
+                document.getElementById('saldoAtual').textContent = `Saldo: ${formatarMoeda(saldoFiltrado)} (filtrado)`;
+            } else {
+                // Sempre atualizar com dados completos quando não há filtros
+                const totalEntradasGeral = lancamentos
+                    .filter(l => l.tipo === 'entrada')
+                    .reduce((sum, l) => sum + l.valor, 0);
+                
+                const totalSaidasGeral = lancamentos
+                    .filter(l => l.tipo === 'saida')
+                    .reduce((sum, l) => sum + l.valor, 0);
+                
+                const saldoGeral = totalEntradasGeral - totalSaidasGeral;
+
+                document.getElementById('totalEntradas').textContent = formatarMoeda(totalEntradasGeral);
+                document.getElementById('totalSaidas').textContent = formatarMoeda(totalSaidasGeral);
+                document.getElementById('saldoFinal').textContent = formatarMoeda(saldoGeral);
+                document.getElementById('saldoAtual').textContent = `Saldo: ${formatarMoeda(saldoGeral)}`;
+            }
+        }
+
+        // Função para exportar dados
+        function exportarDados() {
+            const dados = {
+                exportadoEm: new Date().toISOString(),
+                totalLancamentos: lancamentos.length,
+                resumo: {
+                    totalEntradas: lancamentos.filter(l => l.tipo === 'entrada').reduce((sum, l) => sum + l.valor, 0),
+                    totalSaidas: lancamentos.filter(l => l.tipo === 'saida').reduce((sum, l) => sum + l.valor, 0),
+                    saldoFinal: lancamentos.filter(l => l.tipo === 'entrada').reduce((sum, l) => sum + l.valor, 0) - 
+                               lancamentos.filter(l => l.tipo === 'saida').reduce((sum, l) => sum + l.valor, 0)
+                },
+                lancamentos: lancamentos
+            };
+
+            const dataStr = JSON.stringify(dados, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `livro-caixa-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+        }
+
+        // Função para importar dados
+        function importarDados(event) {
+            const arquivo = event.target.files[0];
+            if (!arquivo) return;
+
+            if (!arquivo.name.endsWith('.json')) {
+                alert('❌ Por favor, selecione um arquivo JSON válido.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const dadosImportados = JSON.parse(e.target.result);
+                    
+                    // Verificar se é um backup válido
+                    if (!dadosImportados.lancamentos || !Array.isArray(dadosImportados.lancamentos)) {
+                        alert('❌ Arquivo JSON inválido. Certifique-se de que é um backup do Livro Caixa.');
+                        return;
+                    }
+
+                    // Confirmar importação
+                    const totalImportados = dadosImportados.lancamentos.length;
+                    const confirmar = confirm(
+                        `📤 Importar ${totalImportados} lançamentos?\n\n` +
+                        `⚠️ ATENÇÃO: Isso irá SUBSTITUIR todos os dados atuais!\n\n` +
+                        `Deseja continuar?`
+                    );
+
+                    if (confirmar) {
+                        // Validar e limpar dados importados
+                        const lancamentosValidos = dadosImportados.lancamentos.filter(l => {
+                            return l.data && l.tipo && l.categoria && l.descricao && 
+                                   typeof l.valor === 'number' && l.valor >= 0;
+                        });
+
+                        if (lancamentosValidos.length !== totalImportados) {
+                            const diferenca = totalImportados - lancamentosValidos.length;
+                            alert(`⚠️ ${diferenca} lançamentos inválidos foram ignorados.`);
+                        }
+
+                        // Substituir dados
+                        lancamentos = lancamentosValidos;
+                        salvarDados();
+                        
+                        // Limpar filtros e atualizar
+                        limparFiltros();
+                        aplicarFiltros();
+                        atualizarResumo();
+
+                        // Feedback de sucesso
+                        alert(`✅ Importação concluída!\n\n📊 ${lancamentosValidos.length} lançamentos importados com sucesso.`);
+                        
+                        // Limpar input
+                        event.target.value = '';
+                    }
+
+                } catch (error) {
+                    console.error('Erro ao importar:', error);
+                    alert('❌ Erro ao ler o arquivo. Verifique se é um JSON válido.');
+                }
+            };
+
+            reader.readAsText(arquivo);
+        }
+
+        // Função para gerar relatório PDF
+        function gerarRelatorioPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Configurações
+            const pageWidth = doc.internal.pageSize.width;
+            const margin = 20;
+            let yPosition = 30;
+            
+            // Cabeçalho
+            doc.setFontSize(20);
+            doc.setFont(undefined, 'bold');
+            doc.text('LIVRO CAIXA - RELATÓRIO', pageWidth/2, yPosition, { align: 'center' });
+            
+            yPosition += 10;
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'normal');
+            doc.text('JN2M3A DIGITAL', pageWidth/2, yPosition, { align: 'center' });
+            
+            yPosition += 15;
+            doc.setFontSize(10);
+            const dataAtual = new Date().toLocaleDateString('pt-BR');
+            const horaAtual = new Date().toLocaleTimeString('pt-BR');
+            doc.text(`Gerado em: ${dataAtual} às ${horaAtual}`, pageWidth/2, yPosition, { align: 'center' });
+            
+            // Período do relatório
+            yPosition += 15;
+            const dataInicial = document.getElementById('dataInicial').value;
+            const dataFinal = document.getElementById('dataFinal').value;
+            
+            if (dataInicial || dataFinal) {
+                doc.setFont(undefined, 'bold');
+                doc.text('PERÍODO:', margin, yPosition);
+                doc.setFont(undefined, 'normal');
+                const periodo = `${dataInicial ? formatarData(dataInicial) : 'Início'} até ${dataFinal ? formatarData(dataFinal) : 'Hoje'}`;
+                doc.text(periodo, margin + 25, yPosition);
+                yPosition += 10;
+            }
+            
+            // Resumo financeiro
+            yPosition += 10;
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(14);
+            doc.text('RESUMO FINANCEIRO', margin, yPosition);
+            
+            yPosition += 15;
+            doc.setFontSize(11);
+            
+            const totalEntradas = lancamentosFiltrados
+                .filter(l => l.tipo === 'entrada')
+                .reduce((sum, l) => sum + l.valor, 0);
+            
+            const totalSaidas = lancamentosFiltrados
+                .filter(l => l.tipo === 'saida')
+                .reduce((sum, l) => sum + l.valor, 0);
+            
+            const saldoFinal = totalEntradas - totalSaidas;
+            
+            // Caixas coloridas para o resumo
+            doc.setFillColor(34, 197, 94); // Verde
+            doc.rect(margin, yPosition - 5, 50, 15, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.text('ENTRADAS', margin + 25, yPosition + 2, { align: 'center' });
+            doc.text(formatarMoeda(totalEntradas), margin + 25, yPosition + 8, { align: 'center' });
+            
+            doc.setFillColor(239, 68, 68); // Vermelho
+            doc.rect(margin + 60, yPosition - 5, 50, 15, 'F');
+            doc.text('SAÍDAS', margin + 85, yPosition + 2, { align: 'center' });
+            doc.text(formatarMoeda(totalSaidas), margin + 85, yPosition + 8, { align: 'center' });
+            
+            doc.setFillColor(59, 130, 246); // Azul
+            doc.rect(margin + 120, yPosition - 5, 50, 15, 'F');
+            doc.text('SALDO', margin + 145, yPosition + 2, { align: 'center' });
+            doc.text(formatarMoeda(saldoFinal), margin + 145, yPosition + 8, { align: 'center' });
+            
+            doc.setTextColor(0, 0, 0);
+            yPosition += 25;
+            
+            // Tabela de lançamentos
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(14);
+            doc.text('DETALHAMENTO DOS LANÇAMENTOS', margin, yPosition);
+            
+            yPosition += 15;
+            doc.setFontSize(9);
+            
+            // Cabeçalho da tabela
+            doc.setFillColor(240, 240, 240);
+            doc.rect(margin, yPosition - 5, pageWidth - 2*margin, 10, 'F');
+            
+            doc.text('Data', margin + 2, yPosition + 2);
+            doc.text('Tipo', margin + 25, yPosition + 2);
+            doc.text('Categoria', margin + 45, yPosition + 2);
+            doc.text('Descrição', margin + 75, yPosition + 2);
+            doc.text('Valor', pageWidth - margin - 25, yPosition + 2, { align: 'right' });
+            
+            yPosition += 12;
+            
+            // Dados da tabela
+            doc.setFont(undefined, 'normal');
+            
+            // Ordenar por data (mais recente primeiro)
+            const lancamentosOrdenados = [...lancamentosFiltrados].sort((a, b) => new Date(b.data) - new Date(a.data));
+            
+            lancamentosOrdenados.forEach((lancamento, index) => {
+                // Verificar se precisa de nova página
+                if (yPosition > 250) {
+                    doc.addPage();
+                    yPosition = 30;
+                }
+                
+                // Linha zebrada
+                if (index % 2 === 0) {
+                    doc.setFillColor(248, 248, 248);
+                    doc.rect(margin, yPosition - 3, pageWidth - 2*margin, 8, 'F');
+                }
+                
+                // Dados
+                doc.text(formatarData(lancamento.data), margin + 2, yPosition + 2);
+                doc.text(lancamento.tipo === 'entrada' ? 'ENT' : 'SAI', margin + 25, yPosition + 2);
+                doc.text(lancamento.categoria.substring(0, 12), margin + 45, yPosition + 2);
+                
+                // Descrição limitada
+                const descricao = lancamento.descricao.length > 25 
+                    ? lancamento.descricao.substring(0, 25) + '...' 
+                    : lancamento.descricao;
+                doc.text(descricao, margin + 75, yPosition + 2);
+                
+                // Valor com cor
+                const valorTexto = (lancamento.tipo === 'entrada' ? '+' : '-') + formatarMoeda(lancamento.valor);
+                if (lancamento.tipo === 'entrada') {
+                    doc.setTextColor(34, 197, 94);
+                } else {
+                    doc.setTextColor(239, 68, 68);
+                }
+                doc.text(valorTexto, pageWidth - margin - 2, yPosition + 2, { align: 'right' });
+                doc.setTextColor(0, 0, 0);
+                
+                yPosition += 8;
+            });
+            
+            // Rodapé
+            const totalPages = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= totalPages; i++) {
+                doc.setPage(i);
+                doc.setFontSize(8);
+                doc.text(`Página ${i} de ${totalPages}`, pageWidth/2, 285, { align: 'center' });
+                doc.text('© 2025 JN2M3A DIGITAL - Desenvolvendo soluções que facilitam o seu dia a dia', pageWidth/2, 290, { align: 'center' });
+            }
+            
+            // Salvar PDF
+            const nomeArquivo = `relatorio-livro-caixa-${new Date().toISOString().split('T')[0]}.pdf`;
+            doc.save(nomeArquivo);
+        }
+
+        // Adicionar listeners para filtros
+        document.getElementById('dataInicial').addEventListener('change', aplicarFiltros);
+        document.getElementById('dataFinal').addEventListener('change', aplicarFiltros);
+        document.getElementById('filtroTipo').addEventListener('change', aplicarFiltros);
+        document.getElementById('filtroCategoria').addEventListener('change', aplicarFiltros);
+
+        // Inicializar aplicação
+        aplicarFiltros();
+        atualizarResumo();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c91d607552da2e',t:'MTc1NzQ0NjM3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
