@@ -19,19 +19,19 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
     <!-- Header -->
-    <header class="gradient-bg text-white py-6 shadow-lg">
+    <header class="gradient-bg text-white py-4 sm:py-6 shadow-lg">
         <div class="container mx-auto px-4">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="flex items-center space-x-4">
-                    <img src="https://sou.net.br/digital" alt="JN2M3A DIGITAL" class="h-12 w-auto" onerror="this.style.display='none'">
-                    <div>
-                        <h1 class="text-2xl font-bold">Livro Caixa</h1>
-                        <p class="text-blue-100">Controle financeiro completo</p>
+                    <img src="https://sou.net.br/digital" alt="JN2M3A DIGITAL" class="h-10 sm:h-12 w-auto" onerror="this.style.display='none'">
+                    <div class="text-center sm:text-left">
+                        <h1 class="text-xl sm:text-2xl font-bold">Livro Caixa</h1>
+                        <p class="text-blue-100 text-sm">Controle financeiro completo</p>
                     </div>
                 </div>
-                <div class="text-right">
-                    <p class="text-lg font-semibold" id="saldoAtual">Saldo: R$ 0,00</p>
-                    <p class="text-sm text-blue-100">Atualizado em tempo real</p>
+                <div class="text-center sm:text-right">
+                    <p class="text-base sm:text-lg font-semibold" id="saldoAtual">Saldo: R$ 0,00</p>
+                    <p class="text-xs sm:text-sm text-blue-100">Atualizado em tempo real</p>
                 </div>
             </div>
         </div>
@@ -55,9 +55,9 @@
         </div>
 
         <!-- Formulário de Lançamento -->
-        <div class="bg-white rounded-xl card-shadow p-6 mb-8">
+        <div class="bg-white rounded-xl card-shadow p-4 sm:p-6 mb-8">
             <h2 class="text-xl font-bold text-gray-800 mb-6">📝 Novo Lançamento</h2>
-            <form id="lancamentoForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <form id="lancamentoForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Data</label>
                     <input type="date" id="data" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
@@ -87,7 +87,7 @@
                         <option value="outros">Outros</option>
                     </select>
                 </div>
-                <div class="md:col-span-2 lg:col-span-3">
+                <div class="sm:col-span-2 lg:col-span-3">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
                     <input type="text" id="descricao" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Descreva o lançamento..." required>
                 </div>
@@ -100,9 +100,9 @@
         </div>
 
         <!-- Filtros -->
-        <div class="bg-white rounded-xl card-shadow p-6 mb-8">
+        <div class="bg-white rounded-xl card-shadow p-4 sm:p-6 mb-8">
             <h2 class="text-xl font-bold text-gray-800 mb-4">🔍 Filtros</h2>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Data Inicial</label>
                     <input type="date" id="dataInicial" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
@@ -133,43 +133,43 @@
                     </select>
                 </div>
             </div>
-            <div class="flex gap-4 mt-4">
-                <button onclick="aplicarFiltros()" class="btn-primary text-white py-2 px-6 rounded-lg font-semibold hover:shadow-lg transition-all duration-200">
+            <div class="flex flex-wrap gap-2 sm:gap-4 mt-4">
+                <button onclick="aplicarFiltros()" class="btn-primary text-white py-2 px-4 sm:px-6 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 text-sm sm:text-base">
                     🔍 Filtrar
                 </button>
-                <button onclick="limparFiltros()" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded-lg font-semibold transition-all duration-200">
+                <button onclick="limparFiltros()" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 sm:px-6 rounded-lg font-semibold transition-all duration-200 text-sm sm:text-base">
                     🗑️ Limpar
                 </button>
-                <button onclick="exportarDados()" class="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-lg font-semibold transition-all duration-200">
-                    📥 Exportar JSON
+                <button onclick="exportarDados()" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 sm:px-6 rounded-lg font-semibold transition-all duration-200 text-sm sm:text-base">
+                    📥 Exportar
                 </button>
-                <button onclick="gerarRelatorioPDF()" class="bg-red-500 hover:bg-red-600 text-white py-2 px-6 rounded-lg font-semibold transition-all duration-200">
-                    📄 Relatório PDF
+                <button onclick="gerarRelatorioPDF()" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 sm:px-6 rounded-lg font-semibold transition-all duration-200 text-sm sm:text-base">
+                    📄 PDF
                 </button>
-                <label for="uploadJson" class="bg-purple-500 hover:bg-purple-600 text-white py-2 px-6 rounded-lg font-semibold transition-all duration-200 cursor-pointer">
-                    📤 Importar JSON
+                <label for="uploadJson" class="bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 sm:px-6 rounded-lg font-semibold transition-all duration-200 cursor-pointer text-sm sm:text-base">
+                    📤 Importar
                 </label>
                 <input type="file" id="uploadJson" accept=".json" class="hidden" onchange="importarDados(event)">
             </div>
         </div>
 
         <!-- Lista de Lançamentos -->
-        <div class="bg-white rounded-xl card-shadow p-6">
-            <div class="flex justify-between items-center mb-6">
+        <div class="bg-white rounded-xl card-shadow p-4 sm:p-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
                 <h2 class="text-xl font-bold text-gray-800">📋 Histórico de Lançamentos</h2>
                 <span class="text-sm text-gray-500" id="totalRegistros">0 registros</span>
             </div>
             
             <div class="overflow-x-auto">
-                <table class="w-full">
+                <table class="w-full min-w-[600px]">
                     <thead>
                         <tr class="border-b-2 border-gray-200">
-                            <th class="text-left py-3 px-2 font-semibold text-gray-700">Data</th>
-                            <th class="text-left py-3 px-2 font-semibold text-gray-700">Tipo</th>
-                            <th class="text-left py-3 px-2 font-semibold text-gray-700">Categoria</th>
-                            <th class="text-left py-3 px-2 font-semibold text-gray-700">Descrição</th>
-                            <th class="text-right py-3 px-2 font-semibold text-gray-700">Valor</th>
-                            <th class="text-center py-3 px-2 font-semibold text-gray-700">Ações</th>
+                            <th class="text-left py-3 px-2 font-semibold text-gray-700 text-sm">Data</th>
+                            <th class="text-left py-3 px-2 font-semibold text-gray-700 text-sm">Tipo</th>
+                            <th class="text-left py-3 px-2 font-semibold text-gray-700 text-sm hidden sm:table-cell">Categoria</th>
+                            <th class="text-left py-3 px-2 font-semibold text-gray-700 text-sm">Descrição</th>
+                            <th class="text-right py-3 px-2 font-semibold text-gray-700 text-sm">Valor</th>
+                            <th class="text-center py-3 px-2 font-semibold text-gray-700 text-sm">Ações</th>
                         </tr>
                     </thead>
                     <tbody id="listaLancamentos">
@@ -185,21 +185,22 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8 mt-12">
+    <footer class="bg-gray-800 text-white py-6 mt-12">
         <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="flex items-center space-x-4 mb-4 md:mb-0">
-                    <img src="https://i.ibb.co/zhSz3B6y/JN2-M3-ADIGITAL-H-2-removebg-preview.png" alt="JN2M3A DIGITAL" class="h-10 w-auto" onerror="this.style.display='none'">
-                    <div>
-                        <p class="font-semibold">Uma marca do Grupo Foto de Marca</p>
-                        <p class="text-sm text-gray-300">WhatsApp (79) 99896-5081</p>
+            <div class="text-center">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
+                    <img src="https://i.ibb.co/zhSz3B6y/JN2-M3-ADIGITAL-H-2-removebg-preview.png" alt="JN2M3A DIGITAL" class="h-8 w-auto" onerror="this.style.display='none'">
+                    <div class="text-center sm:text-left">
+                        <p class="font-semibold text-sm">Uma marca do Grupo Foto de Marca</p>
+                        <p class="text-xs text-gray-300">WhatsApp (79) 99896-5081</p>
                     </div>
                 </div>
-                <div class="text-center md:text-right">
-                    <p class="text-sm text-gray-300 mb-2">© 2025 JN2M3A DIGITAL. Desenvolvendo soluções que facilitam o seu dia a dia.</p>
-                    <div class="flex space-x-4 justify-center md:justify-end">
-                        <a href="https://rec.sou.net.br/termo_de_uso.html" class="text-blue-400 hover:text-blue-300 text-sm">Termos de Uso</a>
-                        <a href="https://rec.sou.net.br/faq" class="text-blue-400 hover:text-blue-300 text-sm">Perguntas Frequentes</a>
+                <div class="border-t border-gray-700 pt-4">
+                    <p class="text-xs text-gray-300 mb-3">© 2025 JN2M3A DIGITAL. Desenvolvendo soluções que facilitam o seu dia a dia.</p>
+                    <div class="flex flex-wrap gap-4 justify-center text-xs">
+                        <a href="https://rec.sou.net.br/termo_de_uso.html" class="text-blue-400 hover:text-blue-300">Termos de Uso</a>
+                        <span class="text-gray-500">•</span>
+                        <a href="https://rec.sou.net.br/faq" class="text-blue-400 hover:text-blue-300">Perguntas Frequentes</a>
                     </div>
                 </div>
             </div>
@@ -334,27 +335,33 @@
 
             tbody.innerHTML = lancamentosFiltrados.map(lancamento => `
                 <tr class="border-b border-gray-100 hover:bg-gray-50 animate-fade-in">
-                    <td class="py-3 px-2">${formatarData(lancamento.data)}</td>
+                    <td class="py-3 px-2 text-sm">${formatarData(lancamento.data)}</td>
                     <td class="py-3 px-2">
                         <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                             lancamento.tipo === 'entrada' 
                                 ? 'bg-green-100 text-green-800' 
                                 : 'bg-red-100 text-red-800'
                         }">
-                            ${lancamento.tipo === 'entrada' ? '💰 Entrada' : '💸 Saída'}
+                            ${lancamento.tipo === 'entrada' ? '💰' : '💸'}
+                            <span class="hidden sm:inline ml-1">${lancamento.tipo === 'entrada' ? 'Entrada' : 'Saída'}</span>
                         </span>
                     </td>
-                    <td class="py-3 px-2 capitalize">${lancamento.categoria}</td>
-                    <td class="py-3 px-2">${lancamento.descricao}</td>
-                    <td class="py-3 px-2 text-right font-semibold ${
+                    <td class="py-3 px-2 capitalize text-sm hidden sm:table-cell">${lancamento.categoria}</td>
+                    <td class="py-3 px-2 text-sm">
+                        <div class="max-w-[150px] sm:max-w-none truncate" title="${lancamento.descricao}">
+                            ${lancamento.descricao}
+                        </div>
+                        <div class="sm:hidden text-xs text-gray-500 capitalize">${lancamento.categoria}</div>
+                    </td>
+                    <td class="py-3 px-2 text-right font-semibold text-sm ${
                         lancamento.tipo === 'entrada' ? 'text-green-600' : 'text-red-600'
                     }">
                         ${lancamento.tipo === 'entrada' ? '+' : '-'} ${formatarMoeda(lancamento.valor)}
                     </td>
                     <td class="py-3 px-2 text-center">
                         <button onclick="excluirLancamento('${lancamento.id}')" 
-                                class="text-red-500 hover:text-red-700 font-medium text-sm">
-                            🗑️ Excluir
+                                class="text-red-500 hover:text-red-700 font-medium text-xs sm:text-sm">
+                            🗑️<span class="hidden sm:inline ml-1">Excluir</span>
                         </button>
                     </td>
                 </tr>
@@ -679,5 +686,5 @@
         aplicarFiltros();
         atualizarResumo();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c91d607552da2e',t:'MTc1NzQ0NjM3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97cc01055454d833',t:'MTc1NzQ3NjY3NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
