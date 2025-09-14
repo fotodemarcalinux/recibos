@@ -194,6 +194,26 @@
             height: auto;
         }
         
+        .save-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(46, 204, 113, 0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .save-indicator.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.2rem;
@@ -264,6 +284,13 @@
             .bingo-message {
                 font-size: 1.8rem;
             }
+            
+            .save-indicator {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                text-align: center;
+            }
         }
         
         footer {
@@ -278,7 +305,7 @@
     <div class="container">
         <header>
             <h1>BINGO ONLINE</h1>
-            <p class="subtitle">Sorteador de números de 1 a 90</p>
+            <p class="subtitle">Sorteador de números de 1 a 90 - Dados salvos localmente</p>
         </header>
         
         <div class="current-number-section">
@@ -313,8 +340,10 @@
             </div>
         </div>
         
+        <div class="save-indicator" id="save-indicator">Dados salvos localmente!</div>
+        
         <footer>
-            <p>Sorteador de Bingo Online - Desenvolvido para diversão!</p>
+            <p>Sorteador de Bingo Online - Os dados são mantidos mesmo ao atualizar a página</p>
         </footer>
     </div>
 
@@ -328,10 +357,43 @@
             const remainingCountEl = document.getElementById('remaining-count');
             const lastDrawnEl = document.getElementById('last-drawn');
             const bingoMessage = document.getElementById('bingo-message');
+            const saveIndicator = document.getElementById('save-indicator');
             
             let availableNumbers = Array.from({length: 90}, (_, i) => i + 1);
             let drawnNumbers = [];
             let lastDrawnNumber = null;
+            
+            // Carregar dados salvos
+            function loadSavedData() {
+                const savedData = localStorage.getItem('bingoData');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    drawnNumbers = data.drawnNumbers;
+                    lastDrawnNumber = data.lastDrawnNumber;
+                    
+                    // Reconstruir a lista de números disponíveis
+                    availableNumbers = Array.from({length: 90}, (_, i) => i + 1)
+                        .filter(num => !drawnNumbers.includes(num));
+                    
+                    return true;
+                }
+                return false;
+            }
+            
+            // Salvar dados localmente
+            function saveData() {
+                const data = {
+                    drawnNumbers: drawnNumbers,
+                    lastDrawnNumber: lastDrawnNumber
+                };
+                localStorage.setItem('bingoData', JSON.stringify(data));
+                
+                // Mostrar indicador de salvamento
+                saveIndicator.classList.add('show');
+                setTimeout(() => {
+                    saveIndicator.classList.remove('show');
+                }, 2000);
+            }
             
             // Inicializar a grade de números
             function initializeNumbersGrid() {
@@ -341,6 +403,12 @@
                     numberEl.className = 'number';
                     numberEl.textContent = i;
                     numberEl.id = `number-${i}`;
+                    
+                    // Marcar números já sorteados
+                    if (drawnNumbers.includes(i)) {
+                        numberEl.classList.add('drawn');
+                    }
+                    
                     numbersGrid.appendChild(numberEl);
                 }
             }
@@ -368,6 +436,9 @@
                 const numberEl = document.getElementById(`number-${drawnNumber}`);
                 numberEl.classList.add('drawn');
                 
+                // Salvar dados
+                saveData();
+                
                 // Verificar se todos os números foram sorteados
                 if (availableNumbers.length === 0) {
                     showBingo();
@@ -376,10 +447,10 @@
             
             // Atualizar a interface
             function updateUI() {
-                currentNumberEl.textContent = lastDrawnNumber;
+                currentNumberEl.textContent = lastDrawnNumber || '--';
                 drawnCountEl.textContent = drawnNumbers.length;
                 remainingCountEl.textContent = availableNumbers.length;
-                lastDrawnEl.textContent = lastDrawnNumber;
+                lastDrawnEl.textContent = lastDrawnNumber || '--';
             }
             
             // Mostrar mensagem de Bingo
@@ -399,8 +470,19 @@
                 
                 bingoMessage.classList.remove('show');
                 drawBtn.disabled = false;
-                currentNumberEl.textContent = '--';
-                lastDrawnEl.textContent = '--';
+                
+                // Limpar dados salvos
+                localStorage.removeItem('bingoData');
+                
+                // Mostrar mensagem de reinício
+                saveIndicator.textContent = 'Sorteio reiniciado!';
+                saveIndicator.style.background = 'rgba(241, 196, 15, 0.9)';
+                saveIndicator.classList.add('show');
+                setTimeout(() => {
+                    saveIndicator.classList.remove('show');
+                    saveIndicator.textContent = 'Dados salvos localmente!';
+                    saveIndicator.style.background = 'rgba(46, 204, 113, 0.9)';
+                }, 2000);
             }
             
             // Event listeners
@@ -408,7 +490,25 @@
             resetBtn.addEventListener('click', resetDraw);
             
             // Inicializar o jogo
+            const hasSavedData = loadSavedData();
             initializeNumbersGrid();
+            updateUI();
+            
+            if (availableNumbers.length === 0) {
+                showBingo();
+            }
+            
+            // Mostrar mensagem se dados foram carregados
+            if (hasSavedData) {
+                saveIndicator.textContent = 'Dados anteriores carregados!';
+                saveIndicator.style.background = 'rgba(52, 152, 219, 0.9)';
+                saveIndicator.classList.add('show');
+                setTimeout(() => {
+                    saveIndicator.classList.remove('show');
+                    saveIndicator.textContent = 'Dados salvos localmente!';
+                    saveIndicator.style.background = 'rgba(46, 204, 113, 0.9)';
+                }, 3000);
+            }
         });
     </script>
 </body>
