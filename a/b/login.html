@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Área do Cliente - JN2M3A DIGITAL</title>
   <script src="../../js/auth.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --primary-color: #2563eb;
@@ -13,8 +12,9 @@
       --secondary-color: #10b981;
       --dark-color: #1f2937;
       --light-color: #f9fafb;
-      --gray-color: #9ca3af;
+      --gray-color: #6b7280;
       --error-color: #ef4444;
+      --border-color: #d1d5db;
     }
     
     * {
@@ -38,96 +38,87 @@
     
     .logo-container {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
     }
     
     .logo {
-      font-size: 2.5rem;
-      font-weight: 700;
+      font-size: 2.8rem;
+      font-weight: 800;
       color: var(--primary-color);
-      letter-spacing: 1px;
-      margin-bottom: 10px;
+      letter-spacing: 1.5px;
+      margin-bottom: 12px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
     
     .logo-subtitle {
       color: var(--gray-color);
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 400;
+      max-width: 500px;
+      line-height: 1.5;
     }
     
     .login-container {
       background: white;
       width: 100%;
-      max-width: 420px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      padding: 30px;
-      margin-bottom: 30px;
+      max-width: 450px;
+      border-radius: 14px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      margin-bottom: 40px;
+      border: 1px solid var(--border-color);
     }
     
     .login-header {
       text-align: center;
-      margin-bottom: 25px;
+      margin-bottom: 30px;
     }
     
     .login-title {
-      font-size: 1.8rem;
-      font-weight: 600;
+      font-size: 2rem;
+      font-weight: 700;
       color: var(--dark-color);
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
     
     .login-subtitle {
       color: var(--gray-color);
-      font-size: 0.95rem;
+      font-size: 1.05rem;
+      line-height: 1.5;
     }
     
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
     
     label {
       display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
+      margin-bottom: 10px;
+      font-weight: 600;
       color: var(--dark-color);
-    }
-    
-    .input-with-icon {
-      position: relative;
-    }
-    
-    .input-with-icon i {
-      position: absolute;
-      left: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--gray-color);
-      z-index: 1;
-    }
-    
-    .input-with-icon input {
-      padding-left: 45px;
-      position: relative;
-      z-index: 2;
+      font-size: 1.05rem;
     }
     
     input[type="text"],
     input[type="password"] {
       width: 100%;
-      padding: 14px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
+      padding: 16px 18px;
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
       font-size: 16px;
       transition: all 0.3s;
-      background-color: transparent;
+      background-color: white;
     }
     
     input[type="text"]:focus,
     input[type="password"]:focus {
       border-color: var(--primary-color);
       outline: none;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+    
+    .password-container {
+      position: relative;
     }
     
     .password-toggle {
@@ -139,72 +130,77 @@
       border: none;
       color: var(--gray-color);
       cursor: pointer;
-      z-index: 3;
+      font-size: 1.1rem;
     }
     
     button[type="submit"] {
       width: 100%;
-      background-color: var(--primary-color);
+      background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
       color: white;
       border: none;
-      padding: 14px;
-      border-radius: 8px;
-      font-size: 16px;
+      padding: 18px;
+      border-radius: 10px;
+      font-size: 1.1rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: all 0.3s;
+      margin-top: 10px;
     }
     
     button[type="submit"]:hover {
-      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(37, 99, 235, 0.2);
     }
     
     .divider {
       display: flex;
       align-items: center;
-      margin: 25px 0;
+      margin: 30px 0;
     }
     
     .divider::before,
     .divider::after {
       content: "";
       flex: 1;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid var(--border-color);
     }
     
     .divider span {
-      padding: 0 15px;
+      padding: 0 20px;
       color: var(--gray-color);
-      font-size: 0.9rem;
+      font-size: 0.95rem;
     }
     
     .support {
       text-align: center;
-      margin-top: 20px;
+      margin-top: 25px;
     }
     
     .support p {
       color: var(--gray-color);
-      font-size: 0.9rem;
-      margin-bottom: 8px;
+      font-size: 1rem;
+      margin-bottom: 12px;
     }
     
     .support a {
       color: var(--primary-color);
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: all 0.2s;
     }
     
     .support a:hover {
       text-decoration: underline;
+      color: var(--primary-dark);
     }
     
     footer {
       background-color: var(--dark-color);
       color: white;
       text-align: center;
-      padding: 15px;
-      font-size: 0.8rem;
+      padding: 20px;
+      font-size: 0.9rem;
       width: 100%;
       position: absolute;
       bottom: 0;
@@ -214,10 +210,13 @@
     footer a {
       color: #fbbf24;
       text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s;
     }
     
     footer a:hover {
       text-decoration: underline;
+      color: #fcd34d;
     }
     
     .notification {
@@ -226,20 +225,27 @@
       right: 20px;
       background-color: var(--error-color);
       color: white;
-      padding: 15px 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 18px 24px;
+      border-radius: 10px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
       display: none;
       z-index: 1000;
+      font-weight: 500;
     }
     
-    @media (max-width: 480px) {
+    @media (max-width: 600px) {
       .login-container {
-        padding: 20px;
+        padding: 30px 25px;
+        margin-bottom: 30px;
       }
       
       .logo {
-        font-size: 2rem;
+        font-size: 2.2rem;
+      }
+      
+      .logo-subtitle {
+        font-size: 1rem;
+        padding: 0 10px;
       }
       
       body {
@@ -247,13 +253,17 @@
         justify-content: flex-start;
         padding-top: 40px;
       }
+      
+      .login-title {
+        font-size: 1.7rem;
+      }
     }
   </style>
 </head>
 <body>
   <div class="logo-container">
     <div class="logo">JN2M3A DIGITAL</div>
-    <div class="logo-subtitle">Soluções inteligentes para o seu negócio</div>
+    <div class="logo-subtitle">Soluções inteligentes e inovadoras para impulsionar o seu negócio</div>
   </div>
   
   <div class="login-container">
@@ -265,20 +275,14 @@
     <form onsubmit="event.preventDefault(); login(usuario.value, senha.value);">
       <div class="form-group">
         <label for="usuario">Usuário</label>
-        <div class="input-with-icon">
-          <i class="fas fa-user"></i>
-          <input type="text" id="usuario" placeholder="Digite seu usuário" required>
-        </div>
+        <input type="text" id="usuario" placeholder="Digite seu nome de usuário" required>
       </div>
       
       <div class="form-group">
         <label for="senha">Senha</label>
-        <div class="input-with-icon">
-          <i class="fas fa-lock"></i>
+        <div class="password-container">
           <input type="password" id="senha" placeholder="Digite sua senha" required>
-          <button type="button" class="password-toggle" id="togglePassword">
-            <i class="fas fa-eye"></i>
-          </button>
+          <button type="button" class="password-toggle" id="togglePassword">👁️</button>
         </div>
       </div>
       
@@ -290,7 +294,7 @@
     </div>
     
     <div class="support">
-      <p>Entre em contato com nosso suporte</p>
+      <p>Entre em contato com nosso suporte especializado</p>
       <a href="mailto:suporte@jn2m3adigital.com">suporte@jn2m3adigital.com</a>
     </div>
   </div>
@@ -303,7 +307,6 @@
   </footer>
   
   <div class="notification" id="notification">
-    <i class="fas fa-exclamation-circle"></i>
     <span id="notification-text"></span>
   </div>
 
@@ -311,14 +314,13 @@
     // Função para mostrar/ocultar senha
     document.getElementById('togglePassword').addEventListener('click', function() {
       const passwordInput = document.getElementById('senha');
-      const icon = this.querySelector('i');
       
       if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
+        this.textContent = '🔒';
       } else {
         passwordInput.type = 'password';
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
+        this.textContent = '👁️';
       }
     });
     
@@ -329,7 +331,7 @@
       const notificationText = document.getElementById('notification-text');
       
       notificationText.textContent = message;
-      notification.style.display = 'flex';
+      notification.style.display = 'block';
       
       setTimeout(() => {
         notification.style.display = 'none';
