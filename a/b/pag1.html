@@ -1,15 +1,521 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Página 1</title>
+  <!-- Inclui o script de autenticação -->
   <script src="js/auth.js"></script>
-  <script>
-    window.onload = verificarLogin;
-  </script>
+    <script>
+      window.onload = verificarLogin;
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Sorteador de Bingo</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #2c3e50, #4a69bd);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            color: #f8c291;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .current-number-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .current-number {
+            font-size: 8rem;
+            font-weight: bold;
+            color: #f8c291;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+            margin: 20px 0;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 220px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        #draw-btn {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        #draw-btn:hover {
+            background-color: #27ae60;
+            transform: translateY(-3px);
+        }
+        
+        #reset-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        #reset-btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+        }
+        
+        .drawn-numbers {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .drawn-numbers h2 {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            color: #f8c291;
+        }
+        
+        .numbers-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .number {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #3498db;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .number.drawn {
+            background-color: #e74c3c;
+            transform: scale(1.1);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 150px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #f8c291;
+        }
+        
+        .bingo-message {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #f8c291;
+            text-align: center;
+            margin: 20px 0;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            height: 0;
+            transition: all 0.5s ease;
+        }
+        
+        .bingo-message.show {
+            opacity: 1;
+            height: auto;
+        }
+        
+        .save-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(46, 204, 113, 0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .save-indicator.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .current-number {
+                font-size: 6rem;
+                height: 130px;
+                width: 180px;
+            }
+            
+            button {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+            
+            .number {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .stat-box {
+                min-width: 120px;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            
+            .bingo-message {
+                font-size: 2.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .current-number {
+                font-size: 4.5rem;
+                height: 100px;
+                width: 140px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .number {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+            
+            .stat-box {
+                min-width: 100px;
+                padding: 10px;
+            }
+            
+            .bingo-message {
+                font-size: 1.8rem;
+            }
+            
+            .save-indicator {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                text-align: center;
+            }
+        }
+        
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
-  <h2>Conteúdo restrito - Página 1</h2>
-  <button onclick="logout()">Sair</button>
+    <div class="container">
+        <header>
+            <h1>BINGO ONLINE</h1>
+            <p class="subtitle">Sorteador de números de 1 a 90 - Dados salvos localmente</p>
+        </header>
+        
+        <div class="current-number-section">
+            <div class="current-number" id="current-number">--</div>
+            <div class="controls">
+                <button id="draw-btn">Sortear Número</button>
+                <button id="reset-btn">Reiniciar Sorteio</button>
+            </div>
+        </div>
+        
+        <div class="bingo-message" id="bingo-message">BINGO!</div>
+        
+        <div class="drawn-numbers">
+            <h2>Números Sorteados</h2>
+            <div class="numbers-grid" id="numbers-grid">
+                <!-- Os números serão gerados via JavaScript -->
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-title">Sorteados</div>
+                <div class="stat-value" id="drawn-count">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">Restantes</div>
+                <div class="stat-value" id="remaining-count">90</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">Último Sorteio</div>
+                <div class="stat-value" id="last-drawn">--</div>
+            </div>
+        </div>
+        
+        <div class="save-indicator" id="save-indicator">Dados salvos localmente!</div>
+        
+        <footer>
+            <p>Sorteador de Bingo Online - Os dados são mantidos mesmo ao atualizar a página</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const drawBtn = document.getElementById('draw-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const currentNumberEl = document.getElementById('current-number');
+            const numbersGrid = document.getElementById('numbers-grid');
+            const drawnCountEl = document.getElementById('drawn-count');
+            const remainingCountEl = document.getElementById('remaining-count');
+            const lastDrawnEl = document.getElementById('last-drawn');
+            const bingoMessage = document.getElementById('bingo-message');
+            const saveIndicator = document.getElementById('save-indicator');
+            
+            let availableNumbers = Array.from({length: 90}, (_, i) => i + 1);
+            let drawnNumbers = [];
+            let lastDrawnNumber = null;
+            
+            // Carregar dados salvos
+            function loadSavedData() {
+                const savedData = localStorage.getItem('bingoData');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    drawnNumbers = data.drawnNumbers;
+                    lastDrawnNumber = data.lastDrawnNumber;
+                    
+                    // Reconstruir a lista de números disponíveis
+                    availableNumbers = Array.from({length: 90}, (_, i) => i + 1)
+                        .filter(num => !drawnNumbers.includes(num));
+                    
+                    return true;
+                }
+                return false;
+            }
+            
+            // Salvar dados localmente
+            function saveData() {
+                const data = {
+                    drawnNumbers: drawnNumbers,
+                    lastDrawnNumber: lastDrawnNumber
+                };
+                localStorage.setItem('bingoData', JSON.stringify(data));
+                
+                // Mostrar indicador de salvamento
+                saveIndicator.classList.add('show');
+                setTimeout(() => {
+                    saveIndicator.classList.remove('show');
+                }, 2000);
+            }
+            
+            // Inicializar a grade de números
+            function initializeNumbersGrid() {
+                numbersGrid.innerHTML = '';
+                for (let i = 1; i <= 90; i++) {
+                    const numberEl = document.createElement('div');
+                    numberEl.className = 'number';
+                    numberEl.textContent = i;
+                    numberEl.id = `number-${i}`;
+                    
+                    // Marcar números já sorteados
+                    if (drawnNumbers.includes(i)) {
+                        numberEl.classList.add('drawn');
+                    }
+                    
+                    numbersGrid.appendChild(numberEl);
+                }
+            }
+            
+            // Sortear próximo número
+            function drawNextNumber() {
+                if (availableNumbers.length === 0) {
+                    showBingo();
+                    return;
+                }
+                
+                // Sortear um número aleatório
+                const randomIndex = Math.floor(Math.random() * availableNumbers.length);
+                const drawnNumber = availableNumbers[randomIndex];
+                
+                // Remover o número sorteado da lista de disponíveis
+                availableNumbers.splice(randomIndex, 1);
+                drawnNumbers.push(drawnNumber);
+                lastDrawnNumber = drawnNumber;
+                
+                // Atualizar a interface
+                updateUI();
+                
+                // Efeito visual para o número sorteado
+                const numberEl = document.getElementById(`number-${drawnNumber}`);
+                numberEl.classList.add('drawn');
+                
+                // Salvar dados
+                saveData();
+                
+                // Verificar se todos os números foram sorteados
+                if (availableNumbers.length === 0) {
+                    showBingo();
+                }
+            }
+            
+            // Atualizar a interface
+            function updateUI() {
+                currentNumberEl.textContent = lastDrawnNumber || '--';
+                drawnCountEl.textContent = drawnNumbers.length;
+                remainingCountEl.textContent = availableNumbers.length;
+                lastDrawnEl.textContent = lastDrawnNumber || '--';
+            }
+            
+            // Mostrar mensagem de Bingo
+            function showBingo() {
+                bingoMessage.classList.add('show');
+                drawBtn.disabled = true;
+            }
+            
+            // Reiniciar o sorteio
+            function resetDraw() {
+                availableNumbers = Array.from({length: 90}, (_, i) => i + 1);
+                drawnNumbers = [];
+                lastDrawnNumber = null;
+                
+                initializeNumbersGrid();
+                updateUI();
+                
+                bingoMessage.classList.remove('show');
+                drawBtn.disabled = false;
+                
+                // Limpar dados salvos
+                localStorage.removeItem('bingoData');
+                
+                // Mostrar mensagem de reinício
+                saveIndicator.textContent = 'Sorteio reiniciado!';
+                saveIndicator.style.background = 'rgba(241, 196, 15, 0.9)';
+                saveIndicator.classList.add('show');
+                setTimeout(() => {
+                    saveIndicator.classList.remove('show');
+                    saveIndicator.textContent = 'Dados salvos localmente!';
+                    saveIndicator.style.background = 'rgba(46, 204, 113, 0.9)';
+                }, 2000);
+            }
+            
+            // Event listeners
+            drawBtn.addEventListener('click', drawNextNumber);
+            resetBtn.addEventListener('click', resetDraw);
+            
+            // Inicializar o jogo
+            const hasSavedData = loadSavedData();
+            initializeNumbersGrid();
+            updateUI();
+            
+            if (availableNumbers.length === 0) {
+                showBingo();
+            }
+            
+            // Mostrar mensagem se dados foram carregados
+            if (hasSavedData) {
+                saveIndicator.textContent = 'Dados anteriores carregados!';
+                saveIndicator.style.background = 'rgba(52, 152, 219, 0.9)';
+                saveIndicator.classList.add('show');
+                setTimeout(() => {
+                    saveIndicator.classList.remove('show');
+                    saveIndicator.textContent = 'Dados salvos localmente!';
+                    saveIndicator.style.background = 'rgba(46, 204, 113, 0.9)';
+                }, 3000);
+            }
+        });
+    </script>
 </body>
 </html>
