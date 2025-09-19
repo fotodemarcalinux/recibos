@@ -1,0 +1,37 @@
+[
+  {
+    "title": "Exemplo de Card",
+    "desc": "Esta é uma descrição de exemplo.",
+    "link": "https://www.instagram.com/",
+    "color": "#3b82f6",
+    "imageBase64": null
+  },
+  {
+    "title": "Exemplo de Card",
+    "desc": "Esta é uma descrição de exemplo.",
+    "link": "https://www.instagram.com/",
+    "color": "#22c55e",
+    "imageBase64": null
+  },
+  {
+    "title": "Exemplo de Card",
+    "desc": "Esta é uma descrição de exemplo.",
+    "link": "https://www.instagram.com/",
+    "color": "#f97316",
+    "imageBase64": null
+  },
+  {
+    "title": "Exemplo de Card",
+    "desc": "Esta é uma descrição de exemplo.",
+    "link": "https://www.instagram.com/",
+    "color": "#8b5cf6",
+    "imageBase64": null
+  },
+  {
+    "title": "Exemplo de Card",
+    "desc": "Esta é uma descrição de exemplo.",
+    "link": "https://www.instagram.com/",
+    "color": "#ef4444",
+    "imageBase64": null
+  }
+]
