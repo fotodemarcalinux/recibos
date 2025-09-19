@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -32,7 +33,6 @@
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center">
                 <img src="https://digital.sou.net.br/backend/logo.webp" alt="logo" class="h-12 w-auto">
-                <span class="ml-3 text-2xl font-bold text-gray-800">teste1</span>
             </div>
             <div class="flex items-center gap-4">
                 <a href="#" onclick="if(typeof logout === 'function') { event.preventDefault(); logout(); } else { alert('Função de logout não encontrada.'); }" class="bg-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition-colors">Sair</a>
@@ -41,6 +41,8 @@
     </header>
 
     <main class="container mx-auto px-6 py-12 flex-grow">
+
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">Painel de Controle - teste1</h1>
 
         <!-- Seção de Cards - Conteúdo será carregado aqui -->
         <section id="cards-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
